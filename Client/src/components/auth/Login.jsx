@@ -14,7 +14,7 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const notify = () => toast("User signin successfully!");
+  const notify = () => toast("Welcome CANOVA 👋");
 
   const handleChange = (e) => {
     const { name, value } = e.target;

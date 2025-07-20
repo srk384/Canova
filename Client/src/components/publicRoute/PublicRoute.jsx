@@ -5,9 +5,9 @@ import LoadingFallback from "../LoadingFallback/LoadingFallback";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../utils/redux/slices/userSlice";
 
-const ProtectedRoute = ({ children }) => {
+const PublicRoute = ({ children }) => {
   const dispatch = useDispatch();
-  const [authentication, { isLoading, isError, error }] =
+ const [authentication, { isLoading, isSuccess, data, isError }] =
     useAuthenticationMutation();
 
   useEffect(() => {
@@ -27,9 +27,9 @@ const ProtectedRoute = ({ children }) => {
 
   if (isLoading) return <LoadingFallback />;
 
-  if (isError && !isLoading) return <Navigate to="/login" replace:true />;
+  // if (data && !isError ) return <Navigate to="/dashboard" replace:true />;  
 
   return children;
 };
 
-export default ProtectedRoute;
+export default PublicRoute;

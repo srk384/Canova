@@ -1,0 +1,32 @@
+.sidebar-container {
+  width: 300px;
+  background-color: #f8f8f8;
+  height: 100dvh;
+  padding: 15px;
+}
+.sidebar-logo {
+  margin: 15px 0;
+}
+.sidebar-ul {
+  list-style: none;
+  max-height: 85dvh;
+  height: 100%;
+  & li {
+    margin-bottom: 10px;
+    background-color: #bfdaf5;
+    padding: 7px 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+  }
+}
+
+.sidebar-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-left: 7px;
+  cursor: pointer;
+}
