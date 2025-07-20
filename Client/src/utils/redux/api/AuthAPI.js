@@ -1,7 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+// import 'dotenv/config'
+
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:3000/api/auth/",
+  baseUrl: `${import.meta.env.REACT_APP_BASE_URL}/api/auth/`,
   prepareHeaders: (headers) => {
     const token = localStorage.getItem("token");
     headers.set("authorization", `Bearer ${token}`);
