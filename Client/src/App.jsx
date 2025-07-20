@@ -4,7 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import Singnup from "./components/auth/Singnup";
 import ForgotPassword from "./components/auth/ForgotPassword";
 import ResetPassword from "./components/auth/ResetPassword";
-import ProtectedRoute from "./components/protectedRoute/protectedRoute";
+import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 
