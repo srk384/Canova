@@ -1,4 +1,3 @@
-const { connectDB } = require("../config/ConnectDB");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../middlewares/jwtMiddleware");
 const User = require("../models/userModel");
@@ -8,7 +7,6 @@ require("dotenv").config();
 
 const signUp = async (req, res) => {
   const { name, email, password } = req.body.post;
-  await connectDB();
 
   try {
     const user = await User.findOne({ email: email });
@@ -34,7 +32,6 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
   const { email, password } = req.body.post;
-  await connectDB();
 
   try {
     const user = await User.findOne({ email: email });
@@ -57,7 +54,6 @@ const signIn = async (req, res) => {
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
-  await connectDB();
   const user = await User.findOne({ email });
 
   if (!user) return res.status(404).json({ error: "User not found" });
@@ -87,9 +83,6 @@ const forgotPassword = async (req, res) => {
 
 const verifyOTP = async (req, res) => {
   const { email, otp } = req.body.post;
-  await connectDB();
-  console.log(req.body.post)
-
   const user = await User.findOne({ email });
 
   if (!user || user.resetOTP !== otp || user.resetOTPExpiry < Date.now()) {
@@ -107,8 +100,6 @@ const verifyOTP = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   const { email, password } = req.body.post;
-  console.log(req.body.post)
-  await connectDB();
   const user = await User.findOne({ email });
 
  if (

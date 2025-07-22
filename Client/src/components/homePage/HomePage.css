@@ -5,7 +5,7 @@
   padding: 10px;
   padding-left: 0px;
   padding-bottom: 0px;
-  overflow-y:auto;
+  position: relative;
 }
 
 .homepage-container {
@@ -42,6 +42,7 @@
     align-items: center;
     justify-content: center;
     font-size: 16px;
+    cursor: pointer;
 
     & h3 {
       font-weight: 500;
@@ -60,6 +61,7 @@
     align-items: center;
     justify-content: center;
     font-size: 16px;
+    cursor: pointer;
 
     & h3 {
       font-weight: 500;
@@ -104,6 +106,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  cursor: pointer;
 }
 
 .recentWorks-formName {
@@ -169,6 +172,7 @@
   display: flex;
   flex-direction: column;
   background: #fff;
+  cursor: pointer;
 }
 
 .recentWorks-project-top {

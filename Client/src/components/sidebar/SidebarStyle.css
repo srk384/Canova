@@ -13,8 +13,7 @@
   height: 100%;
   & li {
     margin-bottom: 10px;
-    background-color: #bfdaf5;
-    padding: 7px 15px;
+    padding: 10px 15px;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -29,4 +28,12 @@
   gap: 15px;
   padding-left: 7px;
   cursor: pointer;
+}
+
+.selected-li {
+  background-color: #bfdaf5;
+}
+a {
+  text-decoration: none;
+  color: black;
 }

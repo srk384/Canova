@@ -1,6 +1,5 @@
-const FormComponent = ({prop}) => {
-const {name, draft, analysis, action} = prop
-    console.log(draft)
+const FormComponent = ({data}) => {
+const {name, draft, id} = data
   return (
     <div className="homepage-recentWorks-form">
       <h3 className="recentWorks-formName">

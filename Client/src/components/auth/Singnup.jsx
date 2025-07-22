@@ -43,7 +43,7 @@ const Singnup = () => {
       setError({});
       if (user) {
         notify()
-        navigate("/dashboard");
+        navigate("/dashboard/homepage");
       }
     } catch (error) {
       console.log("err:", error);
