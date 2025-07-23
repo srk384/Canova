@@ -208,3 +208,8 @@
   height: 20px;
   cursor: pointer;
 }
+.no-recentWorks{
+  color: #9c9a9a;
+  font-size: 25px;
+  margin: 0 auto 0  auto;
+}

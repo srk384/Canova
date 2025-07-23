@@ -82,7 +82,7 @@ function App() {
         />
        
         <Route
-          path="/projects/:projectId/forms"
+          path="/dashboard/projects/:projectId/forms"
           element={
             <ProtectedRoute>
               <Dashboard>

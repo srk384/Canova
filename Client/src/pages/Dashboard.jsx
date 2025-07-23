@@ -1,22 +1,29 @@
-import FormPage from "../components/formPage/FormPage"
-import HomePage from "../components/homePage/HomePage"
-import ProjectsPage from "../components/projectsPage/ProjectsPage"
-import Sidebar from "../components/sidebar/Sidebar"
+import { useLocation } from "react-router-dom";
+import HomePage from "../components/homePage/HomePage";
+import Sidebar from "../components/sidebar/Sidebar";
 
-const Dashboard = ({children}) => {
-        console.log(children?.type.name)
+const Dashboard = ({ children }) => {
+
+  const { pathname } = useLocation();
+  const path = pathname.split("/")[2];
 
   return (
-    <div className="dashboard-container" style={{display:"flex"}}>
-       <Sidebar page = {children?.type.name}/>
-       {/* <HomePage/> */}
-      {/* <ProjectsPage/> */}
-      {children}
-      {/* <FormPage/> */}
+    <div className="dashboard-container" style={{ display: "flex" }}>
+      {!children && (
+        <>
+          <Sidebar page={"homepage"} />
+          <HomePage />
+        </>
+      )}
 
-      
+      {children && (
+        <>
+          <Sidebar page={path} />
+          {children}
+        </>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

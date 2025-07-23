@@ -14,6 +14,9 @@ const ProjectsPage = () => {
         <h1 className="projectsPage-title">Welcome to CANOVA</h1>
         <div className="projectsPage-inner-container">
           <div className="projectsPage-recentWorks">
+            {projects?.length === 0 && (
+              <div className="no-recentWorks">No Projects to display</div>
+            )}
             {projects &&
               projects.map((project) => (
                 <ProjectComponent

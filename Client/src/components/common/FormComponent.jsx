@@ -7,12 +7,12 @@ const {name, draft, id} = data
       </h3>
 
       <div className="recentWorks-img-container">
-        <img src="../svgs/form.svg" alt="form icon" />
+        <img src="/svgs/form.svg" alt="form icon" />
       </div>
 
       <div className="recentWorks-form-action">
         <button className="view-analysis">View Analysis</button>
-        <img src="../svgs/threeDots.svg" alt="options" className="dots-icon" />
+        <img src="/svgs/threeDots.svg" alt="options" className="dots-icon" />
       </div>
     </div>
   );

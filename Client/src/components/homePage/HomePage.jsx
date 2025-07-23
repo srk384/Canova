@@ -20,11 +20,13 @@ const HomePage = () => {
     data: forms,
     isLoading: loadingForms,
     isError: errorForms,
+    refetch: refetchForms,
   } = useGetFormsQuery("forms/forms");
   const {
     data: projects,
     isLoading: loadingProjects,
     isError: errorProjects,
+    refetch: refetchProjects,
   } = useGetProjectsQuery("projects/projects");
 
   // console.log(forms);
@@ -32,13 +34,14 @@ const HomePage = () => {
 
   const handleCreateForm = async () => {
     const { data } = await createProject({
-      action: "create-form",
+      action: "forms/create-form",
       project: "",
     });
 
     if (data.message.includes("Form created.")) {
       //   navigate(`/form-builder/${data.formId}`);
       console.log("Form created");
+      refetchForms();
     }
   };
 
@@ -58,7 +61,7 @@ const HomePage = () => {
               onClick={() => setIsCreateProjectClicked(true)}
             >
               <div className="project-img-container">
-                <img src="../svgs/projectWhite.svg" alt="" />
+                <img src="/svgs/projectWhite.svg" alt="" />
               </div>
               <h3>Start From scratch</h3>
               <p>Create your first Project now</p>
@@ -66,7 +69,7 @@ const HomePage = () => {
 
             <div className="homepage-form" onClick={handleCreateForm}>
               <div className="project-img-container">
-                <img src="../svgs/form.svg" alt="" />
+                <img src="/svgs/form.svg" alt="" />
               </div>
               <h3>Create Form</h3>
               <p>create your first Form now</p>
@@ -79,7 +82,7 @@ const HomePage = () => {
 
           <div className="homepage-recentWorks">
             {forms &&
-              forms.map((form) => (
+              forms.slice(0, 4).map((form) => (
                 <FormComponent
                   key={form._id}
                   data={{
@@ -89,14 +92,16 @@ const HomePage = () => {
                   }}
                 />
               ))}
-
+            {(forms?.length === 0 && projects?.length === 0) && (
+              <div className="no-recentWorks">No recent work to display</div>
+            )}
             {projects &&
-              projects.map((project) => (
+              projects.slice(0, 4).map((project) => (
                 <ProjectComponent
                   key={project._id}
                   data={{
                     name: project.name,
-                    id:project._id
+                    id: project._id,
                   }}
                 />
               ))}
@@ -107,6 +112,8 @@ const HomePage = () => {
           <h3 className="homepage-recentWorks-title">Shared Works</h3>
 
           <div className="homepage-recentWorks" style={{ marginBottom: "0px" }}>
+            <div className="no-recentWorks">No Shared work to display</div>
+
             {/* <FormComponent /> */}
             {/* <FormComponent /> */}
             {/* <ProjectComponent />
@@ -115,7 +122,12 @@ const HomePage = () => {
         </div>
       </div>
       {isCreateProjectClicked && (
-        <CreateProjectModal onClose={() => setIsCreateProjectClicked(false)} />
+        <CreateProjectModal
+          onClose={() => {
+            setIsCreateProjectClicked(false);
+            refetchProjects();
+          }}
+        />
       )}
     </div>
   );

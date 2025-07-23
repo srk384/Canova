@@ -49,6 +49,15 @@ const getUserProjects = async (req, res) => {
   }
 };
 
+const getProjectById = async (req, res) => {
+  const projectId = req.params.id;
+  const userId = req.user._id;
+  try {
+    const project = await Project.findOne({ _id: projectId, owner: userId });
+    res.status(200).json(project);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch project by Id" });
+  }
+};
 
-
-module.exports = { createProjectAndForm, getUserProjects };
+module.exports = { createProjectAndForm, getUserProjects, getProjectById };
