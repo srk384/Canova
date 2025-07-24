@@ -3,17 +3,19 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { authApi } from "../api/AuthAPI";
 import userSliceReducer from '../slices/userSlice'
 import { projectsApi } from "../api/ProjectAPI";
+import { formAPI } from "../api/FormAPI";
 
 export const store = configureStore({
   reducer: {
      user: userSliceReducer,
     [authApi.reducerPath]: authApi.reducer,
     [projectsApi.reducerPath]: projectsApi.reducer,
+    [formAPI.reducerPath]: formAPI.reducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware,projectsApi.middleware),
+    getDefaultMiddleware().concat(authApi.middleware,projectsApi.middleware, formAPI.middleware),
 })
 
 // optional, but required for refetchOnFocus/refetchOnReconnect behaviors

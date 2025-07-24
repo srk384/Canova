@@ -1,13 +1,13 @@
-import FormComponent from "../common/FormComponent";
+import FormComponent from "../../common/FormComponent";
 import CreateProjectModal from "../modal/CreateProjectModal";
-import ProjectComponent from "../common/ProjectComponent";
+import ProjectComponent from "../../common/ProjectComponent";
 import "./HomePage.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   useCreateProjectMutation,
   useGetFormsQuery,
   useGetProjectsQuery,
-} from "../../utils/redux/api/ProjectAPI";
+} from "../../../utils/redux/api/ProjectAPI";
 import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
@@ -29,8 +29,6 @@ const HomePage = () => {
     refetch: refetchProjects,
   } = useGetProjectsQuery("projects/projects");
 
-  // console.log(forms);
-  // console.log(projects);
 
   const handleCreateForm = async () => {
     const { data } = await createProject({
@@ -38,8 +36,8 @@ const HomePage = () => {
       project: "",
     });
 
-    if (data.message.includes("Form created.")) {
-      //   navigate(`/form-builder/${data.formId}`);
+    if (data.success) {
+        navigate(`/form-builder/${data.form._id}`);
       console.log("Form created");
       refetchForms();
     }

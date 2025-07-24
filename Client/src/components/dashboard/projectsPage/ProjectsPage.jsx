@@ -1,6 +1,6 @@
 import "./ProjectsPageStyle.css";
-import { useGetProjectsQuery } from "../../utils/redux/api/ProjectAPI";
-import ProjectComponent from "../common/ProjectComponent";
+import { useGetProjectsQuery } from "../../../utils/redux/api/ProjectAPI";
+import ProjectComponent from "../../common/ProjectComponent";
 
 const ProjectsPage = () => {
   const {

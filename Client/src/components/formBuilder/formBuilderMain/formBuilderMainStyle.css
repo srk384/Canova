@@ -1,0 +1,7 @@
+.formBuilder-main-content {
+    padding: 24px;
+    width: calc(100vw - 320px - 276px);
+    /* border: 1px solid black; */
+    overflow-y: auto;
+  
+}

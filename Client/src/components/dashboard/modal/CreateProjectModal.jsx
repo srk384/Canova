@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./CreateProjectModalStyle.css";
-import { useCreateProjectMutation } from "../../utils/redux/api/ProjectAPI";
+import { useCreateProjectMutation } from "../../../utils/redux/api/ProjectAPI";
 import { useNavigate } from "react-router-dom";
 
 const CreateProjectModal = ({ onClose }) => {

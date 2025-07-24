@@ -8,9 +8,10 @@ import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 import PublicRoute from "./components/publicRoute/PublicRoute";
-import ProjectsPage from "./components/projectsPage/ProjectsPage";
-import HomePage from "./components/homePage/HomePage";
-import FormPage from "./components/formPage/FormPage";
+import ProjectsPage from "./components/dashboard/projectsPage/ProjectsPage";
+import HomePage from "./components/dashboard/homePage/HomePage";
+import FormPage from "./components/dashboard/formPage/FormPage";
+import FormBuilder from "./components/formBuilder/FormBuilder";
 
 function App() {
   return (
@@ -80,7 +81,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-       
+
         <Route
           path="/dashboard/projects/:projectId/forms"
           element={
@@ -88,6 +89,16 @@ function App() {
               <Dashboard>
                 <FormPage />
               </Dashboard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Form Builder routes */}
+        <Route
+          path="/form-builder/:id"
+          element={
+            <ProtectedRoute>
+              <FormBuilder />
             </ProtectedRoute>
           }
         />

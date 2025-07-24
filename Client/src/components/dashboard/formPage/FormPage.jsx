@@ -1,20 +1,21 @@
 import "./FormPageStyle.css";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   useGetFormsQuery,
   useCreateProjectMutation,
-} from "../../utils/redux/api/ProjectAPI";
-import FormComponent from "../common/FormComponent";
+} from "../../../utils/redux/api/ProjectAPI";
+import FormComponent from "../../common/FormComponent";
 
 const FormPage = () => {
   const { projectId } = useParams();
   const { projectName } = useLocation().state;
+  const navigate = useNavigate()
 
   const {
     data: forms,
     isLoading: loadingForms,
     isError: errorForms,
-    refetch
+    refetch,
   } = useGetFormsQuery(`forms/projects/${projectId}/forms`);
 
   const [createProject, { isLoading, isError }] = useCreateProjectMutation();
@@ -24,9 +25,11 @@ const FormPage = () => {
       action: `forms/project/${projectId}`,
       project: "",
     });
-    if (data.message.includes("Form added in the project.")) {
-      //   navigate(`/form-builder/${data.formId}`);
-      refetch()
+    console.log(data);
+
+    if (data.success) {
+      navigate(`/form-builder/${data.form._id}`);
+      refetch();
       console.log("Form Inserted");
     }
   };

@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import HomePage from "../components/homePage/HomePage";
-import Sidebar from "../components/sidebar/Sidebar";
+import HomePage from "../components/dashboard/homePage/HomePage";
+import Sidebar from "../components/dashboard/sidebar/Sidebar";
 
 const Dashboard = ({ children }) => {
 
