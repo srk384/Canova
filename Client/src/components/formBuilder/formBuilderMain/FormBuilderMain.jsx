@@ -14,7 +14,7 @@ const FormBuilderMain = () => {
       className="formBuilder-main-content-body"
       style={{ backgroundColor: rgba }}
     >
-      {/* <AddQuestionBtn/> */}
+      <AddQuestionBtn/>
     </div>
   );
 };

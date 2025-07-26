@@ -1,4 +1,4 @@
-import "./dropdownStyle.css";
+import "./DropdownStyle.css";
 import { useState, useRef } from "react";
 
 const Dropdown = () => {
