@@ -1,5 +1,5 @@
 import { useState } from "react";
-import './linearScaleStyle.css'
+import './LinearScaleStyle.css'
 
 const LinearScale = ({ min = 0, max = 10 }) => {
   const [value, setValue] = useState((max + min) / 2);
