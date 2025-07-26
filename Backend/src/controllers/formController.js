@@ -78,7 +78,7 @@ const getFormById = async (req, res) => {
       .status(200)
       .json({ message: "form fetched", success: true, form: form });
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch forms" });
+    res.status(500).json({ message: "Failed to fetch form" });
   }
 };
 
@@ -99,7 +99,7 @@ const addPage = async (req, res) => {
 
     res.status(200).json({ message: "Page Added", success: true, form: form });
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch forms" });
+    res.status(500).json({ message: "Failed to add Page" });
   }
 };
 
@@ -108,15 +108,13 @@ const getPages = async (req, res) => {
   try {
     const pages = await Page.find({ form: formId });
 
-    res
-      .status(200)
-      .json({
-        message: "Pages fetched with form Id",
-        success: true,
-        pages: pages,
-      });
+    res.status(200).json({
+      message: "Pages fetched with form Id",
+      success: true,
+      pages: pages,
+    });
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch forms" });
+    res.status(500).json({ message: "Failed to get pages" });
   }
 };
 

@@ -1,0 +1,46 @@
+.file-upload-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.settings-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 20px;
+  gap: 15px;
+}
+
+label {
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.pill {
+  background-color: #e0eaf7;
+  padding: 6px 16px;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+.filetype-container {
+  display: flex;
+  gap: 6px;
+  position: relative;
+}
+
+.hidden-fileupload-checkbox {
+  position: absolute;
+  opacity: 00;
+  cursor: pointer;
+  height: 19px;
+  width: 19px;
+  z-index: 99;
+  right: 11px;
+  top:3px
+}
+
+.hidden-fileupload-checkbox:checked + .custom-checkbox::after {
+  display: block;
+}

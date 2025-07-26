@@ -1,11 +1,22 @@
-import './formBuilderMainStyle.css'
+import { useState, useEffect } from "react";
+import "./formBuilderMainStyle.css";
+import { useSelector } from "react-redux";
+import AddQuestionBtn from "../sidebarRight/actionButtons/addQuestionBtn/AddQuestionBtn";
 
 const FormBuilderMain = () => {
-   return (
-    <div className="formBuilder-main-content">
-     
+  const { ui } = useSelector((state) => state.uiSlice);
+  const rgba = ui?.backgroundColor;
+
+  
+
+  return (
+    <div
+      className="formBuilder-main-content-body"
+      style={{ backgroundColor: rgba }}
+    >
+      {/* <AddQuestionBtn/> */}
     </div>
   );
-}
+};
 
-export default FormBuilderMain
+export default FormBuilderMain;

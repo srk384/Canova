@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAuthenticationMutation } from "../../utils/redux/api/AuthAPI";
 import { Navigate } from "react-router-dom";
-import LoadingFallback from "../LoadingFallback/LoadingFallback";
+import LoadingFallback from "../common/LoadingFallback/LoadingFallback";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../utils/redux/slices/userSlice";
 

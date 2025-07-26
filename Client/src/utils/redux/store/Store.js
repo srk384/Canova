@@ -1,13 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import { authApi } from "../api/AuthAPI";
 import userSliceReducer from '../slices/userSlice'
+import uiSliceReducer from '../slices/uiSlice'
+import { authApi } from "../api/AuthAPI";
 import { projectsApi } from "../api/ProjectAPI";
 import { formAPI } from "../api/FormAPI";
 
 export const store = configureStore({
   reducer: {
      user: userSliceReducer,
+     uiSlice: uiSliceReducer,
     [authApi.reducerPath]: authApi.reducer,
     [projectsApi.reducerPath]: projectsApi.reducer,
     [formAPI.reducerPath]: formAPI.reducer,

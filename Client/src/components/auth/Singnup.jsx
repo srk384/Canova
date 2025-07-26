@@ -4,7 +4,7 @@ import ShowSvg from "../svgs/ShowSvg";
 import HideSvg from "../svgs/HideSvg";
 import { useState } from "react";
 import { useAuthenticationMutation } from "../../utils/redux/api/AuthAPI";
-import LoadingFallback from "../LoadingFallback/LoadingFallback";
+import LoadingFallback from "../common/LoadingFallback/LoadingFallback";
 import { toast } from "react-toastify";
 
 const Singnup = () => {

@@ -1,14 +1,34 @@
+import { useDispatch, useSelector } from "react-redux";
 import "./SidebarRightStyle.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { setUi } from "../../../utils/redux/slices/uiSlice";
 
-const SidebarRight = () => {
-  const [color, setColor] = useState("#b6b6b6");
+const SidebarRight = ({ onAddQuestion }) => {
+  const [color, setColor] = useState("#ffffff");
+  // b6b6b6
   const [opacity, setOpacity] = useState(100);
+
+  const dispatch = useDispatch();
+  const { ui } = useSelector((state) => state.uiSlice);
+
+  function hexToRgb(hex, opacity) {
+    const cleanHex = hex.startsWith("#") ? hex.slice(1) : hex;
+
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
+
+    return `rgba(${r},${g},${b},${opacity === 100 ? 1 : opacity / 100})`;
+  }
+
+  useEffect(() => {
+    dispatch(setUi({ ...ui, backgroundColor: hexToRgb(color, opacity) }));
+  }, [opacity, color]);
 
   return (
     <div className="formBuilder-right-sidebar">
       <div className="formBuilder-actions-btn">
-        <button>
+        <button onClick={onAddQuestion}> 
           <img src="/svgs/addQues.svg" alt="" />
           <span>Add Question</span>
         </button>
