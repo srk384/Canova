@@ -10,7 +10,9 @@ const ProjectsPage = () => {
     isError,
   } = useGetProjectsQuery("projects/projects");
 
-  {isLoading && <LoadingFallback/>}
+  {
+    (isLoading || !projects) && <LoadingFallback />;
+  }
   return (
     <div className="projectsPage-body">
       <div className="projectsPage-container">

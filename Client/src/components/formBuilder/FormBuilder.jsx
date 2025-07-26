@@ -43,7 +43,7 @@ const FormBuilder = () => {
   };
 
   {
-    isLoading && <LoadingFallback />;
+    (isLoading || !pagesData) && <LoadingFallback />;
   }
   return (
     <div className="formBuilder-layout">
