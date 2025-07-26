@@ -6,6 +6,7 @@ import SidebarRight from "./sidebarRight/SidebarRight";
 import { useGetFormsQuery } from "../../utils/redux/api/ProjectAPI";
 import { useGetPagesQuery } from "../../utils/redux/api/FormAPI";
 import { useEffect, useState } from "react";
+import LoadingFallback from "../common/LoadingFallback/LoadingFallback";
 
 const FormBuilder = () => {
   const { id } = useParams();
@@ -13,28 +14,20 @@ const FormBuilder = () => {
 
   const [form, setForm] = useState();
 
-  const { data: pagesData, refetch } = useGetPagesQuery(`pages/${form?._id}`,  { skip: !form?._id });
+  const { data: pagesData, refetch } = useGetPagesQuery(`pages/${form?._id}`, {
+    skip: !form?._id,
+  });
 
-
-
-
-const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState([]);
 
   const addQuestion = () => {
     const newQuestion = {
       id: Date.now(),
       type: "shortAnswer",
-      text: "New Question"
+      text: "New Question",
     };
     setQuestions((prev) => [...prev, newQuestion]);
   };
-
-
-
-
-
-
-
 
   const setFormData = () => {
     setForm(data?.form);
@@ -48,6 +41,10 @@ const [questions, setQuestions] = useState([]);
     setForm({ ...form, [name]: value });
     // console.log(form);
   };
+
+  {
+    pagesData && <LoadingFallback />;
+  }
   return (
     <div className="formBuilder-layout">
       <SidebarLeft data={{ form, pagesData, refetch }} />
@@ -68,8 +65,8 @@ const [questions, setQuestions] = useState([]);
           </div>
         </div>
         <div className="builder-tools-inner-container">
-          <FormBuilderMain questions={questions}/>
-          <SidebarRight onAddQuestion={addQuestion}/>
+          <FormBuilderMain questions={questions} />
+          <SidebarRight onAddQuestion={addQuestion} />
         </div>
       </div>
     </div>

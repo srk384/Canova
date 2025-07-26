@@ -1,13 +1,16 @@
-import "./ProjectsPageStyle.css";
 import { useGetProjectsQuery } from "../../../utils/redux/api/ProjectAPI";
+import LoadingFallback from "../../common/LoadingFallback/LoadingFallback";
 import ProjectComponent from "../../common/ProjectComponent";
+import "./ProjectsPageStyle.css";
 
 const ProjectsPage = () => {
   const {
     data: projects,
-    isLoading: loadingProjects,
-    isError: errorProjects,
+    isLoading,
+    isError,
   } = useGetProjectsQuery("projects/projects");
+
+  {isLoading && <LoadingFallback/>}
   return (
     <div className="projectsPage-body">
       <div className="projectsPage-container">

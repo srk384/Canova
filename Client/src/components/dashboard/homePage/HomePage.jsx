@@ -9,6 +9,7 @@ import {
   useGetProjectsQuery,
 } from "../../../utils/redux/api/ProjectAPI";
 import { useNavigate } from "react-router-dom";
+import LoadingFallback from "../../common/LoadingFallback/LoadingFallback";
 
 const HomePage = () => {
   const [isCreateProjectClicked, setIsCreateProjectClicked] = useState(false);
@@ -29,7 +30,6 @@ const HomePage = () => {
     refetch: refetchProjects,
   } = useGetProjectsQuery("projects/projects");
 
-
   const handleCreateForm = async () => {
     const { data } = await createProject({
       action: "forms/create-form",
@@ -37,11 +37,15 @@ const HomePage = () => {
     });
 
     if (data.success) {
-        navigate(`/form-builder/${data.form._id}`);
+      navigate(`/form-builder/${data.form._id}`);
       console.log("Form created");
       refetchForms();
     }
   };
+
+  {
+    loadingProjects && loadingForms && <LoadingFallback />;
+  }
 
   return (
     <div
@@ -90,7 +94,7 @@ const HomePage = () => {
                   }}
                 />
               ))}
-            {(forms?.length === 0 && projects?.length === 0) && (
+            {forms?.length === 0 && projects?.length === 0 && (
               <div className="no-recentWorks">No recent work to display</div>
             )}
             {projects &&
