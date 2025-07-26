@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import FormBuilderMain from "./formBuilderMain/formBuilderMain";
+import FormBuilderMain from "./formBuilderMain/FormBuilderMain";
 import "./FormBuilderStyle.css";
 import SidebarLeft from "./sidebarLeft/SidebarLeft";
 import SidebarRight from "./sidebarRight/SidebarRight";
