@@ -1,15 +1,15 @@
-import FormComponent from "../../common/FormComponent";
-import CreateProjectModal from "../modal/CreateProjectModal";
-import ProjectComponent from "../../common/ProjectComponent";
-import "./HomePage.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   useCreateProjectMutation,
   useGetFormsQuery,
   useGetProjectsQuery,
 } from "../../../utils/redux/api/ProjectAPI";
-import { useNavigate } from "react-router-dom";
+import FormComponent from "../../common/FormComponent";
 import LoadingFallback from "../../common/LoadingFallback/LoadingFallback";
+import ProjectComponent from "../../common/ProjectComponent";
+import CreateProjectModal from "../modal/CreateProjectModal";
+import "./HomePage.css";
 
 const HomePage = () => {
   const [isCreateProjectClicked, setIsCreateProjectClicked] = useState(false);
@@ -44,7 +44,9 @@ const HomePage = () => {
   };
 
   {
-    loadingProjects && loadingForms && <LoadingFallback />;
+    (loadingProjects || loadingForms || !projects || !forms) && (
+      <LoadingFallback />
+    );
   }
 
   return (

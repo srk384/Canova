@@ -1,12 +1,12 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useGetPagesQuery } from "../../utils/redux/api/FormAPI";
+import { useGetFormsQuery } from "../../utils/redux/api/ProjectAPI";
+import LoadingFallback from "../common/LoadingFallback/LoadingFallback";
 import FormBuilderMain from "./formBuilderMain/FormBuilderMain";
 import "./FormBuilderStyle.css";
 import SidebarLeft from "./sidebarLeft/SidebarLeft";
 import SidebarRight from "./sidebarRight/SidebarRight";
-import { useGetFormsQuery } from "../../utils/redux/api/ProjectAPI";
-import { useGetPagesQuery } from "../../utils/redux/api/FormAPI";
-import { useEffect, useState } from "react";
-import LoadingFallback from "../common/LoadingFallback/LoadingFallback";
 
 const FormBuilder = () => {
   const { id } = useParams();
@@ -14,7 +14,7 @@ const FormBuilder = () => {
 
   const [form, setForm] = useState();
 
-  const { data: pagesData, refetch } = useGetPagesQuery(`pages/${form?._id}`, {
+  const { data: pagesData, refetch , isLoading} = useGetPagesQuery(`pages/${form?._id}`, {
     skip: !form?._id,
   });
 
@@ -43,7 +43,7 @@ const FormBuilder = () => {
   };
 
   {
-    pagesData && <LoadingFallback />;
+    isLoading && <LoadingFallback />;
   }
   return (
     <div className="formBuilder-layout">
