@@ -1,5 +1,6 @@
 const Form = require("../models/formModel");
 const Project = require("../models/projectModel");
+const Page = require("../models/pageModel");
 
 const createProjectAndForm = async (req, res) => {
   const { projectName, formName } = req.body.project;
@@ -23,8 +24,14 @@ const createProjectAndForm = async (req, res) => {
       pages: [], // start empty
     });
 
+    
     project.forms.push(form._id);
     await project.save();
+    
+    const page = await Page.create({ form: form._id });
+    
+    form.pages.push(page._id);
+    await form.save();
 
     return res.status(201).json({
       message: "Project and form created.",

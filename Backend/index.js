@@ -7,6 +7,7 @@ const port = process.env.PORT || 4000;
 const userRoute = require('./src/routes/userRoute')
 const projectsRoute = require('./src/routes/projectRoute')
 const formsRoute = require('./src/routes/formsRoute')
+const pagesRoute = require('./src/routes/pagesRoute')
 const { connectDB } = require("./src/config/ConnectDB");
 
 
@@ -19,8 +20,8 @@ connectDB()
 
 app.use('/api/auth', userRoute)
 app.use('/api/projects', projectsRoute)
-
 app.use('/api/forms', formsRoute)
+app.use('/api/pages', pagesRoute)
 
 app.listen(port, () => {
   console.log(`Server is runnning at Port: ${port}`);

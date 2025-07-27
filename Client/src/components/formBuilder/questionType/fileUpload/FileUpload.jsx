@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setQuestions } from "../../../../utils/redux/slices/questionsSlice";
 import "./FileUploadStyle.css";
 
 const FILE_TYPES = [
@@ -12,7 +14,7 @@ const FILE_TYPES = [
   "spreadsheet",
 ];
 
-const FileUpload = () => {
+const FileUpload = ({ id }) => {
   const [selectedTypes, setSelectedTypes] = useState([
     "image",
     "pdf",
@@ -22,7 +24,16 @@ const FileUpload = () => {
     "zip",
   ]);
 
+  const dispatch = useDispatch();
+  const { questions } = useSelector((state) => state.questionsSlice);
 
+  useEffect(() => {
+    const fileTypes = questions.map((question) =>
+      question.id === id ? { ...question, fileTypes: selectedTypes } : question
+    );
+
+    dispatch(setQuestions(fileTypes));
+  }, [selectedTypes]);
 
   const toggleType = (type) => {
     setSelectedTypes((prev) =>
@@ -36,7 +47,7 @@ const FileUpload = () => {
         <label>Number of Files:</label>
         <div className="pill">5</div>
         {FILE_TYPES.slice(0, 4).map((type) => (
-          <div className="filetype-container">
+          <div key={type} className="filetype-container">
             <label key={type}>{type}</label>
             <input
               className="hidden-fileupload-checkbox"

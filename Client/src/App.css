@@ -3,3 +3,31 @@
   padding: 0;
   box-sizing: border-box;
 }
+body {
+  overflow: hidden;
+}
+/* Works in WebKit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px; /* Slimmer width */
+  height: 6px; /* Slimmer horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Light background for track */
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c0c0c0; /* Thumb color (darker than track) */
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0; /* Darker on hover */
+}
+
+  /* Firefox */
+* {
+  scrollbar-width: thin; /* Slim scrollbar */
+  scrollbar-color: #c0c0c0 #f0f0f0; /* thumb color | track color */
+}

@@ -1,14 +1,30 @@
 import "./CheckBoxStyle.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setQuestions } from "../../../../utils/redux/slices/questionsSlice";
 
-const CheckBox = () => {
+const CheckBox = ({ id }) => {
   const [options, setOptions] = useState(["", ""]); // Start with 2 empty options
   const optionRefs = useRef([]);
+
+  const dispatch = useDispatch();
+  const { questions } = useSelector((state) => state.questionsSlice);
+
+  useEffect(() => {
+    questions.forEach(
+      (question) =>
+        question.id === id && question.options && setOptions(question.options)
+    );
+  }, [questions]);
 
   const handleChange = (value, index) => {
     const updated = [...options];
     updated[index] = value;
-    setOptions(updated);
+    // setOptions(updated);
+    const updatedOptions = questions.map((question) =>
+      question.id === id ? { ...question, options: updated } : question
+    );
+    dispatch(setQuestions(updatedOptions));
   };
 
   const handleKeyDown = (e, index) => {
@@ -63,6 +79,7 @@ const CheckBox = () => {
             onKeyDown={(e) => handleKeyDown(e, i)}
             placeholder={`Option ${i + 1}`}
             rows={1}
+            id="checkbox"
           />
         </div>
       ))}

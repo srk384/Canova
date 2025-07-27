@@ -10,6 +10,10 @@ const createForm = async (req, res) => {
       name: "Untitled Form",
       owner: userId,
     });
+    const page = await Page.create({ form: newForm._id });
+
+    newForm.pages.push(page._id);
+    await newForm.save();
 
     res
       .status(201)

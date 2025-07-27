@@ -7,9 +7,13 @@ const pageSchema = new mongoose.Schema(
       ref: "Form",
       required: true,
     },
+    // title: {
+    //   type: String,
+    //   default: "Untitled Form",
+    // },
     order: {
-      type: String,
-      required: true,
+      type: Number,
+      default: 1,
     },
     questions: {
       type: mongoose.Schema.Types.ObjectId,

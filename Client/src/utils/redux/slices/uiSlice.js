@@ -2,10 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   ui: {
-  activePageId: null,
-  activeQuestionId: null,
-  backgroundColor: null
-}
+    activePageId: null,
+    activeSectionId: null,
+    pageColor: null,
+    sectionColor: null,
+    previewMode: false,
+    formName: null,
+  },
 };
 
 const uiSlice = createSlice({
@@ -14,7 +17,7 @@ const uiSlice = createSlice({
   reducers: {
     setUi: (state, action) => {
       state.ui = action.payload;
-      console.log(action.payload)
+      console.log(action.payload);
     },
   },
 });

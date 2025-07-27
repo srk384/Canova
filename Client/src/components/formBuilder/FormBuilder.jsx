@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useGetPagesQuery } from "../../utils/redux/api/FormAPI";
 import { useGetFormsQuery } from "../../utils/redux/api/ProjectAPI";
@@ -7,66 +8,61 @@ import FormBuilderMain from "./formBuilderMain/FormBuilderMain";
 import "./FormBuilderStyle.css";
 import SidebarLeft from "./sidebarLeft/SidebarLeft";
 import SidebarRight from "./sidebarRight/SidebarRight";
+import { setUi } from "../../utils/redux/slices/uiSlice";
 
 const FormBuilder = () => {
   const { id } = useParams();
-  const { data } = useGetFormsQuery(`/forms/form/${id}`);
+  const { data, refetch, isLoading, isSuccess } = useGetFormsQuery(
+    `/forms/form/${id}`
+  );
+  const { ui } = useSelector((state) => state.uiSlice);
 
-  const [form, setForm] = useState();
 
-  const { data: pagesData, refetch , isLoading} = useGetPagesQuery(`pages/${form?._id}`, {
-    skip: !form?._id,
-  });
+  const dispatch = useDispatch();
 
-  const [questions, setQuestions] = useState([]);
 
-  const addQuestion = () => {
-    const newQuestion = {
-      id: Date.now(),
-      type: "shortAnswer",
-      text: "New Question",
-    };
-    setQuestions((prev) => [...prev, newQuestion]);
-  };
-
-  const setFormData = () => {
-    setForm(data?.form);
-    // console.log(data?.form)
-  };
-
-  useEffect(setFormData, [data]);
+  useEffect(() => {
+    if (isSuccess) dispatch(setUi({ ...ui, formName: data?.form?.name }));
+  }, []);
 
   const handleChanges = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-    // console.log(form);
+    dispatch(setUi({ ...ui, formName: value }));
   };
 
+  const handleSave = () => {};
+
   {
-    (isLoading || !pagesData) && <LoadingFallback />;
+    (isLoading || !data) && <LoadingFallback />;
   }
   return (
     <div className="formBuilder-layout">
-      <SidebarLeft data={{ form, pagesData, refetch }} />
+      {isSuccess && <SidebarLeft data={{ ...data, refetch }} />}
       <div className="builder-tools-container">
         <div className="formBuilder-top">
-          {form && (
+          {isSuccess && (
             <input
               type="text"
               name="name"
               id=""
-              value={form.name}
+              value={ui.formName ?? data?.form?.name }
               onChange={handleChanges}
             />
           )}
           <div>
-            <button>Preview</button>
-            <button>Save</button>
+            <button
+              onClick={() => {
+                dispatch(setUi({ ...ui, previewMode: true }));
+              }}
+            >
+              Preview
+            </button>
+            <button onClick={handleSave}>Save</button>
           </div>
         </div>
         <div className="builder-tools-inner-container">
-          <FormBuilderMain questions={questions} />
-          <SidebarRight onAddQuestion={addQuestion} />
+          <FormBuilderMain />
+          <SidebarRight />
         </div>
       </div>
     </div>

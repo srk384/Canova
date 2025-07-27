@@ -1,21 +1,37 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./MultipleChoiceStyle.css";
+import { useDispatch, useSelector } from "react-redux";
+import { setQuestions } from "../../../../utils/redux/slices/questionsSlice";
 
-const MultipleChoice = () => {
+const MultipleChoice = ({ id }) => {
   const [options, setOptions] = useState(["", ""]); // Start with 2 empty options
   const optionRefs = useRef([]);
+
+  const dispatch = useDispatch();
+  const { questions } = useSelector((state) => state.questionsSlice);
+
+  useEffect(() => {
+    questions.forEach(
+      (question) =>
+        question.id === id && question.options && setOptions(question.options)
+    );
+  }, [questions]);
 
   const handleChange = (value, index) => {
     const updated = [...options];
     updated[index] = value;
-    setOptions(updated);
+    // setOptions(updated);
+    const updatedOptions = questions.map((question) =>
+      question.id === id ? { ...question, options: updated } : question
+    );
+    dispatch(setQuestions(updatedOptions));
   };
 
   const handleKeyDown = (e, index) => {
     const isEmpty = options[index].trim() === "";
 
     if (e.key === "Enter" && e.shiftKey) {
-      return; 
+      return;
     }
 
     if (e.key === "Enter") {
@@ -62,7 +78,8 @@ const MultipleChoice = () => {
             onChange={(e) => handleChange(e.target.value, i)}
             onKeyDown={(e) => handleKeyDown(e, i)}
             placeholder={`Option ${i + 1}`}
-            rows={1} // allows auto-expansion later
+            rows={1}
+            id="multipleChoice"
           />
         </div>
       ))}
