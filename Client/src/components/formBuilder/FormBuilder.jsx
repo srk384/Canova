@@ -37,7 +37,7 @@ const FormBuilder = () => {
   }
   return (
     <div className="formBuilder-layout">
-      {isSuccess && <SidebarLeft data={{ ...data, refetch }} />}
+      <SidebarLeft data={{ ...data, refetch }} />
       <div className="builder-tools-container">
         <div className="formBuilder-top">
           {isSuccess && (
