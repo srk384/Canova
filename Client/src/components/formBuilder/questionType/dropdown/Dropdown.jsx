@@ -3,16 +3,18 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setQuestions } from "../../../../utils/redux/slices/questionsSlice";
 
-const Dropdown = ({id}) => {
+const Dropdown = ({ id }) => {
   const [options, setOptions] = useState(["", ""]); // Start with 2 empty options
   const optionRefs = useRef([]);
 
   const dispatch = useDispatch();
   const { questions } = useSelector((state) => state.questionsSlice);
+  const { ui } = useSelector((state) => state.uiSlice);
 
   useEffect(() => {
     questions.forEach(
-      (question) => question.id === id && question.options && setOptions(question.options)
+      (question) =>
+        question.qId === id && question.options && setOptions(question.options)
     );
   }, [questions]);
 
@@ -22,7 +24,7 @@ const Dropdown = ({id}) => {
     // setOptions(updated);
 
     const updatedOptions = questions.map((question) =>
-      question.id === id ? { ...question, options: updated } : question
+      question.qId === id ? { ...question, options: updated } : question
     );
     dispatch(setQuestions(updatedOptions));
   };
@@ -64,10 +66,12 @@ const Dropdown = ({id}) => {
             ref={(el) => (optionRefs.current[i] = el)}
             className="dropdown-option-input"
             value={opt}
+            disabled={ui?.previewMode}
             onChange={(e) => handleChange(e.target.value, i)}
             onKeyDown={(e) => handleKeyDown(e, i)}
             placeholder={`Drop Down Option ${i + 1}`}
           />
+          {console.log(opt)}
         </div>
       ))}
     </div>

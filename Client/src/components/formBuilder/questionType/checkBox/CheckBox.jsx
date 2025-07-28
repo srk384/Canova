@@ -9,11 +9,12 @@ const CheckBox = ({ id }) => {
 
   const dispatch = useDispatch();
   const { questions } = useSelector((state) => state.questionsSlice);
+  const { ui } = useSelector((state) => state.uiSlice);
 
   useEffect(() => {
     questions.forEach(
       (question) =>
-        question.id === id && question.options && setOptions(question.options)
+        question.qId === id && question.options && setOptions(question.options)
     );
   }, [questions]);
 
@@ -22,7 +23,7 @@ const CheckBox = ({ id }) => {
     updated[index] = value;
     // setOptions(updated);
     const updatedOptions = questions.map((question) =>
-      question.id === id ? { ...question, options: updated } : question
+      question.qId === id ? { ...question, options: updated } : question
     );
     dispatch(setQuestions(updatedOptions));
   };
@@ -67,6 +68,7 @@ const CheckBox = ({ id }) => {
           <input
             type="checkbox"
             name="option"
+            disabled={ui?.previewMode}
             value={opt}
             className="hidden-checkbox"
           />
@@ -75,6 +77,7 @@ const CheckBox = ({ id }) => {
             ref={(el) => (optionRefs.current[i] = el)}
             className="option-input"
             value={opt}
+            disabled={ui?.previewMode}
             onChange={(e) => handleChange(e.target.value, i)}
             onKeyDown={(e) => handleKeyDown(e, i)}
             placeholder={`Option ${i + 1}`}

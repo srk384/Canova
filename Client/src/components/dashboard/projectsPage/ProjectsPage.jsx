@@ -10,8 +10,8 @@ const ProjectsPage = () => {
     isError,
   } = useGetProjectsQuery("projects/projects");
 
-  {
-    (isLoading || !projects) && <LoadingFallback />;
+  if (isLoading || !projects) {
+    return <LoadingFallback />;
   }
   return (
     <div className="projectsPage-body">

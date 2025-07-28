@@ -20,7 +20,7 @@
     & textarea {
       margin-left: 15px;
       font-size: 22px;
-      min-width: 800px;
+      /* min-width: 800px; */
       width: 100%;
       resize: none;
       border: none;

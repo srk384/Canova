@@ -43,11 +43,11 @@ const HomePage = () => {
     }
   };
 
-  {
-    (loadingProjects || loadingForms || !projects || !forms) && (
-      <LoadingFallback />
-    );
-  }
+  //  if (loadingProjects || loadingForms || !projects || !forms) {
+  //     return <LoadingFallback />;
+  //   }
+
+  
 
   return (
     <div

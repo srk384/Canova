@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
- import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import {
   setQuestions,
   setSections,
@@ -11,7 +11,6 @@ import "./SidebarRightStyle.css";
 const SidebarRight = () => {
   const [pageColor, setPageColor] = useState("#ffffff");
   const [sectionColor, setSectionColor] = useState("#ffffff");
-  // b6b6b6
   const [pageOpacity, setPageOpacity] = useState(100);
   const [sectionOpacity, setSectionOpacity] = useState(100);
 
@@ -32,21 +31,27 @@ const SidebarRight = () => {
   }
 
   useEffect(() => {
-    dispatch(
-      setUi({
-        ...ui,
-        pageColor: hexToRgb(pageColor, pageOpacity),
-        sectionColor: hexToRgb(sectionColor, sectionOpacity),
-      })
-    );
+    if (pageColor || sectionColor || pageOpacity || sectionOpacity) {
+      dispatch(
+        setUi({
+          ...ui,
+          pageColor: hexToRgb(pageColor, pageOpacity),
+          sectionColor: hexToRgb(sectionColor, sectionOpacity),
+        })
+      );
+    }
   }, [pageColor, sectionColor, pageOpacity, sectionOpacity]);
 
-
-  useEffect(()=>{
-    if(sections.length>0){
-      dispatch(setUi({...ui, activeSectionId:sections[sections.length-1].sectionId}))
+  useEffect(() => {
+    if (sections.length > 0) {
+      dispatch(
+        setUi({
+          ...ui,
+          activeSectionId: sections[sections.length - 1].sectionId,
+        })
+      );
     }
-  },[sections])
+  }, [sections]);
   return (
     <div className="formBuilder-right-sidebar">
       <div className="formBuilder-actions-btn">
@@ -91,10 +96,14 @@ const SidebarRight = () => {
             dispatch(
               setSections([
                 ...sections,
-                { sectionId: Date.now(), sectionColor: sectionColor, pageId: ui.activePageId, },
+                {
+                  sectionId: Date.now(),
+                  sectionColor: sectionColor,
+                  pageId: ui.activePageId,
+                },
               ])
             );
-            notify()
+            notify();
           }}
         >
           <img src="/svgs/addSections.svg" alt="" />

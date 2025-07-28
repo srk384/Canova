@@ -3,6 +3,7 @@ import { setQuestions } from "../../../utils/redux/slices/questionsSlice";
 
 const ShortAnswer = ({ qno }) => {
   const { questions } = useSelector((state) => state.questionsSlice);
+  const { ui } = useSelector((state) => state.uiSlice);
   const dispatch = useDispatch();
   // console.log(qno);
   const handleChange = (e) => {
@@ -20,6 +21,7 @@ const ShortAnswer = ({ qno }) => {
         id="shortAnswerTextarea"
         placeholder="Your Answer here..."
         rows={4}
+        disabled={ui?.previewMode}
         onChange={handleChange}
       ></textarea>
     </div>

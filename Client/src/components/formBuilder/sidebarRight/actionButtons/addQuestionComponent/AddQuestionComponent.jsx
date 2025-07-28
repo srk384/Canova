@@ -15,8 +15,9 @@ const AddQuestionComponent = ({ question }) => {
   const { qId, qno, type, text, options } = question;
 
   const { questions } = useSelector((state) => state.questionsSlice);
-  // const { ui } = useSelector((state) => state.uiSlice);
+  const { ui } = useSelector((state) => state.uiSlice);
 
+  const preview = ui?.previewMode;
   const [isClickedSelectQuestionType, setIsClickedSelectQuestionType] =
     useState(false);
   const [questionType, setQuestionType] = useState(type);
@@ -54,12 +55,17 @@ const AddQuestionComponent = ({ question }) => {
     }
   }, [questionType]);
 
+
+  const handleChange = ()=>{
+
+  }
+
   //deleting questions when empty and backspace is pressed
   const handleKeyDown = (e) => {
+
     const question = questions.find((q) => q.qId === qId);
     if (!question) return;
-    console.log(question)
-    
+  
     const isEmpty = question.text.trim() === "";
 
     if (e.key === "Backspace" && isEmpty) {
@@ -115,7 +121,7 @@ const AddQuestionComponent = ({ question }) => {
   return (
     <div
       className="formBuilder-question-container"
-      style={{ marginBottom: "50px", padding: "40px 20px" }}
+      style={{ padding: "30px 20px" }}
     >
       <div className="formBuilder-questions-section">
         <div className="formBuilder-question">
@@ -126,6 +132,8 @@ const AddQuestionComponent = ({ question }) => {
               id="quesTextArea"
               placeholder="What is?"
               rows={1}
+              disabled={preview}
+              value={text}
               onKeyDown={(e) => handleKeyDown(e)}
               onChange={(e) => {
                 const updatedQuestion = questions.map((question, index) =>
@@ -145,6 +153,7 @@ const AddQuestionComponent = ({ question }) => {
               alt=""
               className="select-question-type"
               onClick={() =>
+                !preview &&
                 setIsClickedSelectQuestionType(!isClickedSelectQuestionType)
               }
             />

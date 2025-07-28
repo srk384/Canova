@@ -9,11 +9,12 @@ const MultipleChoice = ({ id }) => {
 
   const dispatch = useDispatch();
   const { questions } = useSelector((state) => state.questionsSlice);
+  const { ui } = useSelector((state) => state.uiSlice);
 
   useEffect(() => {
     questions.forEach(
       (question) =>
-        question.id === id && question.options && setOptions(question.options)
+        question.qId === id && question.options && setOptions(question.options)
     );
   }, [questions]);
 
@@ -22,7 +23,7 @@ const MultipleChoice = ({ id }) => {
     updated[index] = value;
     // setOptions(updated);
     const updatedOptions = questions.map((question) =>
-      question.id === id ? { ...question, options: updated } : question
+      question.qId === id ? { ...question, options: updated } : question
     );
     dispatch(setQuestions(updatedOptions));
   };
@@ -67,6 +68,7 @@ const MultipleChoice = ({ id }) => {
           <input
             type="radio"
             name="option"
+            disabled={ui?.previewMode}
             value={opt}
             className="hidden-radio"
           />
@@ -74,6 +76,7 @@ const MultipleChoice = ({ id }) => {
           <textarea
             ref={(el) => (optionRefs.current[i] = el)}
             className="option-input"
+            disabled={ui?.previewMode}
             value={opt}
             onChange={(e) => handleChange(e.target.value, i)}
             onKeyDown={(e) => handleKeyDown(e, i)}

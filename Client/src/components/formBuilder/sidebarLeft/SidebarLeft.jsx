@@ -5,22 +5,13 @@ import { setUi } from "../../../utils/redux/slices/uiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
-const SidebarLeft = ( {data} ) => {
+const SidebarLeft = ({ data }) => {
   const [updateForm, { error, isLoading, isError, isSuccess }] =
     useUpdateFormMutation();
 
   const dispatch = useDispatch();
   const { ui } = useSelector((state) => state.uiSlice);
 
-  useEffect(() => {
-    dispatch(
-      setUi({
-        ...ui,
-        activePageId: data?.form?.pages[0]._id,
-        activeQuestionId: null,
-      })
-    );
-  }, []);
 
   const addPage = async () => {
     const res = await updateForm({
@@ -47,22 +38,24 @@ const SidebarLeft = ( {data} ) => {
         {data?.form &&
           data?.form.pages.map((page, index) => (
             // <Link to={`/form-builder/page/${page._id}`} key={page._id}>
-            <li
-              key={page._id}
-              className={`${page._id === ui.activePageId ? "selected-li" : ""}`}
-              onClick={() => {
-                // setSelectedPage(index);
-                dispatch(
-                  setUi({
-                    ...ui,
-                    activePageId: page._id,
-                    activeQuestionId: null,
-                  })
-                );
-              }}
-            >{`Page ${
-              index + 1 < 10 ? String(index + 1).padStart(2, "0") : index + 1
-            }`}</li>
+              <li
+                key={page._id}
+                className={`${
+                  page._id === ui.activePageId ? "selected-li" : ""
+                }`}
+                onClick={() => {
+                  // setSelectedPage(index);
+                  dispatch(
+                    setUi({
+                      ...ui,
+                      activePageId: page._id,
+                      activeQuestionId: null,
+                    })
+                  );
+                }}
+              >{`Page ${
+                index + 1 < 10 ? String(index + 1).padStart(2, "0") : index + 1
+              }`}</li>
             // </Link>
           ))}
 
