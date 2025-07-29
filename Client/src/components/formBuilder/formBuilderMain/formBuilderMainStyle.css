@@ -3,6 +3,7 @@
   width: calc(100vw - 320px - 276px);
   overflow-y: auto;
   font-family: "Inter", sans-serif;
+  position: relative;
 }
 
 .formBuilder-question {
@@ -25,7 +26,6 @@
       resize: none;
       border: none;
       outline: none;
-      background-color: white;
       padding: 5px 10px;
       font-family: "Inter", sans-serif;
       border-radius: 5px;
@@ -99,4 +99,7 @@ textarea {
   border-radius: 18px;
   margin-bottom: 20px;
   border: 1px solid lightgray; 
+}
+.activeSection{
+  border: 2px solid black;
 }

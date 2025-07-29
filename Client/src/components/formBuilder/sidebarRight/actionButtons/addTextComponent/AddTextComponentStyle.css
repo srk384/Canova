@@ -1,0 +1,13 @@
+#addTextArea {
+  padding: 5px 10px;
+  outline: none;
+  border: none;
+  resize: none;
+  width: 100%;
+  font-size: 22px;
+  border-radius: 5px;
+  background-color: transparent;
+}
+#addTextArea:focus {
+  background-color: white;
+}

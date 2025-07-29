@@ -9,6 +9,7 @@ import "./FormBuilderStyle.css";
 import SidebarLeft from "./sidebarLeft/SidebarLeft";
 import SidebarRight from "./sidebarRight/SidebarRight";
 import PreviewForm from "./previewForm/PreviewForm";
+import { setBuilderState } from "../../utils/redux/slices/builderStateSlice";
 
 const FormBuilder = () => {
   const { id } = useParams();
@@ -17,6 +18,8 @@ const FormBuilder = () => {
   );
   // console.log(data.form.name)
   const { ui } = useSelector((state) => state.uiSlice);
+  const { questions } = useSelector((state) => state.questionsSlice);
+  // const { builderState } = useSelector((state) => state.builderState);
 
   const dispatch = useDispatch();
 
@@ -37,7 +40,34 @@ const FormBuilder = () => {
     dispatch(setUi({ ...ui, formName: value }));
   };
 
-  const handleSave = () => {};
+  const handleSave = () => {
+
+    // const builderState = {
+    //   activePageId: ui.activePageId,
+    //   pageColor: ui.pageColor,
+    //   formName: ui.formName,
+    //   questions: questions,
+    // };
+
+
+    
+    //     {
+    //   "builderState": {
+    //     "activePageId": "6881e6fb27b9d1a656c7aebb",
+    //     "pageColor": "rgba(248,227,227,1)",
+    //     "formName": "My Survey",
+    //     "questions": [
+    //       {
+    //         "qId": 1753725373702,
+    //         "pageId": "6881e6fb27b9d1a656c7aebb",
+    //         "type": "multipleChoice",
+    //         "text": "What does this image contain?",
+    //         "options": ["option 1", "option 2"]
+    //       }
+    //     ]
+    //   }
+    // }
+  };
 
   if (isLoading || !data) {
     return <LoadingFallback />;

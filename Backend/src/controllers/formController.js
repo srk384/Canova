@@ -78,6 +78,8 @@ const getFormById = async (req, res) => {
   const userId = req.user._id;
   try {
     const form = await Form.findOne({ _id: formId, owner: userId });
+    form.views += 1;
+    await form.save();
     res
       .status(200)
       .json({ message: "form fetched", success: true, form: form });

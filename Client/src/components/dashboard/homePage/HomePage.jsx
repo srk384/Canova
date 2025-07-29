@@ -6,7 +6,6 @@ import {
   useGetProjectsQuery,
 } from "../../../utils/redux/api/ProjectAPI";
 import FormComponent from "../../common/FormComponent";
-import LoadingFallback from "../../common/LoadingFallback/LoadingFallback";
 import ProjectComponent from "../../common/ProjectComponent";
 import CreateProjectModal from "../modal/CreateProjectModal";
 import "./HomePage.css";
@@ -43,9 +42,7 @@ const HomePage = () => {
     }
   };
 
-  //  if (loadingProjects || loadingForms || !projects || !forms) {
-  //     return <LoadingFallback />;
-  //   }
+
 
   
 

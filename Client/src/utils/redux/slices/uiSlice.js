@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   ui: {
     activePageId: null,
-    activeSectionId: null,
     pageColor: null,
+    activeSectionId: null,
     sectionColor: null,
     previewMode: false,
     formName: null,
+    uploadModal:false,
+    uploadType:null
   },
 };
 

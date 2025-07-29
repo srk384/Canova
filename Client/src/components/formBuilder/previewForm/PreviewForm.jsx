@@ -2,6 +2,9 @@ import "./PreviewFormStyle.css";
 import { useDispatch, useSelector } from "react-redux";
 import AddQuestionComponent from "../sidebarRight/actionButtons/addQuestionComponent/AddQuestionComponent";
 import { setUi } from "../../../utils/redux/slices/uiSlice";
+import AddTextComponent from "../sidebarRight/actionButtons/addTextComponent/AddTextComponent";
+import AddImageComponent from "../sidebarRight/actionButtons/addImageComponent/AddImageComponent";
+import AddVideoComponent from "../sidebarRight/actionButtons/addVideoComponent/addVideoComponent";
 
 const PreviewForm = () => {
   const { questions, sections } = useSelector((state) => state.questionsSlice);
@@ -22,64 +25,65 @@ const PreviewForm = () => {
         </div>
         <div className="previewForm-questions">
           {questions
-            .filter((q) => q.pageId === ui.activePageId)
-            .reduce((acc, question) => {
-              const section = sections.find(
-                (s) =>
-                  s.sectionId === question.sectionId &&
-                  s.pageId === ui.activePageId
-              );
-
-              if (section) {
-                // Sectioned questions
-                const existingSection = acc.find(
-                  (item) => item.sectionId === section.sectionId
-                );
-
-                if (existingSection) {
-                  existingSection.questions.push(question);
-                } else {
-                  acc.push({
-                    sectionId: section.sectionId,
-                    sectionColor: section.sectionColor,
-                    questions: [question],
-                  });
-                }
-              } else {
-                // Unsectioned questions → group them together
-                const unsectioned = acc.find((item) => item.sectionId === null);
-                if (unsectioned) {
-                  unsectioned.questions.push(question);
-                } else {
-                  acc.push({ sectionId: null, questions: [question] });
-                }
-              }
-
-              return acc;
-            }, [])
-            .map((group) =>
-              group.sectionId ? (
-                <div
-                  key={group.sectionId}
-                  className="section"
-                  style={{ backgroundColor: group.sectionColor }}
-                >
-                  {group.questions.map((question, qIndex) => (
-                    <AddQuestionComponent
-                      key={question.qId}
-                      question={{ ...question, qno: qIndex + 1 }}
-                    />
-                  ))}
-                </div>
-              ) : (
-                group.questions.map((question, qIndex) => (
-                  <AddQuestionComponent
-                    key={question.qId}
-                    question={{ ...question, qno: qIndex + 1 }}
-                  />
-                ))
-              )
-            )}
+                  .filter((q) => q?.pageId === ui?.activePageId)
+                  .map((question, qIndex) => {
+                    if (question.qId) {
+                      switch (question.type) {
+                        case "textBlock":
+                          return <AddTextComponent key={question.qId} question={question}/>;
+                        default:
+                          return (
+                            <AddQuestionComponent
+                              key={question.qId}
+                              question={{ ...question, qno: question.questionOrder }}
+                            />
+                          );
+                      }
+                    } else if (question.sectionId) {
+                      return (
+                        question.elements.length > 0 && (
+                          <div
+                            key={question.sectionId}
+                            className={`section`}
+                            style={{ backgroundColor: question.sectionColor} }
+                           
+                          >
+                            {question?.elements?.map((el) => {
+                              switch (el.type) {
+                                case "textBlock":
+                                  return <AddTextComponent key={el.elId} question={el}/>;
+                                case "image":
+                                  return (
+                                    <AddImageComponent
+                                      key={el.elId}
+                                      src={el.src ? el.src : ""}
+                                    />
+                                  );
+                                case "video":
+                                  return (
+                                    <AddVideoComponent
+                                      key={el.elId}
+                                      src={el.src ? el.src : ""}
+                                    />
+                                  );
+                                default:
+                                  return (
+                                    <AddQuestionComponent
+                                      key={el.elId}
+                                      question={{
+                                        ...el,
+                                        qno: el.elementsOrder,
+                                      }}
+                                    />
+                                  );
+                              }
+                            })}
+                          </div>
+                        )
+                      );
+                    }
+                  })}
+           
         </div>
       </div>
       <div className="previewFrom-right"></div>

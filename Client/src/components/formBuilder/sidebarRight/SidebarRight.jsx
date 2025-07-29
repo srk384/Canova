@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
@@ -13,6 +13,7 @@ const SidebarRight = () => {
   const [sectionColor, setSectionColor] = useState("#ffffff");
   const [pageOpacity, setPageOpacity] = useState(100);
   const [sectionOpacity, setSectionOpacity] = useState(100);
+const skipFirstRender =  useRef(true)
 
   const dispatch = useDispatch();
   const { ui } = useSelector((state) => state.uiSlice);
@@ -31,6 +32,10 @@ const SidebarRight = () => {
   }
 
   useEffect(() => {
+    if(skipFirstRender.current ){
+      skipFirstRender.current = false
+      return
+    }
     if (pageColor || sectionColor || pageOpacity || sectionOpacity) {
       dispatch(
         setUi({
@@ -39,6 +44,18 @@ const SidebarRight = () => {
           sectionColor: hexToRgb(sectionColor, sectionOpacity),
         })
       );
+
+      const updatedColor = questions.map((question) =>
+        question.sectionId === ui.activeSectionId
+          ? {
+              ...question,
+              sectionColor: hexToRgb(sectionColor, sectionOpacity),
+              pageColor: hexToRgb(sectionColor, sectionOpacity),
+            }
+          : question
+      );
+
+      dispatch(setQuestions(updatedColor));
     }
   }, [pageColor, sectionColor, pageOpacity, sectionOpacity]);
 
@@ -52,57 +69,179 @@ const SidebarRight = () => {
       );
     }
   }, [sections]);
+
+  const addElement = (type) => {
+    if (ui.activeSectionId) {
+      const updatedQuestions = questions.map((question) =>
+        question.sectionId === ui.activeSectionId
+          ? {
+              ...question,
+              elements: [
+                ...question.elements,
+                {
+                  elId: Date.now(),
+                  type: "textBlock",
+                  text: "",
+                  // elementsOrder: question.elements.length + 1,
+                },
+              ],
+            }
+          : question
+      );
+      dispatch(setQuestions(updatedQuestions));
+    } else {
+      const newElement = {
+        qId: Date.now(),
+        pageId: ui.activePageId,
+        // questionOrder: questions.length + 1,
+        type: "textBlock",
+        content: "",
+      };
+      dispatch(setQuestions([...questions, newElement]));
+    }
+  };
+
+  const validTypes = [
+    "shortAnswer",
+    "longAnswer",
+    "multipleChoice",
+    "checkbox",
+    "dropdown",
+    "fileUpload",
+    "date",
+    "linearScale",
+    "rating",
+  ];
+
+  const questionOrder =
+    questions.filter((question) => validTypes.includes(question.type)).length +
+    1;
+
+  const elementOrder = (questions, sectionId, validTypes) => {
+    // Find the section (or question group) where we need to count
+    const section = questions.find((q) => q.sectionId === sectionId);
+
+    if (!section || !section.elements) return 1; // If no section or empty, start from 1
+
+    // Count only valid elements inside this section
+    const count = section.elements.filter((el) =>
+      validTypes.includes(el.type)
+    ).length;
+
+    return count + 1;
+  };
+  // console.log(questions);
+
   return (
     <div className="formBuilder-right-sidebar">
       <div className="formBuilder-actions-btn">
         <button
-          onClick={() =>
-            dispatch(
-              setQuestions([
-                ...questions,
-                {
-                  qId: Date.now(),
-                  pageId: ui.activePageId,
-                  sectionId: ui?.activeSectionId,
-                  type: "multipleChoice",
-                  text: "",
-                  options: ["", ""],
-                },
-              ])
-            )
-          }
+          onClick={() => {
+            if (ui.activeSectionId) {
+              const updatedQuestions = questions.map((question) =>
+                question.sectionId === ui.activeSectionId
+                  ? {
+                      ...question,
+                      elements: [
+                        ...question.elements,
+                        {
+                          elId: Date.now(),
+                          type: "multipleChoice",
+                          text: "",
+                          options: ["", ""],
+                          elementsOrder: elementOrder(
+                            questions,
+                            ui.activeSectionId,
+                            validTypes
+                          ),
+                        },
+                      ],
+                    }
+                  : question
+              );
+              dispatch(setQuestions(updatedQuestions));
+            } else {
+              dispatch(
+                setQuestions([
+                  ...questions,
+                  {
+                    qId: Date.now(),
+                    pageId: ui.activePageId,
+                    pageColor: ui.pageColor,
+                    questionOrder: questionOrder,
+                    type: "multipleChoice",
+                    text: "",
+                    options: ["", ""],
+                  },
+                ])
+              );
+            }
+          }}
         >
           <img src="/svgs/addQues.svg" alt="" />
           <span>Add Question</span>
         </button>
-        <button>
+
+        <button
+          onClick={() => {
+            addElement("textBlock");
+          }}
+        >
           <img src="/svgs/addText.svg" alt="" />
           <span>Add Text</span>
         </button>
+
         <button>
           <img src="/svgs/addConditions.svg" alt="" />
           <span>Add Condition</span>
         </button>
-        <button>
+
+        <button
+          onClick={() => {
+            ui?.activeSectionId
+              ? dispatch(
+                  setUi({ ...ui, uploadModal: true, uploadType: "image" })
+                )
+              : alert("Add Section first");
+          }}
+        >
           <img src="/svgs/addImage.svg" alt="" />
           <span>Add Image</span>
         </button>
-        <button>
+
+        <button
+          onClick={() => {
+            ui?.activeSectionId
+              ? dispatch(
+                  setUi({ ...ui, uploadModal: true, uploadType: "video" })
+                )
+              : alert("Add Section first");
+          }}
+        >
           <img src="/svgs/addVideo.svg" alt="" />
           <span>Add Video</span>
         </button>
+
         <button
           onClick={() => {
+            const sectionId = Date.now();
+
             dispatch(
-              setSections([
-                ...sections,
+              setQuestions([
+                ...questions,
                 {
-                  sectionId: Date.now(),
+                  sectionId: sectionId,
                   sectionColor: sectionColor,
                   pageId: ui.activePageId,
+                  pageColor: ui.pageColor,
+                  questionOrder: questions.length + 1,
+                  elements: [],
                 },
               ])
             );
+
+            dispatch(setUi({ ...ui, activeSectionId: sectionId }));
+
             notify();
           }}
         >

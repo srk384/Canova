@@ -14,7 +14,10 @@ const FILE_TYPES = [
   "spreadsheet",
 ];
 
-const FileUpload = ({ id }) => {
+const FileUpload = ({ question }) => {
+  const { qId, elId, qno, type, text } = question;
+
+
   const [selectedTypes, setSelectedTypes] = useState([
     "image",
     "pdf",
@@ -28,11 +31,30 @@ const FileUpload = ({ id }) => {
   const { questions } = useSelector((state) => state.questionsSlice);
 
   useEffect(() => {
-    const fileTypes = questions.map((question) =>
-      question.id === id ? { ...question, fileTypes: selectedTypes } : question
+   
+ if (qId) {
+      const fileTypes = questions.map((question) =>
+      question.qId === qId ? { ...question, fileTypes: selectedTypes } : question
     );
-
     dispatch(setQuestions(fileTypes));
+
+    } else if (elId) {
+      const fileTypes = questions.map((question) => {
+        if (question.elements) {
+          return {
+            ...question,
+            elements: question.elements.map((el) =>
+              el.elId === elId ? { ...el, fileTypes: selectedTypes } : el
+            ),
+          };
+        }
+        return question;
+      });
+
+      dispatch(setQuestions(fileTypes));
+    }
+
+
   }, [selectedTypes]);
 
   const toggleType = (type) => {

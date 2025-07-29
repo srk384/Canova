@@ -3,7 +3,9 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setQuestions } from "../../../../utils/redux/slices/questionsSlice";
 
-const Dropdown = ({ id }) => {
+const Dropdown = ({ question }) => {
+  const { qId, elId, qno, type, text } = question;
+
   const [options, setOptions] = useState(["", ""]); // Start with 2 empty options
   const optionRefs = useRef([]);
 
@@ -12,10 +14,20 @@ const Dropdown = ({ id }) => {
   const { ui } = useSelector((state) => state.uiSlice);
 
   useEffect(() => {
-    questions.forEach(
-      (question) =>
-        question.qId === id && question.options && setOptions(question.options)
-    );
+    if (qId) {
+      questions.forEach(
+        (question) =>
+          question.qId === qId &&
+          question.options &&
+          setOptions(question.options)
+      );
+    } else if (elId) {
+      questions.forEach((question) => {
+        question.elements?.forEach((el) => {
+          el.elId === elId && el.options && setOptions(el.options);
+        });
+      });
+    }
   }, [questions]);
 
   const handleChange = (value, index) => {
@@ -23,10 +35,26 @@ const Dropdown = ({ id }) => {
     updated[index] = value;
     // setOptions(updated);
 
-    const updatedOptions = questions.map((question) =>
-      question.qId === id ? { ...question, options: updated } : question
-    );
-    dispatch(setQuestions(updatedOptions));
+    if (qId) {
+      const updatedOptions = questions.map((question) =>
+        question.qId === qId ? { ...question, options: updated } : question
+      );
+      dispatch(setQuestions(updatedOptions));
+    } else if (elId) {
+      const updatedOptions = questions.map((question) => {
+        if (question.elements) {
+          return {
+            ...question,
+            elements: question.elements.map((el) =>
+              el.elId === elId ? { ...el, options: updated } : el
+            ),
+          };
+        }
+        return question;
+      });
+
+      dispatch(setQuestions(updatedOptions));
+    }
   };
 
   const handleKeyDown = (e, index) => {
@@ -71,7 +99,6 @@ const Dropdown = ({ id }) => {
             onKeyDown={(e) => handleKeyDown(e, i)}
             placeholder={`Drop Down Option ${i + 1}`}
           />
-          {console.log(opt)}
         </div>
       ))}
     </div>

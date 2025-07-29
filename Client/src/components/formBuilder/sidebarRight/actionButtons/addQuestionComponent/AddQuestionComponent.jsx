@@ -12,10 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setQuestions } from "../../../../../utils/redux/slices/questionsSlice";
 
 const AddQuestionComponent = ({ question }) => {
-  const { qId, qno, type, text, options } = question;
+  const { qId, elId, qno, type, text, options } = question;
 
   const { questions } = useSelector((state) => state.questionsSlice);
   const { ui } = useSelector((state) => state.uiSlice);
+
+  // const [isContainElements, setIsContainElements] = useState(false);
 
   const preview = ui?.previewMode;
   const [isClickedSelectQuestionType, setIsClickedSelectQuestionType] =
@@ -55,23 +57,118 @@ const AddQuestionComponent = ({ question }) => {
     }
   }, [questionType]);
 
+  const handleChange = () => {};
 
-  const handleChange = ()=>{
+  const reorderQuestions = (questions) => {
+    const validTypes = [
+      "shortAnswer",
+      "longAnswer",
+      "multipleChoice",
+      "checkbox",
+      "dropdown",
+      "fileUpload",
+      "date",
+      "linearScale",
+      "rating",
+    ];
 
-  }
+    let order = 1;
+
+    return questions.map((q) => {
+      if (validTypes.includes(q.type)) {
+        const updatedQuestion = { ...q, questionOrder: order };
+        order++;
+        return updatedQuestion;
+      }
+      return q;
+    });
+  };
+const reorderElements = (questions) => {
+  const validTypes = [
+    "shortAnswer",
+    "longAnswer",
+    "multipleChoice",
+    "checkbox",
+    "dropdown",
+    "fileUpload",
+    "date",
+    "linearScale",
+    "rating",
+  ];
+
+  let currentSectionId = null;
+  let order = 1;
+
+  return questions.map((question) => {
+    // Reset order if this question belongs to a new section
+    if (question.sectionId && question.sectionId !== currentSectionId) {
+      currentSectionId = question.sectionId;
+      order = 1; // Reset order for new section
+    }
+
+    // Update elements order if elements exist
+    if (question.elements) {
+      return {
+        ...question,
+        elements: question.elements.map((el) => {
+          if (validTypes.includes(el.type)) {
+            return { ...el, elementsOrder: order++ };
+          }
+          return el; // Keep invalid types unchanged
+        }),
+      };
+    }
+
+    return question;
+  });
+};
+
+
 
   //deleting questions when empty and backspace is pressed
   const handleKeyDown = (e) => {
+    let question = null;
 
-    const question = questions.find((q) => q.qId === qId);
+    if (qId) {
+      // Find question directly by qId
+      question = questions.find((q) => q.qId === qId);
+    } else if (elId) {
+      // Find the question containing the element first
+      const parentQuestion = questions.find((q) =>
+        q.elements?.some((el) => el.elId === elId)
+      );
+
+      if (parentQuestion) {
+        question = parentQuestion.elements.find((el) => el.elId === elId);
+      }
+    }
+
     if (!question) return;
-  
+
     const isEmpty = question.text.trim() === "";
 
-    if (e.key === "Backspace" && isEmpty) {
+    if (e.key === "Backspace" && isEmpty && qId) {
       e.preventDefault();
       const updated = questions.filter((q) => q.qId !== qId);
-      dispatch(setQuestions(updated));
+
+      const reordered = reorderQuestions(updated);
+      dispatch(setQuestions(reordered));
+    }
+
+    if (e.key === "Backspace" && isEmpty && elId) {
+      e.preventDefault();
+      const updated = questions.map((question) =>
+        // Check if this question contains the element to delete
+        question.elements?.some((el) => el.elId === elId)
+          ? {
+              ...question,
+              elements: question.elements.filter((el) => el.elId !== elId),
+            }
+          : question
+      );
+
+      const reordered = reorderElements(updated);
+      dispatch(setQuestions(reordered));
     }
 
     // Allow Enter default behavior only for shift+enter
@@ -80,6 +177,7 @@ const AddQuestionComponent = ({ question }) => {
     }
   };
 
+  console.log(questions);
   const questionTypeArray = [
     {
       text: "Short Answer",
@@ -136,27 +234,51 @@ const AddQuestionComponent = ({ question }) => {
               value={text}
               onKeyDown={(e) => handleKeyDown(e)}
               onChange={(e) => {
-                const updatedQuestion = questions.map((question, index) =>
-                  question.qId === qId
-                    ? { ...question, text: e.target.value }
-                    : question
-                );
+                if (qId) {
+                  const updatedQuestion = questions.map((question, index) =>
+                    question.qId === qId
+                      ? { ...question, text: e.target.value }
+                      : question
+                  );
 
-                dispatch(setQuestions(updatedQuestion));
+                  dispatch(setQuestions(updatedQuestion));
+                } else if (elId) {
+                  const updatedQuestion = questions.map((question) => {
+                    // Check if this question contains the element to delete
+                    if (question.elements?.some((el) => el.elId === elId)) {
+                      return {
+                        ...question,
+                        elements: question.elements.map((el) =>
+                          el.elId === elId
+                            ? {
+                                ...el,
+                                text: e.target.value,
+                              }
+                            : el
+                        ),
+                      };
+                    }
+                    return question; // keep other questions as-is
+                  });
+
+                  dispatch(setQuestions(updatedQuestion));
+                }
               }}
             ></textarea>
           </div>
 
           <div className="select-question-type-container">
-            <img
-              src={`/svgs/${questionType}.svg`}
-              alt=""
-              className="select-question-type"
-              onClick={() =>
-                !preview &&
-                setIsClickedSelectQuestionType(!isClickedSelectQuestionType)
-              }
-            />
+            {!preview && (
+              <img
+                src={`/svgs/${questionType}.svg`}
+                alt=""
+                className="select-question-type"
+                onClick={() =>
+                  !preview &&
+                  setIsClickedSelectQuestionType(!isClickedSelectQuestionType)
+                }
+              />
+            )}
 
             {/*----------------------------------------select question type dropdown-------------------------------- */}
 
@@ -171,18 +293,43 @@ const AddQuestionComponent = ({ question }) => {
                       setIsClickedSelectQuestionType(
                         !isClickedSelectQuestionType
                       );
-                      const updatedQuestion = questions.map((question, index) =>
-                        question.qId === qId
-                          ? {
-                              ...question,
-                              type: e.target.id,
-                              text: "",
-                              options: ["", ""],
-                            }
-                          : question
-                      );
+                      if (qId) {
+                        const updatedQuestion = questions.map(
+                          (question, index) =>
+                            question.qId === qId
+                              ? {
+                                  ...question,
+                                  type: e.target.id,
+                                  text: "",
+                                  options: ["", ""],
+                                }
+                              : question
+                        );
 
-                      dispatch(setQuestions(updatedQuestion));
+                        dispatch(setQuestions(updatedQuestion));
+                      } else if (elId) {
+                        const updatedQuestion = questions.map((question) => {
+                          // Check if this question contains the element to delete
+                          if (
+                            question.elements?.some((el) => el.elId === elId)
+                          ) {
+                            return {
+                              ...question,
+                              elements: question.elements.map((el) =>
+                                el.elId === elId
+                                  ? {
+                                      ...el,
+                                      type: e.target.id,
+                                    }
+                                  : el
+                              ),
+                            };
+                          }
+                          return question; // keep other questions as-is
+                        });
+
+                        dispatch(setQuestions(updatedQuestion));
+                      }
                     }}
                   >
                     {type.text}
@@ -193,15 +340,15 @@ const AddQuestionComponent = ({ question }) => {
           </div>
         </div>
         <div className="formBuilder-answer">
-          {questionType === "shortAnswer" && <ShortAnswer id={qId} />}
+          {questionType === "shortAnswer" && <ShortAnswer  />}
           {questionType === "longAnswer" && <LongAnswer />}
-          {questionType === "multipleChoice" && <MultipleChoice id={qId} />}
-          {questionType === "checkbox" && <CheckBox id={qId} />}
-          {questionType === "date" && <Date id={qId} />}
+          {questionType === "multipleChoice" && <MultipleChoice question={question} />}
+          {questionType === "checkbox" && <CheckBox question={question} />}
+          {questionType === "date" && <Date  />}
           {questionType === "linearScale" && <LinearScale id={qId} />}
           {questionType === "rating" && <Rating id={qId} />}
-          {questionType === "dropdown" && <Dropdown id={qId} />}
-          {questionType === "fileUpload" && <FileUpload id={qId} />}
+          {questionType === "dropdown" && <Dropdown question={question}/>}
+          {questionType === "fileUpload" && <FileUpload question={question} />}
         </div>
       </div>
     </div>

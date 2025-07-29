@@ -1,0 +1,10 @@
+.form-image-container {
+  padding: 20px 0;
+  width: 600px;
+  margin: 0 auto 0 auto;
+  & img {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+  }
+}
