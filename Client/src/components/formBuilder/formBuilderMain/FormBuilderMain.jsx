@@ -8,7 +8,7 @@ import FileUploadModal from "../../common/fileUploadModal/FileUploadModal";
 import { useState } from "react";
 import { setUi } from "../../../utils/redux/slices/uiSlice";
 import { setQuestions } from "../../../utils/redux/slices/questionsSlice";
-import AddVideoComponent from "../sidebarRight/actionButtons/addVideoComponent/addVideoComponent";
+import AddVideoComponent from "../sidebarRight/actionButtons/addVideoComponent/AddVideoComponent";
 
 const FormBuilderMain = () => {
   const { ui } = useSelector((state) => state.uiSlice);

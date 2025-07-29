@@ -4,7 +4,7 @@ import AddQuestionComponent from "../sidebarRight/actionButtons/addQuestionCompo
 import { setUi } from "../../../utils/redux/slices/uiSlice";
 import AddTextComponent from "../sidebarRight/actionButtons/addTextComponent/AddTextComponent";
 import AddImageComponent from "../sidebarRight/actionButtons/addImageComponent/AddImageComponent";
-import AddVideoComponent from "../sidebarRight/actionButtons/addVideoComponent/addVideoComponent";
+import AddVideoComponent from "../sidebarRight/actionButtons/addVideoComponent/AddVideoComponent";
 
 const PreviewForm = () => {
   const { questions, sections } = useSelector((state) => state.questionsSlice);
