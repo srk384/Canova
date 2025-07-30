@@ -340,13 +340,13 @@ const reorderElements = (questions) => {
           </div>
         </div>
         <div className="formBuilder-answer">
-          {questionType === "shortAnswer" && <ShortAnswer  />}
-          {questionType === "longAnswer" && <LongAnswer />}
+          {questionType === "shortAnswer" && <ShortAnswer  question={question}/>}
+          {questionType === "longAnswer" && <LongAnswer question={question}/>}
           {questionType === "multipleChoice" && <MultipleChoice question={question} />}
           {questionType === "checkbox" && <CheckBox question={question} />}
-          {questionType === "date" && <Date  />}
-          {questionType === "linearScale" && <LinearScale id={qId} />}
-          {questionType === "rating" && <Rating id={qId} />}
+          {questionType === "date" && <Date  question={question}/>}
+          {questionType === "linearScale" && <LinearScale question={question} />}
+          {questionType === "rating" && <Rating question={question}/>}
           {questionType === "dropdown" && <Dropdown question={question}/>}
           {questionType === "fileUpload" && <FileUpload question={question} />}
         </div>

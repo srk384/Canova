@@ -96,7 +96,7 @@ const MultipleChoice = ({ question }) => {
         <div className="option-row" key={i}>
           <input
             type="radio"
-            name="option"
+            name={`option ${qId || elId}`}
             disabled={ui?.previewMode}
             value={opt}
             className="hidden-radio"

@@ -95,7 +95,7 @@ const CheckBox = ({ question }) => {
         <div className="option-row" key={i}>
           <input
             type="checkbox"
-            name="option"
+            name={`option ${qId || elId}`}
             disabled={ui?.previewMode}
             value={opt}
             className="hidden-checkbox"

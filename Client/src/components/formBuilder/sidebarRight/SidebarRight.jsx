@@ -13,7 +13,7 @@ const SidebarRight = () => {
   const [sectionColor, setSectionColor] = useState("#ffffff");
   const [pageOpacity, setPageOpacity] = useState(100);
   const [sectionOpacity, setSectionOpacity] = useState(100);
-const skipFirstRender =  useRef(true)
+  const skipFirstRender = useRef(true);
 
   const dispatch = useDispatch();
   const { ui } = useSelector((state) => state.uiSlice);
@@ -32,9 +32,9 @@ const skipFirstRender =  useRef(true)
   }
 
   useEffect(() => {
-    if(skipFirstRender.current ){
-      skipFirstRender.current = false
-      return
+    if (skipFirstRender.current) {
+      skipFirstRender.current = false;
+      return;
     }
     if (pageColor || sectionColor || pageOpacity || sectionOpacity) {
       dispatch(
@@ -95,7 +95,7 @@ const skipFirstRender =  useRef(true)
         pageId: ui.activePageId,
         // questionOrder: questions.length + 1,
         type: "textBlock",
-        content: "",
+        text: "",
       };
       dispatch(setQuestions([...questions, newElement]));
     }
@@ -113,17 +113,26 @@ const skipFirstRender =  useRef(true)
     "rating",
   ];
 
-  const questionOrder =
-    questions.filter((question) => validTypes.includes(question.type)).length +
-    1;
+  const questionOrder = (questions, currentPageId, validTypes) => {
+    // Find questions on the current page
+    const questionsOnPage = questions.filter(
+      (q) => q.pageId === currentPageId && validTypes.includes(q.type)
+    );
 
-  const elementOrder = (questions, sectionId, validTypes) => {
-    // Find the section (or question group) where we need to count
-    const section = questions.find((q) => q.sectionId === sectionId);
+    // Next order is count + 1
+    return questionsOnPage.length + 1;
+  };
 
-    if (!section || !section.elements) return 1; // If no section or empty, start from 1
+  const elementOrder = (questions, pageId, sectionId, validTypes) => {
+    // Find the section in the correct page
+    const section = questions.find(
+      (q) => q.pageId === pageId && q.sectionId === sectionId
+    );
 
-    // Count only valid elements inside this section
+    // If section not found or no elements, start from 1
+    if (!section || !section.elements) return 1;
+
+    // Count valid elements inside the section
     const count = section.elements.filter((el) =>
       validTypes.includes(el.type)
     ).length;
@@ -138,8 +147,10 @@ const skipFirstRender =  useRef(true)
         <button
           onClick={() => {
             if (ui.activeSectionId) {
+              // Add element only in the active page and active section
               const updatedQuestions = questions.map((question) =>
-                question.sectionId === ui.activeSectionId
+                question.sectionId === ui.activeSectionId &&
+                question.pageId === ui.activePageId
                   ? {
                       ...question,
                       elements: [
@@ -151,6 +162,7 @@ const skipFirstRender =  useRef(true)
                           options: ["", ""],
                           elementsOrder: elementOrder(
                             questions,
+                            ui.activePageId,
                             ui.activeSectionId,
                             validTypes
                           ),
@@ -159,8 +171,10 @@ const skipFirstRender =  useRef(true)
                     }
                   : question
               );
+
               dispatch(setQuestions(updatedQuestions));
             } else {
+              // No active section → add a question directly to the current page
               dispatch(
                 setQuestions([
                   ...questions,
@@ -168,7 +182,11 @@ const skipFirstRender =  useRef(true)
                     qId: Date.now(),
                     pageId: ui.activePageId,
                     pageColor: ui.pageColor,
-                    questionOrder: questionOrder,
+                    questionOrder: questionOrder(
+                      questions,
+                      ui.activePageId,
+                      validTypes
+                    ),
                     type: "multipleChoice",
                     text: "",
                     options: ["", ""],
@@ -226,6 +244,7 @@ const skipFirstRender =  useRef(true)
           onClick={() => {
             const sectionId = Date.now();
 
+            // Create a new section on the active page
             dispatch(
               setQuestions([
                 ...questions,
@@ -234,12 +253,17 @@ const skipFirstRender =  useRef(true)
                   sectionColor: sectionColor,
                   pageId: ui.activePageId,
                   pageColor: ui.pageColor,
-                  questionOrder: questions.length + 1,
+                  questionOrder: questionOrder(
+                    questions,
+                    ui.activePageId,
+                    validTypes
+                  ),
                   elements: [],
                 },
               ])
             );
 
+            // Set this new section as active
             dispatch(setUi({ ...ui, activeSectionId: sectionId }));
 
             notify();

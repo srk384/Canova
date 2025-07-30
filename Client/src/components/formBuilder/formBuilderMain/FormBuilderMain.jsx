@@ -1,14 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
-import AddQuestionComponent from "../sidebarRight/actionButtons/addQuestionComponent/AddQuestionComponent";
-import "./formBuilderMainStyle.css";
 import { useGetQuestionsQuery } from "../../../utils/redux/api/PageAPI";
-import AddTextComponent from "../sidebarRight/actionButtons/addTextComponent/AddTextComponent";
-import AddImageComponent from "../sidebarRight/actionButtons/addImageComponent/AddImageComponent";
-import FileUploadModal from "../../common/fileUploadModal/FileUploadModal";
-import { useState } from "react";
-import { setUi } from "../../../utils/redux/slices/uiSlice";
 import { setQuestions } from "../../../utils/redux/slices/questionsSlice";
+import { setUi } from "../../../utils/redux/slices/uiSlice";
+import FileUploadModal from "../../common/fileUploadModal/FileUploadModal";
+import AddImageComponent from "../sidebarRight/actionButtons/addImageComponent/AddImageComponent";
+import AddQuestionComponent from "../sidebarRight/actionButtons/addQuestionComponent/AddQuestionComponent";
+import AddTextComponent from "../sidebarRight/actionButtons/addTextComponent/AddTextComponent";
 import AddVideoComponent from "../sidebarRight/actionButtons/addVideoComponent/AddVideoComponent";
+import "./formBuilderMainStyle.css";
 
 const FormBuilderMain = () => {
   const { ui } = useSelector((state) => state.uiSlice);
@@ -18,50 +17,12 @@ const FormBuilderMain = () => {
 
   const { data } = useGetQuestionsQuery("6884d18ad4bf6aed233ff47a");
 
-  // const groups = questions
-  //   .filter((q) => q.pageId === ui.activePageId)
-  //   .reduce((acc, question) => {
-  //     const section = sections.find(
-  //       (s) =>
-  //         s.sectionId === question.sectionId && s.pageId === ui.activePageId
-  //     );
-
-  //     if (section) {
-  //       // Sectioned questions
-  //       const existingSection = acc.find(
-  //         (item) => item.sectionId === section.sectionId
-  //       );
-
-  //       if (existingSection) {
-  //         existingSection.questions.push(question);
-  //       } else {
-  //         acc.push({
-  //           sectionId: section.sectionId,
-  //           sectionColor: section.sectionColor,
-  //           questions: [question],
-  //         });
-  //       }
-  //     } else {
-  //       // Unsectioned questions → group them together
-  //       const unsectioned = acc.find((item) => item.sectionId === null);
-  //       if (unsectioned) {
-  //         unsectioned.questions.push(question);
-  //       } else {
-  //         acc.push({ sectionId: null, questions: [question] });
-  //       }
-  //     }
-
-  //     return acc;
-  //   }, []);
-
   const handleUpload = async (file) => {
     const type = file.type.split("/")[0];
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "canova");
 
-    // console.log(typeof file.type.split('/')[0]);
-    // For videos use `video/upload`, for images use `image/upload`
     const endpoint =
       type === "video"
         ? `https://api.cloudinary.com/v1_1/dfomcvlzc/video/upload`
@@ -106,59 +67,15 @@ const FormBuilderMain = () => {
       className="formBuilder-main-content-body"
       style={{ backgroundColor: rgba }}
     >
-      {/* {groups.map((group) =>
-        group.sectionId ? (
-          <div
-            key={group.sectionId}
-            className="section"
-            style={{ backgroundColor: group.sectionColor }}
-          >
-            {group.questions.map((question, qIndex) => {
-              switch (question.type) {
-                case "textBlock":
-                  return <AddTextComponent />;
-
-                case "image":
-                  return (
-                    <div key={question.qId}>
-                      {question.src && <AddImageComponent src={question.src} />}
-                    </div>
-                  );
-
-                case "video":
-                  return (
-                    <div key={question.qId}>
-                      {question.src && <AddVideoComponent src={question.src} />}
-                    </div>
-                  );
-
-                default:
-                  return (
-                    <AddQuestionComponent
-                      key={question.qId}
-                      question={{ ...question, qno: qIndex + 1 }}
-                    />
-                  );
-              }
-            })}
-          </div>
-        ) : (
-          group.questions.map((question, qIndex) => (
-            <AddQuestionComponent
-              key={question.qId}
-              question={{ ...question, qno: qIndex + 1 }}
-            />
-          ))
-        )
-      )} */}
-
       {questions
         .filter((q) => q?.pageId === ui?.activePageId)
         .map((question, qIndex) => {
           if (question.qId) {
             switch (question.type) {
               case "textBlock":
-                return <AddTextComponent key={question.qId} question={question} />;
+                return (
+                  <AddTextComponent key={question.qId} question={question} />
+                );
               default:
                 return (
                   <AddQuestionComponent
@@ -177,7 +94,7 @@ const FormBuilderMain = () => {
                       ? "activeSection"
                       : ""
                   }`}
-                  style={{ backgroundColor: question.sectionColor} }
+                  style={{ backgroundColor: question.sectionColor }}
                   onClick={() =>
                     dispatch(
                       setUi({ ...ui, activeSectionId: question.sectionId })
@@ -187,7 +104,7 @@ const FormBuilderMain = () => {
                   {question?.elements?.map((el) => {
                     switch (el.type) {
                       case "textBlock":
-                        return <AddTextComponent key={el.elId} question={el}/>;
+                        return <AddTextComponent key={el.elId} question={el} />;
                       case "image":
                         return (
                           <AddImageComponent

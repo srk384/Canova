@@ -1,10 +1,40 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setQuestions } from "../../../../utils/redux/slices/questionsSlice";
 import "./LinearScaleStyle.css";
-import { useSelector, useDispatch } from "react-redux";
 
-const LinearScale = ({ min = 0, max = 10 }) => {
-  const [value, setValue] = useState((max + min) / 2);
+const LinearScale = ({ question }) => {
+  const { qId, elId, value, text } = question;
+
+  const min = 0;
+  const max = 10;
   const { ui } = useSelector((state) => state.uiSlice);
+  const { questions } = useSelector((state) => state.questionsSlice);
+  const dispatch = useDispatch();
+
+  // Handle value change and store in Redux
+  const handleChange = (newValue) => {
+    const numericValue = Number(newValue);
+
+    if (qId) {
+      const updated = questions.map((q) =>
+        q.qId === qId ? { ...q, value: numericValue } : q
+      );
+      dispatch(setQuestions(updated));
+    } else if (elId) {
+      const updated = questions.map((q) => {
+        if (q.elements) {
+          return {
+            ...q,
+            elements: q.elements.map((el) =>
+              el.elId === elId ? { ...el, value: numericValue } : el
+            ),
+          };
+        }
+        return q;
+      });
+      dispatch(setQuestions(updated));
+    }
+  };
 
   return (
     <div className="linear-scale-wrapper">
@@ -22,24 +52,28 @@ const LinearScale = ({ min = 0, max = 10 }) => {
         <input
           style={{
             background: `linear-gradient(to right, #4da3ff ${
-              value * 10
-            }%, #ddd ${value * 10 - 100}%)`,
+              ((value || (max + min) / 2) / max) * 100
+            }%, #ddd ${((value || (max + min) / 2) / max) * 100}%)`,
           }}
           type="range"
           min={min}
           max={max}
-          value={value}
+          value={value ?? (max + min) / 2} // fallback to middle if undefined
           disabled={ui?.previewMode}
           className="slider"
-          onChange={(e) => setValue(Number(e.target.value))}
+          onChange={(e) => handleChange(e.target.value)}
         />
 
         <div
           className="thumb-label"
-          style={{ left: `${((value - min) / (max - min)) * 100}%` }}
+          style={{
+            left: `${
+              (((value || (max + min) / 2) - min) / (max - min)) * 100
+            }%`,
+          }}
         >
           <div className="thumb-check">&#10003;</div>
-          <span className="thumb-value">{value}</span>
+          <span className="thumb-value">{value ?? (max + min) / 2}</span>
         </div>
       </div>
     </div>

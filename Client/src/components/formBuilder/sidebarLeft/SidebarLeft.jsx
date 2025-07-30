@@ -11,7 +11,7 @@ const SidebarLeft = ({ data }) => {
 
   const dispatch = useDispatch();
   const { ui } = useSelector((state) => state.uiSlice);
-
+  const { questions } = useSelector((state) => state.questionsSlice);
 
   const addPage = async () => {
     const res = await updateForm({
@@ -27,6 +27,22 @@ const SidebarLeft = ({ data }) => {
     console.log(res);
   };
 
+  const handlePageChange = (newPageId) => {
+    // Reset activeSectionId based on page
+    const sectionOnPage = questions.find(
+      (q) => q.pageId === newPageId && q.sectionId
+    );
+
+    dispatch(
+      setUi({
+        ...ui,
+        activePageId: newPageId,
+        activeSectionId: sectionOnPage ? sectionOnPage.sectionId : null,
+        activeQuestionId: null,
+      })
+    );
+  };
+
   return (
     <div className="formBuilder-left-sidebar">
       <Link to={"/dashboard"}>
@@ -38,24 +54,40 @@ const SidebarLeft = ({ data }) => {
         {data?.form &&
           data?.form.pages.map((page, index) => (
             // <Link to={`/form-builder/page/${page._id}`} key={page._id}>
-              <li
-                key={page._id}
-                className={`${
-                  page._id === ui.activePageId ? "selected-li" : ""
-                }`}
-                onClick={() => {
-                  // setSelectedPage(index);
-                  dispatch(
-                    setUi({
-                      ...ui,
-                      activePageId: page._id,
-                      activeQuestionId: null,
-                    })
-                  );
-                }}
-              >{`Page ${
+            <li
+              key={page._id}
+              className={`${page._id === ui.activePageId ? "selected-li" : ""}`}
+              onClick={() => {
+                // setSelectedPage(index);
+                handlePageChange(page._id);
+                // dispatch(
+                //   setUi({
+                //     ...ui,
+                //     activePageId: page._id,
+                //     activeQuestionId: null,
+                //   })
+                // );
+              }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{`Page ${
                 index + 1 < 10 ? String(index + 1).padStart(2, "0") : index + 1
-              }`}</li>
+              }`}</span>
+              {page._id === ui.activePageId && (
+                <img
+                  src="/svgs/delete.svg"
+                  width={22}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    console.log("delete pressed");
+                  }}
+                />
+              )}
+            </li>
             // </Link>
           ))}
 

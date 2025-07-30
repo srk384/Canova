@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useGetFormsQuery } from "../../utils/redux/api/ProjectAPI";
@@ -10,37 +10,92 @@ import SidebarLeft from "./sidebarLeft/SidebarLeft";
 import SidebarRight from "./sidebarRight/SidebarRight";
 import PreviewForm from "./previewForm/PreviewForm";
 import { setBuilderState } from "../../utils/redux/slices/builderStateSlice";
+import {
+  useSaveDraftMutation,
+  useGetSavedDraftQuery,
+} from "../../utils/redux/api/draftPublishAPI";
+import { setQuestions } from "../../utils/redux/slices/questionsSlice";
 
 const FormBuilder = () => {
   const { id } = useParams();
-  const { data, refetch, isLoading, isSuccess } = useGetFormsQuery(
-    `/forms/form/${id}`
-  );
-  // console.log(data.form.name)
+  // const { data, refetch, isLoading, isSuccess } = useGetFormsQuery(
+  //   `/forms/form/${id}`
+  // );
+
+  const { data, refetch, isLoading, isSuccess } = useGetSavedDraftQuery(id);
+  console.log(data);
+
   const { ui } = useSelector((state) => state.uiSlice);
   const { questions } = useSelector((state) => state.questionsSlice);
-  // const { builderState } = useSelector((state) => state.builderState);
+  const { builderState } = useSelector((state) => state.builderState);
+  const [saveDraft] = useSaveDraftMutation();
 
   const dispatch = useDispatch();
+
+  //fetching data from db
+
+  console.log(questions)
+  useEffect(() => {
+    if (data) {
+      // Flatten out the builderState if your editor uses a flat structure
+      const builderState = data.form?.pages.flatMap((page) => {
+        // include page meta and its questions
+        return page.questions.map((q) => ({
+          ...q,
+          pageId: page._id, // ensure page reference
+        }));
+      });
+
+      dispatch(setQuestions(builderState)); // push into Redux for editing
+    }
+  }, [data, dispatch]);
+
+  // console.log(builderState);
+
+  // setting active page
 
   useEffect(() => {
     if (data) {
       dispatch(
         setUi({
           ...ui,
-          formName: data.form.name,
-          activePageId: data.form.pages[0]._id,
+          formName: data?.form?.name,
+          activePageId: data?.form?.pages[0]._id,
         })
       );
     }
   }, [data, isSuccess]);
+
+  function attachQuestionsToPages(form, questions) {
+    return {
+      ...form,
+      name: ui.formName,
+      pages: form.pages.map((page) => ({
+        ...page,
+        questions: questions.filter((q) => q.pageId === page._id),
+      })),
+    };
+  }
 
   const handleChanges = (e) => {
     const { value } = e.target;
     dispatch(setUi({ ...ui, formName: value }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    const updatedForm = attachQuestionsToPages(data.form, questions);
+    console.log(updatedForm);
+
+    try {
+      const { data } = await saveDraft({
+        action: `${id}/save`,
+        form: updatedForm,
+      });
+
+      // console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
 
     // const builderState = {
     //   activePageId: ui.activePageId,
@@ -49,8 +104,6 @@ const FormBuilder = () => {
     //   questions: questions,
     // };
 
-
-    
     //     {
     //   "builderState": {
     //     "activePageId": "6881e6fb27b9d1a656c7aebb",
