@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
-  setQuestions,
-  setSections,
+  setQuestions
 } from "../../../utils/redux/slices/questionsSlice";
 import { setUi } from "../../../utils/redux/slices/uiSlice";
 import "./SidebarRightStyle.css";

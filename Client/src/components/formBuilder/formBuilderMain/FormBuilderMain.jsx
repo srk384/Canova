@@ -6,8 +6,8 @@ import FileUploadModal from "../../common/fileUploadModal/FileUploadModal";
 import AddImageComponent from "../sidebarRight/actionButtons/addImageComponent/AddImageComponent";
 import AddQuestionComponent from "../sidebarRight/actionButtons/addQuestionComponent/AddQuestionComponent";
 import AddTextComponent from "../sidebarRight/actionButtons/addTextComponent/AddTextComponent";
+import AddConditionComponent from "../sidebarRight/actionButtons/addConditionComponent/AddConditionComponent";
 import AddVideoComponent from "../sidebarRight/actionButtons/addVideoComponent/AddVideoComponent";
-import AddConditionComponent from "../sidebarRight/actionButtons/addConditionComponent/addConditionComponent";
 import "./formBuilderMainStyle.css";
 
 const FormBuilderMain = () => {
