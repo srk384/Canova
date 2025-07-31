@@ -7,6 +7,7 @@ import AddImageComponent from "../sidebarRight/actionButtons/addImageComponent/A
 import AddQuestionComponent from "../sidebarRight/actionButtons/addQuestionComponent/AddQuestionComponent";
 import AddTextComponent from "../sidebarRight/actionButtons/addTextComponent/AddTextComponent";
 import AddVideoComponent from "../sidebarRight/actionButtons/addVideoComponent/AddVideoComponent";
+import AddConditionComponent from "../sidebarRight/actionButtons/addConditionComponent/addConditionComponent";
 import "./formBuilderMainStyle.css";
 
 const FormBuilderMain = () => {
@@ -147,6 +148,8 @@ const FormBuilderMain = () => {
         }
         onUpload={handleUpload}
       />
+
+      {ui.addCondition && <AddConditionComponent/> }
     </div>
   );
 };

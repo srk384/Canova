@@ -16,13 +16,12 @@ const saveDraft = async (req, res) => {
         runValidators: true, // validate against schema
       }
     );
-    console.log(updatedForm);
 
     if (!updatedForm) {
       return res.status(404).json({ message: "Form not found" });
     }
 
-    res.status(200).json(updatedForm);
+    res.status(200).json({ message: "form updated", success: true, form: updatedForm });
   } catch (err) {
     console.error(err);
     res

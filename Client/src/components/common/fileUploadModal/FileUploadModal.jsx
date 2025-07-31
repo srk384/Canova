@@ -71,7 +71,7 @@ const UploadModal = ({ isOpen, onClose, onUpload, type = "image" }) => {
       <div className="modal">
         <div className="modal-header">
           <span>Upload {type === "image" ? "Image" : "Video"}</span>
-          <button onClick={handleClose}>✕</button>
+          <button onClick={handleClose} className="fileupload-close-btn">✕</button>
         </div>
 
         <div

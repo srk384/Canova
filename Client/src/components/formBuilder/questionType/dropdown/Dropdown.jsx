@@ -89,16 +89,54 @@ const Dropdown = ({ question }) => {
   return (
     <div className="dropdown-container">
       {options.map((opt, i) => (
-        <div className="option-row" key={i}>
-          <input
-            ref={(el) => (optionRefs.current[i] = el)}
-            className="dropdown-option-input"
-            value={opt}
-            disabled={ui?.previewMode}
-            onChange={(e) => handleChange(e.target.value, i)}
-            onKeyDown={(e) => handleKeyDown(e, i)}
-            placeholder={`Drop Down Option ${i + 1}`}
-          />
+        <div className="option-condition-row" key={i}>
+          <div className="option-row">
+            <input
+              ref={(el) => (optionRefs.current[i] = el)}
+              className="dropdown-option-input"
+              value={opt}
+              disabled={ui?.previewMode}
+              onChange={(e) => handleChange(e.target.value, i)}
+              onKeyDown={(e) => handleKeyDown(e, i)}
+              placeholder={`Drop Down Option ${i + 1}`}
+            />
+          </div>
+          {ui.addCondition && (
+            <div className="addcondition-radio">
+              <input
+                type="radio"
+                name={`condition ${qId || elId}`}
+                disabled={ui?.previewMode}
+                value={opt}
+                className="hidden-condition-radio"
+                onClick={() => {
+                  if (qId) {
+                    const updatedOptions = questions.map((question) =>
+                      question.qId === qId
+                        ? { ...question, trueAnswer: opt }
+                        : question
+                    );
+                    dispatch(setQuestions(updatedOptions));
+                  } else if (elId) {
+                    const updatedOptions = questions.map((question) => {
+                      if (question.elements) {
+                        return {
+                          ...question,
+                          elements: question.elements.map((el) =>
+                            el.elId === elId ? { ...el, trueAnswer: opt } : el
+                          ),
+                        };
+                      }
+                      return question;
+                    });
+
+                    dispatch(setQuestions(updatedOptions));
+                  }
+                }}
+              />
+              <span className="custom-condition-radio"></span>
+            </div>
+          )}
         </div>
       ))}
     </div>

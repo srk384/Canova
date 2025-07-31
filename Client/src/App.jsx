@@ -16,7 +16,18 @@ import FormBuilder from "./components/formBuilder/FormBuilder";
 function App() {
   return (
     <Router>
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Routes>
         {/* Auth routes */}
         <Route

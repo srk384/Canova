@@ -57,7 +57,6 @@ const AddQuestionComponent = ({ question }) => {
     }
   }, [questionType]);
 
-  const handleChange = () => {};
 
   const reorderQuestions = (questions) => {
     const validTypes = [
@@ -177,7 +176,6 @@ const reorderElements = (questions) => {
     }
   };
 
-  console.log(questions);
   const questionTypeArray = [
     {
       text: "Short Answer",
@@ -223,7 +221,7 @@ const reorderElements = (questions) => {
     >
       <div className="formBuilder-questions-section">
         <div className="formBuilder-question">
-          <div>
+          <div className="textarea-container">
             <span className="question-number">Q{qno}</span>
             <textarea
               name="question"

@@ -7,7 +7,7 @@ import {
 } from "../../../utils/redux/api/ProjectAPI";
 import FormComponent from "../../common/FormComponent";
 import ProjectComponent from "../../common/ProjectComponent";
-import CreateProjectModal from "../modal/CreateProjectModal";
+import CreateProjectModal from "../modal/createProject/CreateProjectModal";
 import "./HomePage.css";
 
 const HomePage = () => {

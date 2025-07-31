@@ -159,7 +159,6 @@ const SidebarRight = () => {
                           elId: Date.now(),
                           type: "multipleChoice",
                           text: "",
-                          options: ["", ""],
                           elementsOrder: elementOrder(
                             questions,
                             ui.activePageId,
@@ -189,7 +188,6 @@ const SidebarRight = () => {
                     ),
                     type: "multipleChoice",
                     text: "",
-                    options: ["", ""],
                   },
                 ])
               );
@@ -209,7 +207,21 @@ const SidebarRight = () => {
           <span>Add Text</span>
         </button>
 
-        <button>
+        <button
+          onClick={() => {
+            if (questions.length > 0) {
+              dispatch(
+                setUi({
+                  ...ui,
+                  addCondition: !ui.addCondition,
+                  pageColor: `${ui.addCondition ? "white" : "#E7EEF5"}`,
+                })
+              );
+            } else {
+              alert("Add questions first");
+            }
+          }}
+        >
           <img src="/svgs/addConditions.svg" alt="" />
           <span>Add Condition</span>
         </button>

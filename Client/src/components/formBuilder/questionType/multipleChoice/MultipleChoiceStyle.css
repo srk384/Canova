@@ -2,12 +2,21 @@
   /* min-width: 700px; */
   padding: 0 30px;
 }
+.option-condition-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  
+}
+
 
 .option-row {
   display: flex;
   align-items: center;
   margin-top: 10px;
   gap: 10px;
+  flex:1
 }
 
 .option-input {
@@ -76,4 +85,74 @@
 
 .hidden-radio:checked + .custom-radio::after {
   display: block;
+}
+
+
+
+
+
+
+
+
+
+.hidden-condition-radio {
+  /* Hide the native checkbox */
+  position: absolute;
+  opacity: 00;
+  cursor: pointer;
+  height: 24px;
+  width: 24px;
+  z-index: 99;
+}
+
+
+
+
+.custom-condition-radio {
+  height: 24px;
+  width: 24px;
+  background-color: white;
+  border: 2px solid #69B5F8;
+  border-radius: 50%;
+  margin-right: 8px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.hidden-condition-radio:checked + .custom-condition-radio {
+  border-color: #69B5F8;
+}
+
+.custom-condition-radio::after {
+  content: "";
+  display: none;
+}
+
+.hidden-condition-radio:checked + .custom-condition-radio::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  background: #69B5F8;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.hidden-condition-radio:checked + .custom-condition-radio::before {
+  content: "✔";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 18px;
+  z-index: 2;
+  font-weight: bold;
 }

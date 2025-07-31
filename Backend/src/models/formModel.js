@@ -7,6 +7,7 @@ const elementSchema = new mongoose.Schema(
     type: { type: String, required: true }, // e.g. textBlock, image, shortAnswer
     text: String,
     src: String, // for images
+    trueAnswer: String,
     options: [String],
     elementsOrder: Number,
     fileTypes: [String], // if type is fileUpload
@@ -26,6 +27,7 @@ const questionSchema = new mongoose.Schema(
     type: String, // for non-section questions (multipleChoice, textBlock, etc.)
     text: String,
     src: String, // if it's an image question
+    trueAnswer: String,
     options: [String],
     elements: [elementSchema], // for section's inner elements
   },

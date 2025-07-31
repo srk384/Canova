@@ -15,20 +15,24 @@
 
   
 }
-.formBuilder-question > div {
+/* .formBuilder-question > div {
   font-size: 22px;
   display: flex;
+  justify-content: space-between;
+  width: 100%;
+} */
+.textarea-container{
+  display: flex;
+  justify-content: space-between;
+  font-size: 22px;
   width: 100%;
 }
 
-.select-question-type{
-  width: 250px;
-}
 .formBuilder-question textarea {
   margin-left: 15px;
   font-size: 22px;
-  width: 800px;
-  /* width: 100%; */
+  flex: 1;
+    width: 100%;
   resize: none;
   border: none;
   outline: none;
@@ -42,7 +46,7 @@
 }
 .formBuilder-question textarea:placeholder {
   color: black;
-}
+} 
 
 .select-question-type-container {
   display: flex;
@@ -107,4 +111,19 @@ textarea {
 }
 .activeSection {
   border: 2px solid black;
+}
+.addCondition-btn{
+  position: fixed;
+  right: 370px;
+  bottom: 30px;
+  border: none;
+  outline: none;
+  background-color: #69B5F8;
+  padding: 10px 40px;
+  font-size: 22px;
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 4px #00000025;
+  cursor: pointer;
+  z-index: 99;
 }

@@ -15,6 +15,7 @@ import {
   useGetSavedDraftQuery,
 } from "../../utils/redux/api/draftPublishAPI";
 import { setQuestions } from "../../utils/redux/slices/questionsSlice";
+import { toast } from "react-toastify";
 
 const FormBuilder = () => {
   const { id } = useParams();
@@ -23,18 +24,16 @@ const FormBuilder = () => {
   // );
 
   const { data, refetch, isLoading, isSuccess } = useGetSavedDraftQuery(id);
-  console.log(data);
 
   const { ui } = useSelector((state) => state.uiSlice);
   const { questions } = useSelector((state) => state.questionsSlice);
   const { builderState } = useSelector((state) => state.builderState);
-  const [saveDraft] = useSaveDraftMutation();
+  const [saveDraft, { isLoading: formUpdating }] = useSaveDraftMutation();
 
   const dispatch = useDispatch();
 
   //fetching data from db
-
-  console.log(questions)
+  console.log(questions);
   useEffect(() => {
     if (data) {
       // Flatten out the builderState if your editor uses a flat structure
@@ -49,8 +48,6 @@ const FormBuilder = () => {
       dispatch(setQuestions(builderState)); // push into Redux for editing
     }
   }, [data, dispatch]);
-
-  // console.log(builderState);
 
   // setting active page
 
@@ -77,6 +74,8 @@ const FormBuilder = () => {
     };
   }
 
+  const notify = () => toast("Form Updated!");
+
   const handleChanges = (e) => {
     const { value } = e.target;
     dispatch(setUi({ ...ui, formName: value }));
@@ -91,35 +90,14 @@ const FormBuilder = () => {
         action: `${id}/save`,
         form: updatedForm,
       });
-
-      // console.log(data);
+      if (data.message.includes("form updated")) {
+        notify();
+      }
+      console.log(data);
     } catch (error) {
+      toast.error("Oops! There is some error.");
       console.log(error);
     }
-
-    // const builderState = {
-    //   activePageId: ui.activePageId,
-    //   pageColor: ui.pageColor,
-    //   formName: ui.formName,
-    //   questions: questions,
-    // };
-
-    //     {
-    //   "builderState": {
-    //     "activePageId": "6881e6fb27b9d1a656c7aebb",
-    //     "pageColor": "rgba(248,227,227,1)",
-    //     "formName": "My Survey",
-    //     "questions": [
-    //       {
-    //         "qId": 1753725373702,
-    //         "pageId": "6881e6fb27b9d1a656c7aebb",
-    //         "type": "multipleChoice",
-    //         "text": "What does this image contain?",
-    //         "options": ["option 1", "option 2"]
-    //       }
-    //     ]
-    //   }
-    // }
   };
 
   if (isLoading || !data) {
@@ -144,12 +122,29 @@ const FormBuilder = () => {
               <div>
                 <button
                   onClick={() => {
-                    dispatch(setUi({ ...ui, previewMode: true }));
+                    dispatch(
+                      setUi({ ...ui, previewMode: true, addCondition: false })
+                    );
                   }}
                 >
                   Preview
                 </button>
-                <button onClick={handleSave}>Save</button>
+                <button disabled={formUpdating} onClick={handleSave}>
+                  {formUpdating ? (
+                    <div
+                      className="spinner"
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        borderWidth: "3px",
+                        margin: "auto",
+                        backgroundColor: "transparent",
+                      }}
+                    ></div>
+                  ) : (
+                    "Save"
+                  )}
+                </button>
               </div>
             </div>
             <div className="builder-tools-inner-container">

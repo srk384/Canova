@@ -24,18 +24,18 @@
   display: flex;
   justify-content: space-between;
   font-weight: bold;
-  & button {
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    scale: 1.5;
-  }
-  & button:hover {
-    background-color: red;
-    color: white;
-    padding: 0 3px 2px 3px;
-    border-radius: 5px;
-  }
+}
+.fileupload-close-btn {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  scale: 1.5;
+}
+.fileupload-close-btn:hover {
+  background-color: red;
+  color: white;
+  padding: 0 3px 2px 3px;
+  border-radius: 5px;
 }
 
 .upload-box {

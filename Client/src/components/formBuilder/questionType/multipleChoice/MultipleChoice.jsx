@@ -93,26 +93,67 @@ const MultipleChoice = ({ question }) => {
   return (
     <div className="multiple-choice-container">
       {options.map((opt, i) => (
-        <div className="option-row" key={i}>
-          <input
-            type="radio"
-            name={`option ${qId || elId}`}
-            disabled={ui?.previewMode}
-            value={opt}
-            className="hidden-radio"
-          />
-          <span className="custom-radio"></span>
-          <textarea
-            ref={(el) => (optionRefs.current[i] = el)}
-            className="option-input"
-            disabled={ui?.previewMode}
-            value={opt}
-            onChange={(e) => handleChange(e.target.value, i)}
-            onKeyDown={(e) => handleKeyDown(e, i)}
-            placeholder={`Option ${i + 1}`}
-            rows={1}
-            id="multipleChoice"
-          />
+        <div className="option-condition-row" key={i}>
+          <div className="option-row">
+            <input
+              type="radio"
+              name={`option ${qId || elId}`}
+              disabled={ui?.previewMode}
+              value={opt}
+              className="hidden-radio"
+            />
+            <span className="custom-radio"></span>
+            <textarea
+              ref={(el) => (optionRefs.current[i] = el)}
+              className="option-input"
+              disabled={ui?.previewMode}
+              value={opt}
+              onChange={(e) => handleChange(e.target.value, i)}
+              onKeyDown={(e) => handleKeyDown(e, i)}
+              placeholder={`Option ${i + 1}`}
+              rows={1}
+              id="multipleChoice"
+            />
+          </div>
+
+          {/*--------------------------------- add condition ------------------------------------*/}
+
+          {ui.addCondition && (
+            <div className="addcondition-radio">
+              <input
+                type="radio"
+                name={`condition ${qId || elId}`}
+                disabled={ui?.previewMode}
+                value={opt}
+                className="hidden-condition-radio"
+                onClick={() => {
+                  if (qId) {
+                    const updatedOptions = questions.map((question) =>
+                      question.qId === qId
+                        ? { ...question, trueAnswer: opt }
+                        : question
+                    );
+                    dispatch(setQuestions(updatedOptions));
+                  } else if (elId) {
+                    const updatedOptions = questions.map((question) => {
+                      if (question.elements) {
+                        return {
+                          ...question,
+                          elements: question.elements.map((el) =>
+                            el.elId === elId ? { ...el,  trueAnswer: opt } : el
+                          ),
+                        };
+                      }
+                      return question;
+                    });
+
+                    dispatch(setQuestions(updatedOptions));
+                  }
+                }}
+              />
+              <span className="custom-condition-radio"></span>
+            </div>
+          )}
         </div>
       ))}
     </div>

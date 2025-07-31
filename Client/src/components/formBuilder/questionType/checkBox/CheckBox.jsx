@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setQuestions } from "../../../../utils/redux/slices/questionsSlice";
 
 const CheckBox = ({ question }) => {
- const { qId, elId, qno, type, text } = question;
+  const { qId, elId, qno, type, text } = question;
 
   const [options, setOptions] = useState(["", ""]); // Start with 2 empty options
   const optionRefs = useRef([]);
@@ -14,7 +14,7 @@ const CheckBox = ({ question }) => {
   const { ui } = useSelector((state) => state.uiSlice);
 
   useEffect(() => {
-      if (qId) {
+    if (qId) {
       questions.forEach(
         (question) =>
           question.qId === qId &&
@@ -92,26 +92,64 @@ const CheckBox = ({ question }) => {
   return (
     <div className="multiple-choice-container">
       {options.map((opt, i) => (
-        <div className="option-row" key={i}>
-          <input
-            type="checkbox"
-            name={`option ${qId || elId}`}
-            disabled={ui?.previewMode}
-            value={opt}
-            className="hidden-checkbox"
-          />
-          <span className="custom-checkbox"></span>
-          <textarea
-            ref={(el) => (optionRefs.current[i] = el)}
-            className="option-input"
-            value={opt}
-            disabled={ui?.previewMode}
-            onChange={(e) => handleChange(e.target.value, i)}
-            onKeyDown={(e) => handleKeyDown(e, i)}
-            placeholder={`Option ${i + 1}`}
-            rows={1}
-            id="checkbox"
-          />
+        <div className="option-condition-row" key={i}>
+          <div className="option-row">
+            <input
+              type="checkbox"
+              name={`option ${qId || elId}`}
+              disabled={ui?.previewMode}
+              value={opt}
+              className="hidden-checkbox"
+            />
+            <span className="custom-checkbox"></span>
+            <textarea
+              ref={(el) => (optionRefs.current[i] = el)}
+              className="option-input"
+              value={opt}
+              disabled={ui?.previewMode}
+              onChange={(e) => handleChange(e.target.value, i)}
+              onKeyDown={(e) => handleKeyDown(e, i)}
+              placeholder={`Option ${i + 1}`}
+              rows={1}
+              id="checkbox"
+            />
+          </div>
+          {ui.addCondition && (
+            <div className="addcondition-radio">
+              <input
+                type="radio"
+                name={`condition ${qId || elId}`}
+                disabled={ui?.previewMode}
+                value={opt}
+                className="hidden-condition-radio"
+                onClick={() => {
+                  if (qId) {
+                    const updatedOptions = questions.map((question) =>
+                      question.qId === qId
+                        ? { ...question, trueAnswer: opt }
+                        : question
+                    );
+                    dispatch(setQuestions(updatedOptions));
+                  } else if (elId) {
+                    const updatedOptions = questions.map((question) => {
+                      if (question.elements) {
+                        return {
+                          ...question,
+                          elements: question.elements.map((el) =>
+                            el.elId === elId ? { ...el, trueAnswer: opt } : el
+                          ),
+                        };
+                      }
+                      return question;
+                    });
+
+                    dispatch(setQuestions(updatedOptions));
+                  }
+                }}
+              />
+              <span className="custom-condition-radio"></span>
+            </div>
+          )}
         </div>
       ))}
     </div>

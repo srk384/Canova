@@ -107,6 +107,7 @@
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
+  
 }
 
 .recentWorks-formName {
@@ -116,11 +117,19 @@
   display: flex;
   align-items: center;
   gap: 5px;
+ 
 }
 
-.recentWorks-formName span {
+.recentWorks-formName span:last-of-type {
   font-weight: 400;
   font-size: 14px;
+}
+.recentWorks-formName-name{
+   white-space: nowrap;  
+  overflow: hidden;      
+  text-overflow: ellipsis; 
+  font-weight: 500;
+  font-size: 16px;
 }
 
 .recentWorks-img-container {
