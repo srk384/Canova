@@ -57,7 +57,7 @@ const FormBuilder = () => {
         setUi({
           ...ui,
           formName: data?.form?.name,
-          activePageId: data?.form?.pages[0]._id,
+          activePageId: data?.form?.pages[0]?._id,
         })
       );
     }

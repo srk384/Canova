@@ -5,11 +5,12 @@ import {
   useCreateProjectMutation,
 } from "../../../utils/redux/api/ProjectAPI";
 import FormComponent from "../../common/FormComponent";
+import SpinnerOverlay from "../../common/spinnerOverlay/SpinnerOverlay";
 
 const FormPage = () => {
   const { projectId } = useParams();
   const { projectName } = useLocation().state;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const {
     data: forms,
@@ -57,15 +58,21 @@ const FormPage = () => {
             <h2>{projectName}</h2>
           </div>
           <div className="formPage-inner-container">
-            <div className="formPage-recentWorks">
-              {forms &&
-                forms.map((form) => (
-                  <FormComponent
-                    key={form._id}
-                    data={{ name: form.name, draft: form.draft, id: form._id }}
-                  />
-                ))}
-            </div>
+            <SpinnerOverlay input={loadingForms}>
+              <div className="formPage-recentWorks">
+                {forms &&
+                  forms.map((form) => (
+                    <FormComponent
+                      key={form._id}
+                      data={{
+                        name: form.name,
+                        draft: form.isDraft,
+                        id: form._id,
+                      }}
+                    />
+                  ))}
+              </div>
+            </SpinnerOverlay>
           </div>
         </div>
 

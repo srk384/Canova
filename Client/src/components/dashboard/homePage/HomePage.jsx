@@ -9,6 +9,7 @@ import FormComponent from "../../common/FormComponent";
 import ProjectComponent from "../../common/ProjectComponent";
 import CreateProjectModal from "../modal/createProject/CreateProjectModal";
 import "./HomePage.css";
+import SpinnerOverlay from "../../common/spinnerOverlay/SpinnerOverlay";
 
 const HomePage = () => {
   const [isCreateProjectClicked, setIsCreateProjectClicked] = useState(false);
@@ -41,10 +42,6 @@ const HomePage = () => {
       refetchForms();
     }
   };
-
-
-
-  
 
   return (
     <div
@@ -80,33 +77,34 @@ const HomePage = () => {
           {/* recent Works */}
 
           <h3 className="homepage-recentWorks-title">Recent Works</h3>
-
-          <div className="homepage-recentWorks">
-            {forms &&
-              forms.slice(0, 4).map((form) => (
-                <FormComponent
-                  key={form._id}
-                  data={{
-                    name: form.name,
-                    draft: form.isDraft,
-                    id: form._id,
-                  }}
-                />
-              ))}
-            {forms?.length === 0 && projects?.length === 0 && (
-              <div className="no-recentWorks">No recent work to display</div>
-            )}
-            {projects &&
-              projects.slice(0, 4).map((project) => (
-                <ProjectComponent
-                  key={project._id}
-                  data={{
-                    name: project.name,
-                    id: project._id,
-                  }}
-                />
-              ))}
-          </div>
+          <SpinnerOverlay loading={loadingForms}>
+            <div className="homepage-recentWorks">
+              {forms &&
+                forms.slice(0, 4).map((form) => (
+                  <FormComponent
+                    key={form._id}
+                    data={{
+                      name: form.name,
+                      draft: form.isDraft,
+                      id: form._id,
+                    }}
+                  />
+                ))}
+              {forms?.length === 0 && projects?.length === 0 && (
+                <div className="no-recentWorks">No recent work to display</div>
+              )}
+              {projects &&
+                projects.slice(0, 4).map((project) => (
+                  <ProjectComponent
+                    key={project._id}
+                    data={{
+                      name: project.name,
+                      id: project._id,
+                    }}
+                  />
+                ))}
+            </div>
+          </SpinnerOverlay>
 
           {/* shared Works */}
 
@@ -114,11 +112,12 @@ const HomePage = () => {
 
           <div className="homepage-recentWorks" style={{ marginBottom: "0px" }}>
             <div className="no-recentWorks">No Shared work to display</div>
-
-            {/* <FormComponent /> */}
-            {/* <FormComponent /> */}
-            {/* <ProjectComponent />
+            <SpinnerOverlay loading={loadingForms}>
+              {/* <FormComponent /> */}
+              {/* <FormComponent /> */}
+              {/* <ProjectComponent />
             <ProjectComponent /> */}
+            </SpinnerOverlay>
           </div>
         </div>
       </div>

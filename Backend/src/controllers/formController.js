@@ -63,6 +63,11 @@ const insertFormInProject = async (req, res) => {
     project.forms.push(newForm._id);
     await project.save();
 
+    const page = await Page.create({ form: newForm._id });
+
+    newForm.pages.push(page._id);
+    await newForm.save();
+
     res.status(200).json({
       message: "Form added in the project.",
       success: true,

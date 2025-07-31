@@ -6,9 +6,9 @@ import FileUploadModal from "../../common/fileUploadModal/FileUploadModal";
 import AddImageComponent from "../sidebarRight/actionButtons/addImageComponent/AddImageComponent";
 import AddQuestionComponent from "../sidebarRight/actionButtons/addQuestionComponent/AddQuestionComponent";
 import AddTextComponent from "../sidebarRight/actionButtons/addTextComponent/AddTextComponent";
-import AddConditionComponent from "../sidebarRight/actionButtons/addConditionComponent/AddConditionComponent";
 import AddVideoComponent from "../sidebarRight/actionButtons/addVideoComponent/AddVideoComponent";
 import "./formBuilderMainStyle.css";
+import AddConditionComponent from "../sidebarRight/actionButtons/addConditionComponent/AddConditionComponent";
 
 const FormBuilderMain = () => {
   const { ui } = useSelector((state) => state.uiSlice);
