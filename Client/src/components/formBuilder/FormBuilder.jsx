@@ -16,7 +16,7 @@ import {
 } from "../../utils/redux/api/draftPublishAPI";
 import { setQuestions } from "../../utils/redux/slices/questionsSlice";
 import { toast } from "react-toastify";
-import AddConditionComponent from "./sidebarRight/actionButtons/addConditionComponent/addConditionComponent";
+import AddConditionComponent from "./sidebarRight/actionButtons/addConditionComponent/AddConditionComponent";
 import PageFlow from "./pageFlow/PageFlow";
 import PublishModal from "../dashboard/modal/publishModal/PublishModal";
 
