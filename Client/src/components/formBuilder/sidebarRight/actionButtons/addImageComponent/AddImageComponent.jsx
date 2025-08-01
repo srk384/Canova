@@ -4,6 +4,7 @@ import "./AddImageComponent.css";
 
 const AddImageComponent = ({ src }) => {
   const { questions } = useSelector((state) => state.questionsSlice);
+  const { ui } = useSelector((state) => state.uiSlice);
   const dispatch = useDispatch();
 
   return (
@@ -23,7 +24,7 @@ const AddImageComponent = ({ src }) => {
           dispatch(setQuestions(updated));
         }}
       >
-        <img src="/svgs/delete.svg" alt="" />
+       {!ui.previewMode && <img src="/svgs/delete.svg" alt="" />}
       </button>
     </div>
   );

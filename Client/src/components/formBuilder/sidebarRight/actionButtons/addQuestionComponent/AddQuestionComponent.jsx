@@ -7,7 +7,7 @@ import LinearScale from "../../../questionType/linearScale/LinearScale";
 import Rating from "../../../questionType/rating/Rating";
 import Dropdown from "../../../questionType/dropdown/Dropdown";
 import FileUpload from "../../../questionType/fileUpload/FileUpload";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setQuestions } from "../../../../../utils/redux/slices/questionsSlice";
 
@@ -30,6 +30,24 @@ const AddQuestionComponent = ({ question }) => {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
   }
+
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setIsClickedSelectQuestionType(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setIsClickedSelectQuestionType]);
 
   useEffect(() => {
     if (
@@ -57,7 +75,6 @@ const AddQuestionComponent = ({ question }) => {
     }
   }, [questionType]);
 
-
   const reorderQuestions = (questions) => {
     const validTypes = [
       "shortAnswer",
@@ -82,47 +99,45 @@ const AddQuestionComponent = ({ question }) => {
       return q;
     });
   };
-const reorderElements = (questions) => {
-  const validTypes = [
-    "shortAnswer",
-    "longAnswer",
-    "multipleChoice",
-    "checkbox",
-    "dropdown",
-    "fileUpload",
-    "date",
-    "linearScale",
-    "rating",
-  ];
+  const reorderElements = (questions) => {
+    const validTypes = [
+      "shortAnswer",
+      "longAnswer",
+      "multipleChoice",
+      "checkbox",
+      "dropdown",
+      "fileUpload",
+      "date",
+      "linearScale",
+      "rating",
+    ];
 
-  let currentSectionId = null;
-  let order = 1;
+    let currentSectionId = null;
+    let order = 1;
 
-  return questions.map((question) => {
-    // Reset order if this question belongs to a new section
-    if (question.sectionId && question.sectionId !== currentSectionId) {
-      currentSectionId = question.sectionId;
-      order = 1; // Reset order for new section
-    }
+    return questions.map((question) => {
+      // Reset order if this question belongs to a new section
+      if (question.sectionId && question.sectionId !== currentSectionId) {
+        currentSectionId = question.sectionId;
+        order = 1; // Reset order for new section
+      }
 
-    // Update elements order if elements exist
-    if (question.elements) {
-      return {
-        ...question,
-        elements: question.elements.map((el) => {
-          if (validTypes.includes(el.type)) {
-            return { ...el, elementsOrder: order++ };
-          }
-          return el; // Keep invalid types unchanged
-        }),
-      };
-    }
+      // Update elements order if elements exist
+      if (question.elements) {
+        return {
+          ...question,
+          elements: question.elements.map((el) => {
+            if (validTypes.includes(el.type)) {
+              return { ...el, elementsOrder: order++ };
+            }
+            return el; // Keep invalid types unchanged
+          }),
+        };
+      }
 
-    return question;
-  });
-};
-
-
+      return question;
+    });
+  };
 
   //deleting questions when empty and backspace is pressed
   const handleKeyDown = (e) => {
@@ -271,6 +286,7 @@ const reorderElements = (questions) => {
                 src={`/svgs/${questionType}.svg`}
                 alt=""
                 className="select-question-type"
+               
                 onClick={() =>
                   !preview &&
                   setIsClickedSelectQuestionType(!isClickedSelectQuestionType)
@@ -281,7 +297,7 @@ const reorderElements = (questions) => {
             {/*----------------------------------------select question type dropdown-------------------------------- */}
 
             {isClickedSelectQuestionType && (
-              <ul className="option-question-type">
+              <ul ref={containerRef} className="option-question-type">
                 {questionTypeArray.map((type, index) => (
                   <li
                     key={index}
@@ -298,7 +314,7 @@ const reorderElements = (questions) => {
                               ? {
                                   ...question,
                                   type: e.target.id,
-                                  text: "",
+                                  // text: "",
                                   options: ["", ""],
                                 }
                               : question
@@ -338,14 +354,20 @@ const reorderElements = (questions) => {
           </div>
         </div>
         <div className="formBuilder-answer">
-          {questionType === "shortAnswer" && <ShortAnswer  question={question}/>}
-          {questionType === "longAnswer" && <LongAnswer question={question}/>}
-          {questionType === "multipleChoice" && <MultipleChoice question={question} />}
+          {questionType === "shortAnswer" && (
+            <ShortAnswer question={question} />
+          )}
+          {questionType === "longAnswer" && <LongAnswer question={question} />}
+          {questionType === "multipleChoice" && (
+            <MultipleChoice question={question} />
+          )}
           {questionType === "checkbox" && <CheckBox question={question} />}
-          {questionType === "date" && <Date  question={question}/>}
-          {questionType === "linearScale" && <LinearScale question={question} />}
-          {questionType === "rating" && <Rating question={question}/>}
-          {questionType === "dropdown" && <Dropdown question={question}/>}
+          {questionType === "date" && <Date question={question} />}
+          {questionType === "linearScale" && (
+            <LinearScale question={question} />
+          )}
+          {questionType === "rating" && <Rating question={question} />}
+          {questionType === "dropdown" && <Dropdown question={question} />}
           {questionType === "fileUpload" && <FileUpload question={question} />}
         </div>
       </div>

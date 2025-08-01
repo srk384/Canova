@@ -205,7 +205,7 @@ const SidebarRight = () => {
           <img src="/svgs/addText.svg" alt="" />
           <span>Add Text</span>
         </button>
-
+{/* -------------------------------------------------------------- */}
         <button
           onClick={() => {
             if (questions.length > 0) {
@@ -213,7 +213,7 @@ const SidebarRight = () => {
                 setUi({
                   ...ui,
                   addCondition: !ui.addCondition,
-                  pageColor: `${ui.addCondition ? "white" : "#E7EEF5"}`,
+                  // pageColor: `${ui.addCondition ? "white" : "#E7EEF5"}`,
                 })
               );
             } else {
@@ -224,7 +224,7 @@ const SidebarRight = () => {
           <img src="/svgs/addConditions.svg" alt="" />
           <span>Add Condition</span>
         </button>
-
+{/* ------------------------------------------------------------------------------- */}
         <button
           onClick={() => {
             ui?.activeSectionId
@@ -361,7 +361,7 @@ const SidebarRight = () => {
         />
       </div>
       <div className="formBuilder-right-sidebar-next-container">
-        <button className="formBuilder-right-sidebar-nextBTN">Next</button>
+        <button className="formBuilder-right-sidebar-nextBTN" onClick={()=>dispatch(setUi({...ui, showPageFlow:true}))}>Next</button>
       </div>
     </div>
   );

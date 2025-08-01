@@ -1,0 +1,202 @@
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 10px;
+  width: 350px;
+  padding: 16px;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.modal-section {
+  margin-bottom: 16px;
+}
+
+.modal-field {
+  display: flex;
+  justify-content: space-between;
+  background: #f2f4f7;
+  padding: 8px 10px;
+  border-radius: 6px;
+  align-items: center;
+}
+
+.change-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  top: 100%;
+  right: 10px;
+  width: 120px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-item {
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #f2f2f2;
+}
+
+.restricted-list .mail-item {
+  display: flex;
+  justify-content: space-between;
+  background: #f9fafc;
+  padding: 6px 8px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.add-mail-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.modal-footer {
+  text-align: center;
+}
+
+.publish-btn {
+  width: 100%;
+  background: #4a90e2;
+  color: white;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-item {
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #f2f2f2;
+}
+
+.restricted-section {
+  margin-top: 12px;
+}
+
+.restricted-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  background: #f9fafc;
+  padding: 6px 8px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+.email-input-restricted-item{
+    width: 100%;
+    padding: 3px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    text-align: center;
+    font-size: 16px;
+}
+
+.avatar {
+  background: #ddd;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+}
+
+.add-mail-btn {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  font-weight: 500;
+  cursor: pointer;
+}
+.img-title-publishModal {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.publish-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 38px;
+}
+.publish-modal-title {
+  font-size: 20px;
+  font-weight: 500;
+}
+.select-page-modal-input {
+  position: relative;
+}

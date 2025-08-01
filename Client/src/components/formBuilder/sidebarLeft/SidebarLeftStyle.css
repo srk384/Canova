@@ -19,25 +19,24 @@
       gap: 15px;
       cursor: pointer;
     }
-    & button {
-      margin-top: 30px;
-      padding: 10px;
-      border-radius: 10px;
-      cursor: pointer;
-      background-color: #e7eef5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      border: none;
-      font-size: 16px;
-      width: 100% ;
-    }
   }
 }
 
-/* .formBuilder-left-sidebar-addbtn  */
+.formBuilder-left-sidebar-addbtn {
+  margin-top: 30px;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #e7eef5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  border: none;
+  font-size: 16px;
+  width: 100%;
+}
 
 .selected-li {
   background-color: #e7eef5;
@@ -45,4 +44,52 @@
 a {
   text-decoration: none;
   color: black;
+}
+.page-menu-popup {
+  position: absolute;
+  right: 0px; /* adjust based on design */
+  top: 40px;
+  background: white;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+}
+
+.page-menu-popup button {
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.page-menu-popup button:hover {
+  background: #f5f5f5;
+}
+
+.page-name-input {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  padding: 2px 4px;
+  width: 90%;
+  color: inherit;
+}
+
+.page-name-input:disabled {
+  cursor: pointer;
+}
+
+.page-name-input:focus {
+  outline: 1px solid #ccc;
+  background: #fff;
+}
+.moreSvg-container {
+  padding: 0 5px;
+  display: flex;
+  justify-content: center;
 }

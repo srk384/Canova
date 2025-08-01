@@ -16,12 +16,12 @@ import {
 } from "../../utils/redux/api/draftPublishAPI";
 import { setQuestions } from "../../utils/redux/slices/questionsSlice";
 import { toast } from "react-toastify";
+import AddConditionComponent from "./sidebarRight/actionButtons/addConditionComponent/addConditionComponent";
+import PageFlow from "./pageFlow/PageFlow";
+import PublishModal from "../dashboard/modal/publishModal/PublishModal";
 
 const FormBuilder = () => {
   const { id } = useParams();
-  // const { data, refetch, isLoading, isSuccess } = useGetFormsQuery(
-  //   `/forms/form/${id}`
-  // );
 
   const { data, refetch, isLoading, isSuccess } = useGetSavedDraftQuery(id);
 
@@ -107,7 +107,7 @@ const FormBuilder = () => {
     <>
       {!ui.previewMode && (
         <div className="formBuilder-layout">
-          <SidebarLeft data={{ ...data, refetch }} />
+          <SidebarLeft id={id} />
           <div className="builder-tools-container">
             <div className="formBuilder-top">
               {isSuccess && (
@@ -120,36 +120,59 @@ const FormBuilder = () => {
                 />
               )}
               <div>
-                <button
-                  onClick={() => {
-                    dispatch(
-                      setUi({ ...ui, previewMode: true, addCondition: false })
-                    );
-                  }}
-                >
-                  Preview
-                </button>
-                <button disabled={formUpdating} onClick={handleSave}>
-                  {formUpdating ? (
-                    <div
-                      className="spinner"
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        borderWidth: "3px",
-                        margin: "auto",
-                        backgroundColor: "transparent",
+                {!ui.showPageFlow && (
+                  <>
+                    <button
+                      onClick={() => {
+                        dispatch(
+                          setUi({
+                            ...ui,
+                            previewMode: true,
+                            addCondition: false,
+                          })
+                        );
                       }}
-                    ></div>
-                  ) : (
-                    "Save"
-                  )}
-                </button>
+                    >
+                      Preview
+                    </button>
+                    <button disabled={formUpdating} onClick={handleSave}>
+                      {formUpdating ? (
+                        <div
+                          className="spinner"
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            borderWidth: "3px",
+                            margin: "auto",
+                            backgroundColor: "transparent",
+                          }}
+                        ></div>
+                      ) : (
+                        "Save"
+                      )}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
             <div className="builder-tools-inner-container">
-              <FormBuilderMain />
-              <SidebarRight />
+              {ui.addCondition && <AddConditionComponent data={{ ...data }} />}
+              {ui.showPageFlow ? (
+                <PageFlow data={{ ...data }} />
+              ) : (
+                <>
+                  <FormBuilderMain />
+                  <SidebarRight />
+                </>
+              )}
+
+              {ui.publish && (
+                <PublishModal
+                  onClose={() => {
+                    dispatch(setUi({ ...ui, publish: false }));
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>

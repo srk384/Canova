@@ -2,6 +2,7 @@ import "./DropdownStyle.css";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setQuestions } from "../../../../utils/redux/slices/questionsSlice";
+import { setConditions } from "../../../../utils/redux/slices/conditionsSlice";
 
 const Dropdown = ({ question }) => {
   const { qId, elId, qno, type, text } = question;
@@ -12,6 +13,7 @@ const Dropdown = ({ question }) => {
   const dispatch = useDispatch();
   const { questions } = useSelector((state) => state.questionsSlice);
   const { ui } = useSelector((state) => state.uiSlice);
+  const { conditions } = useSelector((state) => state.conditions);
 
   useEffect(() => {
     if (qId) {
@@ -108,30 +110,60 @@ const Dropdown = ({ question }) => {
                 name={`condition ${qId || elId}`}
                 disabled={ui?.previewMode}
                 value={opt}
+                checked={
+                  conditions.find(
+                    (c) =>
+                      c.questionId === (qId || elId) && c.trueAnswer === opt
+                  ) !== undefined
+                }
                 className="hidden-condition-radio"
                 onClick={() => {
-                  if (qId) {
-                    const updatedOptions = questions.map((question) =>
-                      question.qId === qId
-                        ? { ...question, trueAnswer: opt }
-                        : question
-                    );
-                    dispatch(setQuestions(updatedOptions));
-                  } else if (elId) {
-                    const updatedOptions = questions.map((question) => {
-                      if (question.elements) {
-                        return {
-                          ...question,
-                          elements: question.elements.map((el) =>
-                            el.elId === elId ? { ...el, trueAnswer: opt } : el
-                          ),
-                        };
-                      }
-                      return question;
-                    });
+                  // if (qId) {
+                  //   const updatedOptions = questions.map((question) =>
+                  //     question.qId === qId
+                  //       ? { ...question, conditions: { ...question.conditions, trueAnswer: opt } }
+                  //       : question
+                  //   );
+                  //   dispatch(setQuestions(updatedOptions));
+                  // } else if (elId) {
+                  //   const updatedOptions = questions.map((question) => {
+                  //     if (question.elements) {
+                  //       return {
+                  //         ...question,
+                  //         elements: question.elements.map((el) =>
+                  //           el.elId === elId ? { ...el, conditions: { ...el.conditions, trueAnswer: opt } } : el
+                  //         ),
+                  //       };
+                  //     }
+                  //     return question;
+                  //   });
 
-                    dispatch(setQuestions(updatedOptions));
+                  //   dispatch(setQuestions(updatedOptions));
+                  // }
+
+                  const updatedConditions = Array.isArray(conditions)
+                    ? [...conditions]
+                    : []; // ensure array
+
+                  const existingIndex = updatedConditions.findIndex(
+                    (c) => c.questionId === (qId || elId)
+                  );
+
+                  if (existingIndex !== -1) {
+                    // Overwrite the existing condition
+                    updatedConditions[existingIndex] = {
+                      ...updatedConditions[existingIndex],
+                      trueAnswer: opt,
+                    };
+                  } else {
+                    // Add a new condition if array is empty or doesn't have this question
+                    updatedConditions.push({
+                      questionId: qId || elId,
+                      trueAnswer: opt,
+                    });
                   }
+
+                  dispatch(setConditions(updatedConditions));
                 }}
               />
               <span className="custom-condition-radio"></span>

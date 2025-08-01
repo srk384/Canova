@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useGetQuestionsQuery } from "../../../utils/redux/api/PageAPI";
 import { setQuestions } from "../../../utils/redux/slices/questionsSlice";
 import { setUi } from "../../../utils/redux/slices/uiSlice";
 import FileUploadModal from "../../common/fileUploadModal/FileUploadModal";
@@ -8,15 +7,12 @@ import AddQuestionComponent from "../sidebarRight/actionButtons/addQuestionCompo
 import AddTextComponent from "../sidebarRight/actionButtons/addTextComponent/AddTextComponent";
 import AddVideoComponent from "../sidebarRight/actionButtons/addVideoComponent/AddVideoComponent";
 import "./formBuilderMainStyle.css";
-import AddConditionComponent from "../sidebarRight/actionButtons/addConditionComponent/AddConditionComponent";
 
 const FormBuilderMain = () => {
   const { ui } = useSelector((state) => state.uiSlice);
   const { questions, sections } = useSelector((state) => state.questionsSlice);
   const rgba = ui?.pageColor;
   const dispatch = useDispatch();
-
-  const { data } = useGetQuestionsQuery("6884d18ad4bf6aed233ff47a");
 
   const handleUpload = async (file) => {
     const type = file.type.split("/")[0];
@@ -148,8 +144,6 @@ const FormBuilderMain = () => {
         }
         onUpload={handleUpload}
       />
-
-      {ui.addCondition && <AddConditionComponent/> }
     </div>
   );
 };

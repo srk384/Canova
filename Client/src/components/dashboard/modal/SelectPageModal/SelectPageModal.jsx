@@ -1,9 +1,15 @@
 import { useState } from "react";
 import "./SelectPageModalStyle.css";
+import { useDispatch, useSelector } from "react-redux";
+import { setUi } from "../../../../utils/redux/slices/uiSlice";
+import { setConditions } from "../../../../utils/redux/slices/conditionsSlice";
 
-const SelectPageModal = ({ onClose, pages = [], onContinue }) => {
+const SelectPageModal = ({ onClose, pages, onContinue }) => {
   const [selectedTruePage, setSelectedTruePage] = useState("");
   const [selectedFalsePage, setSelectedFalsePage] = useState("");
+  const { ui } = useSelector((state) => state.uiSlice);
+  const { conditions } = useSelector((state) => state.conditions);
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -11,6 +17,7 @@ const SelectPageModal = ({ onClose, pages = [], onContinue }) => {
       truePage: selectedTruePage,
       falsePage: selectedFalsePage,
     });
+    dispatch(setUi({ ...ui, addCondition: false }));
   };
 
   return (
@@ -24,7 +31,7 @@ const SelectPageModal = ({ onClose, pages = [], onContinue }) => {
         {/* Header */}
         <div className="select-page-modal-header">
           <img
-            src="../svgs/cube.svg"
+            src="/svgs/cube.svg"
             alt="Page Icon"
             className="select-page-modal-icon"
           />
@@ -43,35 +50,57 @@ const SelectPageModal = ({ onClose, pages = [], onContinue }) => {
         {/* Form */}
         <form className="select-page-modal-form" onSubmit={handleSubmit}>
           {/* Select if True */}
-          <label className="select-page-modal-label">Select, if it's True</label>
+          <label className="select-page-modal-label">
+            Select, if it's True
+          </label>
           <select
             value={selectedTruePage}
-            onChange={(e) => setSelectedTruePage(e.target.value)}
+            onChange={(e) => {
+              setSelectedTruePage(e.target.value);
+              const updatedConditions = conditions.map((condition) => ({
+                ...condition,
+                truePage: e.target.value,
+              }));
+              dispatch(setConditions(updatedConditions));
+            }}
             className="select-page-modal-input"
             required
           >
             <option value="">Select Page</option>
-            {pages.map((page) => (
-              <option key={page.id} value={page.id}>
-                {page.name}
-              </option>
-            ))}
+            {pages
+              .filter((page) => page._id !== ui.activePageId)
+              .map((page) => (
+                <option key={page._id} value={page._id}>
+                  {page.title}
+                </option>
+              ))}
           </select>
 
           {/* Select if False */}
-          <label className="select-page-modal-label">Select, if it's False</label>
+          <label className="select-page-modal-label">
+            Select, if it's False
+          </label>
           <select
             value={selectedFalsePage}
-            onChange={(e) => setSelectedFalsePage(e.target.value)}
+            onChange={(e) => {
+              setSelectedFalsePage(e.target.value);
+              const updatedConditions = conditions.map((condition) => ({
+                ...condition,
+                falsePage: e.target.value,
+              }));
+              dispatch(setConditions(updatedConditions));
+            }}
             className="select-page-modal-input"
             required
           >
             <option value="">Select Page</option>
-            {pages.map((page) => (
-              <option key={page.id} value={page.id}>
-                {page.name}
-              </option>
-            ))}
+            {pages
+              .filter((page) => page._id !== ui.activePageId)
+              .map((page) => (
+                <option key={page._id} value={page._id}>
+                  {page.title}
+                </option>
+              ))}
           </select>
 
           {/* Continue button */}

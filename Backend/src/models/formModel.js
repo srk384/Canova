@@ -30,6 +30,7 @@ const questionSchema = new mongoose.Schema(
     trueAnswer: String,
     options: [String],
     elements: [elementSchema], // for section's inner elements
+    conditions: Object,
   },
   { _id: false }
 );
@@ -38,6 +39,7 @@ const questionSchema = new mongoose.Schema(
 const pageSchema = new mongoose.Schema(
   {
     _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+    title: { type: String, default: "Untitled Page" },
     questions: [questionSchema],
   },
   { _id: false }

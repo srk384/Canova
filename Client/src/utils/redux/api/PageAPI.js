@@ -12,17 +12,25 @@ export const pageAPi = createApi({
   reducerPath: "pageAPi",
   baseQuery,
   endpoints: (build) => ({
-    postQuestions: build.mutation({
+    addPages: build.mutation({
       query: ({ action, ...data }) => ({
         url: action,
         method: "POST",
         body: data,
       }),
     }),
-    getQuestions: build.query({
+    updatePages: build.mutation({
+      query: ({ action, ...data }) => ({
+        url: action,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
+    getPages: build.query({
       query: (path) => path,
     }),
   }),
 });
 
-export const { usePostQuestionsMutation, useGetQuestionsQuery } = pageAPi;
+export const { useAddPagesMutation, useGetPagesQuery, useUpdatePagesMutation } =
+  pageAPi;

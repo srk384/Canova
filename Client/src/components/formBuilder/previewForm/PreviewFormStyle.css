@@ -5,6 +5,10 @@
   height: 100vh;
   padding-top: 10px;
   background-color: white;
+  & textarea,
+  input {
+    color: black;
+  }
 }
 .back-to-editBtn {
   position: fixed;

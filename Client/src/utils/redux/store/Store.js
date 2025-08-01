@@ -9,6 +9,7 @@ import questionsSliceReducer from "../slices/questionsSlice";
 import uiSliceReducer from "../slices/uiSlice";
 import userSliceReducer from "../slices/userSlice";
 import builderStateSliceReducer from "../slices/builderStateSlice";
+import conditionsSliceReducer from "../slices/conditionsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     questionsSlice: questionsSliceReducer,
     questionsSlice: questionsSliceReducer,
     builderState: builderStateSliceReducer,
+    conditions: conditionsSliceReducer,
     [authApi.reducerPath]: authApi.reducer,
     [projectsApi.reducerPath]: projectsApi.reducer,
     [formAPI.reducerPath]: formAPI.reducer,
