@@ -5,6 +5,7 @@ import { formAPI } from "../api/FormAPI";
 import { projectsApi } from "../api/ProjectAPI";
 import { pageAPi } from "../api/PageAPI";
 import { draftPublishAPI } from "../api/draftPublishAPI";
+import { formPublicAPI } from "../api/FormPublicAPI";
 import questionsSliceReducer from "../slices/questionsSlice";
 import uiSliceReducer from "../slices/uiSlice";
 import userSliceReducer from "../slices/userSlice";
@@ -24,6 +25,7 @@ export const store = configureStore({
     [formAPI.reducerPath]: formAPI.reducer,
     [pageAPi.reducerPath]: pageAPi.reducer,
     [draftPublishAPI.reducerPath]: draftPublishAPI.reducer,
+    [formPublicAPI.reducerPath]: formPublicAPI.reducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.
@@ -33,7 +35,8 @@ export const store = configureStore({
       projectsApi.middleware,
       formAPI.middleware,
       pageAPi.middleware,
-      draftPublishAPI.middleware
+      draftPublishAPI.middleware,
+      formPublicAPI.middleware
     ),
 });
 

@@ -3,7 +3,7 @@ import { setQuestions } from "../../../../utils/redux/slices/questionsSlice";
 import "./LinearScaleStyle.css";
 
 const LinearScale = ({ question }) => {
-  const { qId, elId, value, text } = question;
+  const { qId, elId, response, text } = question;
 
   const min = 0;
   const max = 10;
@@ -17,7 +17,7 @@ const LinearScale = ({ question }) => {
 
     if (qId) {
       const updated = questions.map((q) =>
-        q.qId === qId ? { ...q, value: numericValue } : q
+        q.qId === qId ? { ...q, response: numericValue } : q
       );
       dispatch(setQuestions(updated));
     } else if (elId) {
@@ -26,7 +26,7 @@ const LinearScale = ({ question }) => {
           return {
             ...q,
             elements: q.elements.map((el) =>
-              el.elId === elId ? { ...el, value: numericValue } : el
+              el.elId === elId ? { ...el, response: numericValue } : el
             ),
           };
         }
@@ -52,14 +52,14 @@ const LinearScale = ({ question }) => {
         <input
           style={{
             background: `linear-gradient(to right, #4da3ff ${
-              ((value || (max + min) / 2) / max) * 100
-            }%, #ddd ${((value || (max + min) / 2) / max) * 100}%)`,
+              ((response || (max + min) / 2) / max) * 100
+            }%, #ddd ${((response || (max + min) / 2) / max) * 100}%)`,
           }}
           type="range"
           min={min}
           max={max}
-          value={value ?? (max + min) / 2} // fallback to middle if undefined
-          disabled={ui?.previewMode}
+          value={response ?? (max + min) / 2} 
+          // disabled={ui?.previewMode}
           className="slider"
           onChange={(e) => handleChange(e.target.value)}
         />
@@ -68,12 +68,12 @@ const LinearScale = ({ question }) => {
           className="thumb-label"
           style={{
             left: `${
-              (((value || (max + min) / 2) - min) / (max - min)) * 100
+              (((response || (max + min) / 2) - min) / (max - min)) * 100
             }%`,
           }}
         >
           <div className="thumb-check">&#10003;</div>
-          <span className="thumb-value">{value ?? (max + min) / 2}</span>
+          <span className="thumb-value">{response ?? (max + min) / 2}</span>
         </div>
       </div>
     </div>

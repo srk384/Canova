@@ -16,7 +16,8 @@
   align-items: center;
   margin-top: 10px;
   gap: 10px;
-  flex:1
+  flex:1;
+  position: relative;
 }
 
 .option-input {
@@ -48,8 +49,8 @@
   position: absolute;
   opacity: 00;
   cursor: pointer;
-  height: 19px;
-  width: 19px;
+  height: 24px;
+  width: 24px;
   z-index: 99;
 }
 
@@ -86,7 +87,6 @@
 .hidden-radio:checked + .custom-radio::after {
   display: block;
 }
-
 
 
 
@@ -156,3 +156,4 @@
   z-index: 2;
   font-weight: bold;
 }
+

@@ -11,7 +11,7 @@ import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setQuestions } from "../../../../../utils/redux/slices/questionsSlice";
 
-const AddQuestionComponent = ({ question }) => {
+const AddQuestionComponent = ({ question, preview }) => {
   const { qId, elId, qno, type, text, options } = question;
 
   const { questions } = useSelector((state) => state.questionsSlice);
@@ -19,7 +19,7 @@ const AddQuestionComponent = ({ question }) => {
 
   // const [isContainElements, setIsContainElements] = useState(false);
 
-  const preview = ui?.previewMode;
+  // const preview = ui?.previewMode;
   const [isClickedSelectQuestionType, setIsClickedSelectQuestionType] =
     useState(false);
   const [questionType, setQuestionType] = useState(type);
@@ -243,7 +243,7 @@ const AddQuestionComponent = ({ question }) => {
               id="quesTextArea"
               placeholder="What is?"
               rows={1}
-              disabled={preview}
+              disabled={ui.previewMode}
               value={text}
               onKeyDown={(e) => handleKeyDown(e)}
               onChange={(e) => {
@@ -281,12 +281,11 @@ const AddQuestionComponent = ({ question }) => {
           </div>
 
           <div className="select-question-type-container">
-            {!preview && (
+            {!ui?.previewMode && (
               <img
                 src={`/svgs/${questionType}.svg`}
                 alt=""
                 className="select-question-type"
-               
                 onClick={() =>
                   !preview &&
                   setIsClickedSelectQuestionType(!isClickedSelectQuestionType)

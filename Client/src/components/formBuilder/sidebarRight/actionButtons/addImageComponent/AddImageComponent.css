@@ -6,21 +6,27 @@
   display: flex;
   align-items: flex-start;
   gap: 5px;
-  & button {
-    border: none;
-    outline: none;
-    padding: 2px;
-    border-radius: 5px;
-    box-shadow: 0 4px 4px 0 #00000025;
-    cursor: pointer;
-    right: 0;
-    top: 0;
-    background-color: transparent;
-  }
 }
 
 .img {
-  width: 100%;
+  width: 96.5%;
   height: 600px;
   object-fit: contain;
+}
+
+.delete-img-btn {
+  border: none;
+  outline: none;
+  padding: 2px;
+  border-radius: 5px;
+  box-shadow: 0 4px 4px 0 #00000025;
+  cursor: pointer;
+  right: 0;
+  top: 0;
+  background-color: transparent;
+  opacity: 00;
+}
+
+.form-image-container:hover .delete-img-btn {
+  opacity: 100;
 }

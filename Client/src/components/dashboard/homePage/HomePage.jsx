@@ -10,11 +10,13 @@ import ProjectComponent from "../../common/ProjectComponent";
 import CreateProjectModal from "../modal/createProject/CreateProjectModal";
 import "./HomePage.css";
 import SpinnerOverlay from "../../common/spinnerOverlay/SpinnerOverlay";
+import { useSelector } from "react-redux";
 
 const HomePage = () => {
   const [isCreateProjectClicked, setIsCreateProjectClicked] = useState(false);
   const [createProject, { isLoading, isError, error }] =
     useCreateProjectMutation();
+
   const navigate = useNavigate();
 
   const {

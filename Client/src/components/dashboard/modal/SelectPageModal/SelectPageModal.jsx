@@ -3,13 +3,20 @@ import "./SelectPageModalStyle.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setUi } from "../../../../utils/redux/slices/uiSlice";
 import { setConditions } from "../../../../utils/redux/slices/conditionsSlice";
+import { useGetPagesQuery } from "../../../../utils/redux/api/PageAPI";
+import { useParams } from "react-router-dom";
 
-const SelectPageModal = ({ onClose, pages, onContinue }) => {
+const SelectPageModal = ({ onClose, onContinue }) => {
   const [selectedTruePage, setSelectedTruePage] = useState("");
   const [selectedFalsePage, setSelectedFalsePage] = useState("");
   const { ui } = useSelector((state) => state.uiSlice);
   const { conditions } = useSelector((state) => state.conditions);
   const dispatch = useDispatch();
+
+  const { id } = useParams();
+
+  const { data } = useGetPagesQuery(`/get/${id}`);
+  const pages = data?.form?.pages;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -57,10 +64,11 @@ const SelectPageModal = ({ onClose, pages, onContinue }) => {
             value={selectedTruePage}
             onChange={(e) => {
               setSelectedTruePage(e.target.value);
-              const updatedConditions = conditions.map((condition) => ({
-                ...condition,
-                truePage: e.target.value,
-              }));
+              const updatedConditions = conditions.map((condition) =>
+                condition.pageId === ui.activePageId
+                  ? { ...condition, truePage: e.target.value }
+                  : condition
+              );
               dispatch(setConditions(updatedConditions));
             }}
             className="select-page-modal-input"
@@ -84,10 +92,11 @@ const SelectPageModal = ({ onClose, pages, onContinue }) => {
             value={selectedFalsePage}
             onChange={(e) => {
               setSelectedFalsePage(e.target.value);
-              const updatedConditions = conditions.map((condition) => ({
-                ...condition,
-                falsePage: e.target.value,
-              }));
+              const updatedConditions = conditions.map((condition) =>
+                condition.pageId === ui.activePageId
+                  ? { ...condition, falsePage: e.target.value }
+                  : condition
+              );
               dispatch(setConditions(updatedConditions));
             }}
             className="select-page-modal-input"

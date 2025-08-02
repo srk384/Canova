@@ -11,6 +11,7 @@ const AddImageComponent = ({ src }) => {
     <div className="form-image-container">
       <img src={src} alt="form element" className="img" />
       <button
+        className="delete-img-btn"
         onClick={() => {
           const updated = questions.map((question) =>
             question.elements?.some((el) => el.src === src)
@@ -24,7 +25,7 @@ const AddImageComponent = ({ src }) => {
           dispatch(setQuestions(updated));
         }}
       >
-       {!ui.previewMode && <img src="/svgs/delete.svg" alt="" />}
+        {!ui.previewMode && <img src="/svgs/delete.svg" alt="" style={{width:'20px'}}/>}
       </button>
     </div>
   );

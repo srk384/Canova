@@ -9,6 +9,7 @@ const projectsRoute = require('./src/routes/projectRoute')
 const formsRoute = require('./src/routes/formsRoute')
 const pagesRoute = require('./src/routes/pagesRoute')
 const draftPublishRoute = require('./src/routes/draftPublishRoute')
+const publicRoute = require('./src/routes/publicRoute')
 const { connectDB } = require("./src/config/ConnectDB");
 
 
@@ -24,6 +25,7 @@ app.use('/api/projects', projectsRoute)
 app.use('/api/forms', formsRoute)
 app.use('/api/pages', pagesRoute)
 app.use('/api/draftPublish', draftPublishRoute)
+app.use('/api/public', publicRoute)
 
 app.listen(port, () => {
   console.log(`Server is runnning at Port: ${port}`);

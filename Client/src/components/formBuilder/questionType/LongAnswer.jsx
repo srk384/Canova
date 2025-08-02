@@ -10,7 +10,7 @@ const LongAnswer = ({ question }) => {
         name="shortAnswer"
         id="longAnswerTextarea"
         value={answer}
-        disabled={ui?.previewMode}
+        // disabled={ui?.previewMode}
         placeholder="Your Answer here..."
         rows={8}
       ></textarea>

@@ -5,7 +5,7 @@ import { setQuestions } from "../../../../utils/redux/slices/questionsSlice";
 import { setConditions } from "../../../../utils/redux/slices/conditionsSlice";
 
 const Dropdown = ({ question }) => {
-  const { qId, elId, qno, type, text } = question;
+  const { qId, elId, qno, type, text, pageId } = question;
 
   const [options, setOptions] = useState(["", ""]); // Start with 2 empty options
   const optionRefs = useRef([]);
@@ -90,87 +90,140 @@ const Dropdown = ({ question }) => {
 
   return (
     <div className="dropdown-container">
-      {options.map((opt, i) => (
-        <div className="option-condition-row" key={i}>
-          <div className="option-row">
-            <input
-              ref={(el) => (optionRefs.current[i] = el)}
-              className="dropdown-option-input"
-              value={opt}
-              disabled={ui?.previewMode}
-              onChange={(e) => handleChange(e.target.value, i)}
-              onKeyDown={(e) => handleKeyDown(e, i)}
-              placeholder={`Drop Down Option ${i + 1}`}
-            />
-          </div>
-          {ui.addCondition && (
-            <div className="addcondition-radio">
+      {!ui.previewMode &&
+        options.map((opt, i) => (
+          <div className="option-condition-row" key={i}>
+            <div className="option-row">
               <input
-                type="radio"
-                name={`condition ${qId || elId}`}
-                disabled={ui?.previewMode}
+                ref={(el) => (optionRefs.current[i] = el)}
+                className="dropdown-option-input"
                 value={opt}
-                checked={
-                  conditions.find(
-                    (c) =>
-                      c.questionId === (qId || elId) && c.trueAnswer === opt
-                  ) !== undefined
-                }
-                className="hidden-condition-radio"
-                onClick={() => {
-                  // if (qId) {
-                  //   const updatedOptions = questions.map((question) =>
-                  //     question.qId === qId
-                  //       ? { ...question, conditions: { ...question.conditions, trueAnswer: opt } }
-                  //       : question
-                  //   );
-                  //   dispatch(setQuestions(updatedOptions));
-                  // } else if (elId) {
-                  //   const updatedOptions = questions.map((question) => {
-                  //     if (question.elements) {
-                  //       return {
-                  //         ...question,
-                  //         elements: question.elements.map((el) =>
-                  //           el.elId === elId ? { ...el, conditions: { ...el.conditions, trueAnswer: opt } } : el
-                  //         ),
-                  //       };
-                  //     }
-                  //     return question;
-                  //   });
-
-                  //   dispatch(setQuestions(updatedOptions));
-                  // }
-
-                  const updatedConditions = Array.isArray(conditions)
-                    ? [...conditions]
-                    : []; // ensure array
-
-                  const existingIndex = updatedConditions.findIndex(
-                    (c) => c.questionId === (qId || elId)
-                  );
-
-                  if (existingIndex !== -1) {
-                    // Overwrite the existing condition
-                    updatedConditions[existingIndex] = {
-                      ...updatedConditions[existingIndex],
-                      trueAnswer: opt,
-                    };
-                  } else {
-                    // Add a new condition if array is empty or doesn't have this question
-                    updatedConditions.push({
-                      questionId: qId || elId,
-                      trueAnswer: opt,
-                    });
-                  }
-
-                  dispatch(setConditions(updatedConditions));
-                }}
+                // disabled={ui?.previewMode}
+                onChange={(e) => handleChange(e.target.value, i)}
+                onKeyDown={(e) => handleKeyDown(e, i)}
+                placeholder={`Drop Down Option ${i + 1}`}
               />
-              <span className="custom-condition-radio"></span>
             </div>
-          )}
+
+            {/*--------------------------------- add condition ------------------------------------*/}
+
+            {ui.addCondition && (
+              <div className="addcondition-radio">
+                <input
+                  type="radio"
+                  name={`condition ${qId || elId}`}
+                  disabled={ui?.previewMode}
+                  value={opt}
+                  checked={
+                    conditions.find(
+                      (c) =>
+                        c.questionId === (qId || elId) && c.trueAnswer === opt
+                    ) !== undefined
+                  }
+                  className="hidden-condition-radio"
+                  onClick={() => {
+                    const updatedConditions = Array.isArray(conditions)
+                      ? [...conditions]
+                      : []; // ensure array
+
+                    const existingIndex = updatedConditions.findIndex(
+                      (c) => c.questionId === (qId || elId)
+                    );
+
+                    if (existingIndex !== -1) {
+                      // Overwrite the existing condition
+                      updatedConditions[existingIndex] = {
+                        ...updatedConditions[existingIndex],
+                        trueAnswer: opt,
+                      };
+                    } else {
+                      // Add a new condition if array is empty or doesn't have this question
+                      updatedConditions.push({
+                        questionId: qId || elId,
+                        trueAnswer: opt,
+                        pageId: pageId,
+                      });
+                    }
+
+                    dispatch(setConditions(updatedConditions));
+                  }}
+                />
+                <span className="custom-condition-radio"></span>
+              </div>
+            )}
+          </div>
+        ))}
+
+      {ui.previewMode && (
+        <div className="custom-dropdown-container">
+          {(() => {
+            const [selectedOption, setSelectedOption] =
+              useState("Select an option");
+            const [isOpen, setIsOpen] = useState(false);
+
+            return (
+              <div className="custom-dropdown-wrapper">
+                {/* Dropdown header */}
+                <div
+                  className="custom-dropdown"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  <img src="/svgs/downArrow.svg" alt="" />
+                  <span>{selectedOption}</span>
+                </div>
+
+                {/* Options */}
+                {isOpen && (
+                  <div className="custom-dropdown-options">
+                    {options.map((opt) => (
+                      <span
+                        key={opt}
+                        className="custom-dropdown-option"
+                        onClick={() => {
+                          setSelectedOption(opt);
+                          setIsOpen(false);
+                          if (qId) {
+                            const userResp = questions.map((question) =>
+                              question.qId === qId
+                                ? {
+                                    ...question,
+                                    response: opt,
+                                  }
+                                : question
+                            );
+                            dispatch(setQuestions(userResp));
+                          } else if (elId) {
+                            const userResp = questions.map((question) => {
+                              if (question.elements) {
+                                return {
+                                  ...question,
+                                  elements: question.elements.map((el) =>
+                                    el.elId === elId
+                                      ? {
+                                          ...el,
+                                          response: opt,
+                                        }
+                                      : el
+                                  ),
+                                };
+                              }
+                              return question;
+                            });
+
+                            dispatch(setQuestions(userResp));
+                          }
+                        }}
+                      >
+                        {opt}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
-      ))}
+      )}
     </div>
   );
 };

@@ -7,7 +7,7 @@ import { setQuestions } from "../../../utils/redux/slices/questionsSlice";
 import dayjs from "dayjs";
 
 const Date = ({ question }) => {
-  const { qId, elId, value } = question;
+  const { qId, elId, value, response } = question;
   const { questions } = useSelector((state) => state.questionsSlice);
   const dispatch = useDispatch();
 
@@ -16,7 +16,7 @@ const Date = ({ question }) => {
 
     if (qId) {
       const updated = questions.map((q) =>
-        q.qId === qId ? { ...q, value: dateValue } : q
+        q.qId === qId ? { ...q, response: dateValue } : q
       );
       dispatch(setQuestions(updated));
     } else if (elId) {
@@ -25,7 +25,7 @@ const Date = ({ question }) => {
           return {
             ...q,
             elements: q.elements.map((el) =>
-              el.elId === elId ? { ...el, value: dateValue } : el
+              el.elId === elId ? { ...el, response: dateValue } : el
             ),
           };
         }
@@ -39,7 +39,12 @@ const Date = ({ question }) => {
     <div style={{ padding: "0px 30px" }}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={["DatePicker"]}>
-          <DatePicker  value={value ? dayjs(value) : null} onChange={handleChange} />
+          <DatePicker
+            value={
+              value ? dayjs(value) : null || response ? dayjs(response) : null
+            }
+            onChange={handleChange}
+          />
         </DemoContainer>
       </LocalizationProvider>
     </div>

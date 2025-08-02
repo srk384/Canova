@@ -7,12 +7,17 @@ import AddQuestionComponent from "../sidebarRight/actionButtons/addQuestionCompo
 import AddTextComponent from "../sidebarRight/actionButtons/addTextComponent/AddTextComponent";
 import AddVideoComponent from "../sidebarRight/actionButtons/addVideoComponent/AddVideoComponent";
 import "./formBuilderMainStyle.css";
+import { useEffect } from "react";
 
 const FormBuilderMain = () => {
   const { ui } = useSelector((state) => state.uiSlice);
   const { questions, sections } = useSelector((state) => state.questionsSlice);
   const rgba = ui?.pageColor;
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.querySelector(".formBuilder-main-content-body").scrollTop = 0;
+  }, [ui.uploadModal]);
 
   const handleUpload = async (file) => {
     const type = file.type.split("/")[0];
@@ -62,7 +67,10 @@ const FormBuilderMain = () => {
   return (
     <div
       className="formBuilder-main-content-body"
-      style={{ backgroundColor: rgba }}
+      style={{
+        backgroundColor: rgba,
+        overflowY: `${ui.uploadModal ? "hidden" : "auto"}`,
+      }}
     >
       {questions
         .filter((q) => q?.pageId === ui?.activePageId)

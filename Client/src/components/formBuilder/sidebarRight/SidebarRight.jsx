@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import {
-  setQuestions
-} from "../../../utils/redux/slices/questionsSlice";
+import { setQuestions } from "../../../utils/redux/slices/questionsSlice";
 import { setUi } from "../../../utils/redux/slices/uiSlice";
 import "./SidebarRightStyle.css";
 
@@ -158,6 +156,7 @@ const SidebarRight = () => {
                           elId: Date.now(),
                           type: "multipleChoice",
                           text: "",
+                          pageId: ui.activePageId,
                           elementsOrder: elementOrder(
                             questions,
                             ui.activePageId,
@@ -205,7 +204,7 @@ const SidebarRight = () => {
           <img src="/svgs/addText.svg" alt="" />
           <span>Add Text</span>
         </button>
-{/* -------------------------------------------------------------- */}
+        {/* -----------------------------add condition--------------------------------- */}
         <button
           onClick={() => {
             if (questions.length > 0) {
@@ -224,7 +223,7 @@ const SidebarRight = () => {
           <img src="/svgs/addConditions.svg" alt="" />
           <span>Add Condition</span>
         </button>
-{/* ------------------------------------------------------------------------------- */}
+        {/* ---------------------------------------add image---------------------------------------- */}
         <button
           onClick={() => {
             ui?.activeSectionId
@@ -285,7 +284,7 @@ const SidebarRight = () => {
         </button>
       </div>
 
-      {/* ----------------------------------------------------------------------------------- */}
+      {/* ---------------------------------------colors-------------------------------------------- */}
 
       <label>Background Color</label>
       <div className="color-opacity-picker">
@@ -361,7 +360,13 @@ const SidebarRight = () => {
         />
       </div>
       <div className="formBuilder-right-sidebar-next-container">
-        <button className="formBuilder-right-sidebar-nextBTN" onClick={()=>dispatch(setUi({...ui, showPageFlow:true}))}>Next</button>
+        <button
+          className="formBuilder-right-sidebar-nextBTN"
+          disabled={questions.length < 1 }
+          onClick={() => dispatch(setUi({ ...ui, showPageFlow: true, addCondition:false }))}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

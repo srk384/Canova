@@ -1,19 +1,16 @@
-import { useEffect, useState } from "react";
-import SelectPageModal from "../../../../dashboard/modal/SelectPageModal/SelectPageModal";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setUi } from "../../../../../utils/redux/slices/uiSlice";
-import { setConditions } from "../../../../../utils/redux/slices/conditionsSlice";
 import { setQuestions } from "../../../../../utils/redux/slices/questionsSlice";
+import SelectPageModal from "../../../../dashboard/modal/SelectPageModal/SelectPageModal";
 
-const AddConditionComponent = ({ data }) => {
-  const { form } = data;
+const AddConditionComponent = () => {
   const [openSelectPageModal, setOpenSelectPageModal] = useState(false);
   const { ui } = useSelector((state) => state.uiSlice);
   const { questions } = useSelector((state) => state.questionsSlice);
   const { conditions } = useSelector((state) => state.conditions);
   const dispatch = useDispatch();
-
-  // console.log(conditions);
+  console.log(conditions);
+  // console.log(questions);
 
   return (
     <div>
@@ -26,7 +23,6 @@ const AddConditionComponent = ({ data }) => {
       {openSelectPageModal && (
         <SelectPageModal
           onClose={() => setOpenSelectPageModal(false)}
-          pages={form.pages}
           onContinue={({ truePage, falsePage }) => {
             const updatedQuestions = questions.map((q) => {
               // Check if condition exists for this question's qId

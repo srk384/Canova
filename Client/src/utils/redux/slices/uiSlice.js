@@ -9,7 +9,8 @@ const initialState = {
     previewMode: false,
     formName: null,
     uploadModal:false,
-    uploadType:null
+    uploadType:null,
+    publicWelcomeScreen:true
   },
 };
 

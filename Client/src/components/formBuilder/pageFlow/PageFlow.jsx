@@ -2,30 +2,19 @@ import { useDispatch, useSelector } from "react-redux";
 import "./PageFlow.css";
 import { useState } from "react";
 import { setUi } from "../../../utils/redux/slices/uiSlice";
+import { useParams } from "react-router-dom";
+import { useGetPagesQuery } from "../../../utils/redux/api/PageAPI";
 
-const PageFlow = ({ data }) => {
+const PageFlow = () => {
   const { questions } = useSelector((state) => state.questionsSlice);
   const { ui } = useSelector((state) => state.uiSlice);
   const [activePage, setActivePage] = useState("");
   const dispatch = useDispatch();
-  //     const pages = [
-  //   { id: "page01", name: "Page 01" },
-  //   { id: "page02", name: "Page 02" },
-  //   { id: "page03", name: "Page 03" },
-  // ];
 
-  // const questions = [
-  //   {
-  //     qId: "q1",
-  //     text: "Do you agree?",
-  //     conditions: {
-  //       truePageId: "page02",
-  //       falsePageId: "page03",
-  //     },
-  //   },
-  // ];
+  const { id } = useParams();
 
-  const pages = data.form.pages;
+  const { data } = useGetPagesQuery(`/get/${id}`);
+  const pages = data?.form?.pages;
 
   // Build tree data
   const buildTree = () => {
@@ -50,7 +39,7 @@ const PageFlow = ({ data }) => {
             tree.push({
               questionId: el.elId,
               text: el.text,
-              pageId: q.pageId, // ✅ get the parent pageId
+              pageId: el.pageId,
               truePageId: el.conditions?.truePage,
               falsePageId: el.conditions?.falsePage,
             });
@@ -63,6 +52,9 @@ const PageFlow = ({ data }) => {
   };
 
   const treeData = buildTree();
+
+  console.log(treeData);
+  console.log(pages);
 
   return (
     <div className="page-flow-container">
@@ -83,10 +75,8 @@ const PageFlow = ({ data }) => {
 
       {treeData
         .filter((t) => t.pageId === activePage)
-        .slice(0, 1)
         .map((node) => (
           <div key={node.questionId} className="page-node-wrapper">
-            <div className="page-node"></div>
 
             <div className="branches">
               {/* True branch */}
@@ -95,9 +85,24 @@ const PageFlow = ({ data }) => {
                   <span className="branch-label">
                     <img src="/svgs/true.svg" alt="" />
                   </span>
-                  <div className="page-box">
-                    {pages.find((p) => p._id === node.truePageId)?.title ||
-                      "Page"}
+
+                  <div className="page-box-container">
+                    <div className="page-box">
+                      {pages.find((p) => p._id === node.truePageId)?.title ||
+                        "Page"}
+                    </div>
+
+                    {pages
+                      .filter(
+                        (page, index) =>
+                          index >
+                          pages.findIndex(
+                            (page) => page._id === node.truePageId
+                          )
+                      )
+                      .map((page) => (
+                        <div className="page-box">{page.title}</div>
+                      ))}
                   </div>
                 </div>
               )}
@@ -108,9 +113,23 @@ const PageFlow = ({ data }) => {
                   <span className="branch-label">
                     <img src="/svgs/false.svg" alt="" />
                   </span>
-                  <div className="page-box">
-                    {pages.find((p) => p._id === node.falsePageId)?.title ||
-                      "Page"}
+                  <div className="page-box-container">
+                    <div className="page-box">
+                      {pages.find((p) => p._id === node.falsePageId)?.title ||
+                        "Page"}
+                    </div>
+
+                    {pages
+                      .filter(
+                        (page, index) =>
+                          index >
+                          pages.findIndex(
+                            (page) => page._id === node.falsePageId
+                          )
+                      )
+                      .map((page) => (
+                        <div className="page-box">{page.title} </div>
+                      ))}
                   </div>
                 </div>
               )}

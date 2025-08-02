@@ -9,10 +9,36 @@ const ShortAnswer = ({ question }) => {
   const dispatch = useDispatch();
   // console.log(qno);
   const handleChange = (e) => {
-    // const answer = questions.map((question)=>(
-    //   question.qno===qno ? {...question, answerValue:e.target.value}: question
-    // ))
-    // dispatch(setQuestions(answer))
+    if (qId) {
+      const userResp = questions.map((question) =>
+        question.qId === qId
+          ? {
+              ...question,
+              response: e.target.value,
+            }
+          : question
+      );
+      dispatch(setQuestions(userResp));
+    } else if (elId) {
+      const userResp = questions.map((question) => {
+        if (question.elements) {
+          return {
+            ...question,
+            elements: question.elements.map((el) =>
+              el.elId === elId
+                ? {
+                    ...el,
+                    response: e.target.value,
+                  }
+                : el
+            ),
+          };
+        }
+        return question;
+      });
+
+      dispatch(setQuestions(userResp));
+    }
   };
 
   return (
@@ -23,7 +49,7 @@ const ShortAnswer = ({ question }) => {
         placeholder="Your Answer here..."
         rows={4}
         value={answer}
-        disabled={ui?.previewMode}
+        // disabled={ui?.previewMode}
         onChange={handleChange}
       ></textarea>
     </div>

@@ -5,7 +5,7 @@ import { setQuestions } from "../../../../utils/redux/slices/questionsSlice";
 import { setConditions } from "../../../../utils/redux/slices/conditionsSlice";
 
 const MultipleChoice = ({ question }) => {
-  const { qId, elId, qno, type, text } = question;
+  const { qId, elId, qno, type, text, pageId } = question;
 
   const [options, setOptions] = useState(["", ""]); // Start with 2 empty options
   const optionRefs = useRef([]);
@@ -100,9 +100,40 @@ const MultipleChoice = ({ question }) => {
             <input
               type="radio"
               name={`option ${qId || elId}`}
-              disabled={ui?.previewMode}
               value={opt}
               className="hidden-radio"
+              onClick={(e) => {
+                if (qId) {
+                  const userResp = questions.map((question) =>
+                    question.qId === qId
+                      ? {
+                          ...question,
+                          response: e.target.value,
+                        }
+                      : question
+                  );
+                  dispatch(setQuestions(userResp));
+                } else if (elId) {
+                  const userResp = questions.map((question) => {
+                    if (question.elements) {
+                      return {
+                        ...question,
+                        elements: question.elements.map((el) =>
+                          el.elId === elId
+                            ? {
+                                ...el,
+                                response: e.target.value,
+                              }
+                            : el
+                        ),
+                      };
+                    }
+                    return question;
+                  });
+
+                  dispatch(setQuestions(userResp));
+                }
+              }}
             />
             <span className="custom-radio"></span>
             <textarea
@@ -135,40 +166,6 @@ const MultipleChoice = ({ question }) => {
                 }
                 className="hidden-condition-radio"
                 onClick={() => {
-                  // if (qId) {
-                  //   const updatedOptions = questions.map((question) =>
-                  //     question.qId === qId
-                  //       ? {
-                  //           ...question,
-                  //           conditions: { ...question.conditions, trueAnswer: opt },
-                  //         }
-                  //       : question
-                  //   );
-                  //   dispatch(setQuestions(updatedOptions));
-                  // } else if (elId) {
-                  //   const updatedOptions = questions.map((question) => {
-                  //     if (question.elements) {
-                  //       return {
-                  //         ...question,
-                  //         elements: question.elements.map((el) =>
-                  //           el.elId === elId
-                  //             ? {
-                  //                 ...el,
-                  //                 conditions: {
-                  //                   ...el.conditions,
-                  //                   trueAnswer: opt,
-                  //                 },
-                  //               }
-                  //             : el
-                  //         ),
-                  //       };
-                  //     }
-                  //     return question;
-                  //   });
-
-                  //   dispatch(setQuestions(updatedOptions));
-                  // }
-
                   const updatedConditions = Array.isArray(conditions)
                     ? [...conditions]
                     : []; // ensure array
@@ -188,6 +185,7 @@ const MultipleChoice = ({ question }) => {
                     updatedConditions.push({
                       questionId: qId || elId,
                       trueAnswer: opt,
+                      pageId: pageId,
                     });
                   }
 

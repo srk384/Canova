@@ -1,65 +1,128 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "./FileUploadModal.css";
 
-const UploadModal = ({ isOpen, onClose, onUpload, type = "image" }) => {
-  const [file, setFile] = useState(null);
+const FILE_TYPES = [
+  "image",
+  "pdf",
+  "ppt",
+  "document",
+  "video",
+  "zip",
+  "audio",
+  "spreadsheet",
+];
+
+const allowedMimeTypes = {
+  image: ["image/png", "image/jpeg", "image/jpg", "image/gif"],
+  video: ["video/mp4", "video/webm"],
+  pdf: ["application/pdf"],
+  ppt: [
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  ],
+  document: [
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ],
+  zip: ["application/zip", "application/x-zip-compressed"],
+  audio: ["audio/mpeg", "audio/wav"],
+  spreadsheet: [
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  ],
+};
+
+const UploadModal = ({
+  isOpen,
+  onClose,
+  onUpload,
+  type = "image",
+  fileTypes = [],
+}) => {
+  const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const supportedImageTypes = ["image/png", "image/jpeg", "image/jpg"];
-  const supportedVideoTypes = ["video/mp4", "video/webm"];
-  const maxSizeImage = 25 * 1024 * 1024; // 25MB
-  const maxSizeVideo = 200 * 1024 * 1024; // 200MB
+  // Determine allowed categories (from string or array)
+  const allowedCategories = useMemo(() => {
+    return Array.isArray(fileTypes) && fileTypes.length > 0
+      ? fileTypes
+      : [type];
+  }, [type, fileTypes]);
 
-  const validateFile = (file) => {
-    if (type === "image" && !supportedImageTypes.includes(file.type)) {
-      return "Only PNG and JPEG images are allowed.";
+  // Compute combined mime types for input accept attribute
+  const acceptMimeTypes = useMemo(() => {
+    return allowedCategories.flatMap(
+      (category) => allowedMimeTypes[category] || []
+    );
+  }, [allowedCategories]);
+
+  // Max limits (images/videos have special limits)
+  const MAX_FILES =
+    allowedCategories.length === 1 &&
+    (allowedCategories[0] === "image" || allowedCategories[0] === "video")
+      ? 1
+      : 5;
+
+  const MAX_SIZE =
+    allowedCategories.length === 1
+      ? allowedCategories[0] === "image"
+        ? 25 * 1024 * 1024
+        : allowedCategories[0] === "video"
+        ? 200 * 1024 * 1024
+        : 5 * 1024 * 1024
+      : 5 * 1024 * 1024; // if multiple types, use 5MB limit
+
+  const validateFiles = (selectedFiles) => {
+    if (selectedFiles.length > MAX_FILES) {
+      return `You can upload up to ${MAX_FILES} file${
+        MAX_FILES > 1 ? "s" : ""
+      } only.`;
     }
-    if (type === "video" && !supportedVideoTypes.includes(file.type)) {
-      return "Only MP4 and WEBM videos are allowed.";
-    }
-    if (type === "image" && file.size > maxSizeImage) {
-      return "File size must be less than 25MB.";
-    }
-    if (type === "video" && file.size > maxSizeVideo) {
-      return "File size must be less than 200MB.";
+
+    for (const file of selectedFiles) {
+      const isValidType = allowedCategories.some((category) =>
+        allowedMimeTypes[category]?.includes(file.type)
+      );
+
+      if (!isValidType) {
+        return `${file.name} is not a supported file type.`;
+      }
+
+      if (file.size > MAX_SIZE) {
+        return `${file.name} exceeds the size limit of ${
+          MAX_SIZE / 1024 / 1024
+        }MB.`;
+      }
     }
     return "";
   };
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      const errorMsg = validateFile(selectedFile);
-      if (errorMsg) {
-        setError(errorMsg);
-        setFile(null);
-      } else {
-        setError("");
-        setFile(selectedFile);
-      }
+    const selectedFiles = Array.from(e.target.files);
+    const errorMsg = validateFiles(selectedFiles);
+    if (errorMsg) {
+      setError(errorMsg);
+    } else {
+      setError("");
+      setFiles(selectedFiles);
     }
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile) {
-      const errorMsg = validateFile(droppedFile);
-      if (errorMsg) {
-        setError(errorMsg);
-        setFile(null);
-      } else {
-        setError("");
-        setFile(droppedFile);
-      }
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    const errorMsg = validateFiles(droppedFiles);
+    if (errorMsg) {
+      setError(errorMsg);
+    } else {
+      setError("");
+      setFiles(droppedFiles);
     }
   };
 
-
-  // Helper to clear file and error
   const handleClose = () => {
-    setFile(null);
+    setFiles([]);
     setError("");
     onClose();
   };
@@ -69,11 +132,22 @@ const UploadModal = ({ isOpen, onClose, onUpload, type = "image" }) => {
   return (
     <div className="modal-overlay">
       <div className="modal">
+        {/* Header */}
         <div className="modal-header">
-          <span>Upload {type === "image" ? "Image" : "Video"}</span>
-          <button onClick={handleClose} className="fileupload-close-btn">✕</button>
+          <span>
+            Upload{" "}
+            {allowedCategories.length === 1 &&
+            typeof allowedCategories[0] === "string"
+              ? allowedCategories[0].charAt(0).toUpperCase() +
+                allowedCategories[0].slice(1)
+              : "Files"}
+          </span>
+          <button onClick={handleClose} className="fileupload-close-btn">
+            ✕
+          </button>
         </div>
 
+        {/* Upload Area */}
         <div
           className="upload-box"
           onDragOver={(e) => e.preventDefault()}
@@ -81,46 +155,45 @@ const UploadModal = ({ isOpen, onClose, onUpload, type = "image" }) => {
         >
           <p>Drag & drop files to upload</p>
           <small>
-            Max size:{" "}
-            {type === "image"
-              ? maxSizeImage / 1024 / 1024
-              : maxSizeVideo / 1024 / 1024}{" "}
-            MB
+            Max {MAX_FILES} file{MAX_FILES > 1 ? "s" : ""}, each under{" "}
+            {MAX_SIZE / 1024 / 1024} MB
           </small>
           <input
             type="file"
-            accept={
-              type === "image"
-                ? "image/png, image/jpeg, image/jpg"
-                : "video/mp4, video/webm"
-            }
+            accept={acceptMimeTypes.join(", ")}
             onChange={handleFileChange}
+            multiple={MAX_FILES > 1}
             style={{ display: "none" }}
             id="file-input"
           />
           <label htmlFor="file-input" className="browse-btn">
             Browse Files
           </label>
-          {file && !error && (
-            <div className="selected-file-name">
-              <p>Selected file: {file.name}</p>
+
+          {error && <p className="error">{error}</p>}
+          
+          {files.length > 0 && !error && (
+            <div className="selected-file-list">
+              {files.map((file, index) => (
+                <p key={index}>{file.name}</p>
+              ))}
             </div>
           )}
         </div>
 
-        {error && <p className="error">{error}</p>}
 
+        {/* Footer */}
         <div className="modal-footer">
           <button onClick={handleClose} className="cancel-btn">
             Cancel
           </button>
           <button
             onClick={async () => {
-              if (file && !loading) {
+              if (files.length > 0 && !loading) {
                 setLoading(true);
                 try {
-                  await onUpload(file);
-                  setFile(null);
+                  await onUpload(files); // pass array of files
+                  setFiles([]);
                   setError("");
                 } finally {
                   setLoading(false);
@@ -128,7 +201,7 @@ const UploadModal = ({ isOpen, onClose, onUpload, type = "image" }) => {
               }
             }}
             className="upload-btn"
-            disabled={!file || loading}
+            disabled={files.length === 0 || loading}
           >
             {loading ? (
               <div

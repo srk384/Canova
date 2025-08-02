@@ -12,6 +12,8 @@ import ProjectsPage from "./components/dashboard/projectsPage/ProjectsPage";
 import HomePage from "./components/dashboard/homePage/HomePage";
 import FormPage from "./components/dashboard/formPage/FormPage";
 import FormBuilder from "./components/formBuilder/FormBuilder";
+import FormResponsePage from "./pages/FormResponsePage";
+import FormResponse from "./components/formResponse/FormResponse";
 
 function App() {
   return (
@@ -113,6 +115,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* public form routes */}
+        <Route path="/forms/:formId/verify" element={<FormResponsePage />} />
+        <Route path="/forms/:formId/respond" element={<FormResponse />} />
       </Routes>
     </Router>
   );

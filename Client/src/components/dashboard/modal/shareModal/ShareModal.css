@@ -1,0 +1,61 @@
+.share-modal-body {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.share-modal {
+  background: white;
+  border-radius: 10px;
+  width: 350px;
+  padding: 16px;
+  position: relative;
+}
+
+.share-modal-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.share-modal-title {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.share-modal-section {
+  margin-bottom: 16px;
+}
+
+.share-modal-field {
+  display: flex;
+  align-items: center;
+  background: #f2f4f7;
+  padding: 8px 10px;
+  border-radius: 6px;
+  gap: 8px;
+}
+
+.link-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.share-modal-btn {
+  width: 100%;
+  background: #4a90e2;
+  color: white;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.copied-msg {
+  font-size: 12px;
+  color: green;
+  margin-top: 5px;
+}

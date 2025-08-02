@@ -31,6 +31,7 @@ const questionSchema = new mongoose.Schema(
     options: [String],
     elements: [elementSchema], // for section's inner elements
     conditions: Object,
+    fileTypes: [String],
   },
   { _id: false }
 );
@@ -66,7 +67,7 @@ const formSchema = new mongoose.Schema(
     access: [
       {
         email: String,
-        canEdit: Boolean,
+        canEdit: {type: Boolean, default: false}
       },
     ],
     views: { type: Number, default: 0 },
@@ -74,6 +75,7 @@ const formSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    publishedAt: { type: Date },
   },
   { timestamps: true }
 );

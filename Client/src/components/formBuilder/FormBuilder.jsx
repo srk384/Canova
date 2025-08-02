@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetFormsQuery } from "../../utils/redux/api/ProjectAPI";
 import { setUi } from "../../utils/redux/slices/uiSlice";
 import LoadingFallback from "../common/LoadingFallback/LoadingFallback";
@@ -19,11 +19,12 @@ import { toast } from "react-toastify";
 import AddConditionComponent from "./sidebarRight/actionButtons/addConditionComponent/AddConditionComponent";
 import PageFlow from "./pageFlow/PageFlow";
 import PublishModal from "../dashboard/modal/publishModal/PublishModal";
+import ShareModal from "../dashboard/modal/shareModal/ShareModal";
 
 const FormBuilder = () => {
   const { id } = useParams();
-
-  const { data, refetch, isLoading, isSuccess } = useGetSavedDraftQuery(id);
+  
+  const { data, isLoading, isSuccess } = useGetSavedDraftQuery(id);
 
   const { ui } = useSelector((state) => state.uiSlice);
   const { questions } = useSelector((state) => state.questionsSlice);
@@ -31,21 +32,20 @@ const FormBuilder = () => {
   const [saveDraft, { isLoading: formUpdating }] = useSaveDraftMutation();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   //fetching data from db
-  console.log(questions);
+  // console.log(questions);
   useEffect(() => {
     if (data) {
-      // Flatten out the builderState if your editor uses a flat structure
       const builderState = data.form?.pages.flatMap((page) => {
-        // include page meta and its questions
         return page.questions.map((q) => ({
           ...q,
-          pageId: page._id, // ensure page reference
+          pageId: page._id, 
         }));
       });
 
-      dispatch(setQuestions(builderState)); // push into Redux for editing
+      dispatch(setQuestions(builderState)); 
     }
   }, [data, dispatch]);
 
@@ -135,7 +135,10 @@ const FormBuilder = () => {
                     >
                       Preview
                     </button>
-                    <button disabled={formUpdating} onClick={handleSave}>
+                    <button
+                      disabled={formUpdating || questions.length < 1}
+                      onClick={handleSave}
+                    >
                       {formUpdating ? (
                         <div
                           className="spinner"
@@ -156,9 +159,9 @@ const FormBuilder = () => {
               </div>
             </div>
             <div className="builder-tools-inner-container">
-              {ui.addCondition && <AddConditionComponent data={{ ...data }} />}
+              {ui.addCondition && <AddConditionComponent />}
               {ui.showPageFlow ? (
-                <PageFlow data={{ ...data }} />
+                <PageFlow />
               ) : (
                 <>
                   <FormBuilderMain />
@@ -168,8 +171,18 @@ const FormBuilder = () => {
 
               {ui.publish && (
                 <PublishModal
+                  id={id}
                   onClose={() => {
                     dispatch(setUi({ ...ui, publish: false }));
+                  }}
+                />
+              )}
+              {ui.showShareModal && (
+                <ShareModal
+                  publishedLink={ui.publishedLink}
+                  onClose={() => {
+                    navigate('/dashboard')
+                    dispatch(setUi({ ...ui, showShareModal: false }));
                   }}
                 />
               )}

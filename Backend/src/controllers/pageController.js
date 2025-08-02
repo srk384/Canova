@@ -8,7 +8,7 @@ const addQuestions = async (req, res) => {
     const page = await Page.findOne({ _id: req.params.id });
     // console.log(req.body)
 
-    console.log(await Question.create(req.body));
+    // console.log(await Question.create(req.body));
 
     res.send(page);
   } catch (error) {

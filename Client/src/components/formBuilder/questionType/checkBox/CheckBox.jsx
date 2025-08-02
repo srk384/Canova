@@ -5,7 +5,7 @@ import { setQuestions } from "../../../../utils/redux/slices/questionsSlice";
 import { setConditions } from "../../../../utils/redux/slices/conditionsSlice";
 
 const CheckBox = ({ question }) => {
-  const { qId, elId, qno, type, text } = question;
+  const { qId, elId, qno, type, text, pageId } = question;
 
   const [options, setOptions] = useState(["", ""]); // Start with 2 empty options
   const optionRefs = useRef([]);
@@ -14,7 +14,6 @@ const CheckBox = ({ question }) => {
   const { questions } = useSelector((state) => state.questionsSlice);
   const { ui } = useSelector((state) => state.uiSlice);
   const { conditions } = useSelector((state) => state.conditions);
-
 
   useEffect(() => {
     if (qId) {
@@ -100,7 +99,7 @@ const CheckBox = ({ question }) => {
             <input
               type="checkbox"
               name={`option ${qId || elId}`}
-              disabled={ui?.previewMode}
+              // disabled={ui?.previewMode}
               value={opt}
               className="hidden-checkbox"
             />
@@ -117,6 +116,9 @@ const CheckBox = ({ question }) => {
               id="checkbox"
             />
           </div>
+
+          {/*--------------------------------- add condition ------------------------------------*/}
+
           {ui.addCondition && (
             <div className="addcondition-radio">
               <input
@@ -125,35 +127,13 @@ const CheckBox = ({ question }) => {
                 disabled={ui?.previewMode}
                 checked={
                   conditions.find(
-                    (c) => c.questionId === (qId || elId) && c.trueAnswer === opt
+                    (c) =>
+                      c.questionId === (qId || elId) && c.trueAnswer === opt
                   ) !== undefined
                 }
                 value={opt}
                 className="hidden-condition-radio"
                 onClick={() => {
-                  // if (qId) {
-                  //   const updatedOptions = questions.map((question) =>
-                  //     question.qId === qId
-                  //       ? { ...question, conditions: { ...question.conditions, trueAnswer: opt }}
-                  //       : question
-                  //   );
-                  //   dispatch(setQuestions(updatedOptions));
-                  // } else if (elId) {
-                  //   const updatedOptions = questions.map((question) => {
-                  //     if (question.elements) {
-                  //       return {
-                  //         ...question,
-                  //         elements: question.elements.map((el) =>
-                  //           el.elId === elId ? { ...el, conditions: { ...el.conditions, trueAnswer: opt } } : el
-                  //         ),
-                  //       };
-                  //     }
-                  //     return question;
-                  //   });
-
-                  //   dispatch(setQuestions(updatedOptions));
-                  // }
-
                   const updatedConditions = Array.isArray(conditions)
                     ? [...conditions]
                     : []; // ensure array
@@ -173,6 +153,7 @@ const CheckBox = ({ question }) => {
                     updatedConditions.push({
                       questionId: qId || elId,
                       trueAnswer: opt,
+                      pageId: pageId,
                     });
                   }
 
