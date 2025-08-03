@@ -22,10 +22,10 @@ const PublicWelcomeScreen = () => {
     e.preventDefault();
 
     try {
-      const { data } = await getFormPublic({
+      const data = await getFormPublic({
         action: `/form/${formId}`,
         email: email,
-      });
+      }).unwrap();
 
       if (data.form.pages.length > 0) {
         dispatch(
@@ -33,6 +33,7 @@ const PublicWelcomeScreen = () => {
             ...builderState,
             activePage: data.form.pages[0]._id,
             pages: data.form.pages,
+            form: data.form,
           })
         );
       }
@@ -51,15 +52,13 @@ const PublicWelcomeScreen = () => {
         setUi({ ...ui, userEmail: email, previewMode: true, data: data })
       );
 
-      console.log(data);
       if (data) {
         navigate(`/forms/${formId}/respond`);
         toast.success(`Welcome!, ${email}`);
       }
-      console.log(data);
     } catch (error) {
-      toast.error(`Oops!, something went wrong.`);
-      console.log(error);
+      toast.error(`Oops!, ${error.data.error}`);
+      console.log(error.data);
     }
   };
 

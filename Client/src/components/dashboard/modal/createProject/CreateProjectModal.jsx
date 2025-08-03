@@ -1,12 +1,16 @@
 import { useState } from "react";
 import "./CreateProjectModalStyle.css";
-import { useCreateProjectMutation } from "../../../../utils/redux/api/ProjectAPI";
+import {
+  useCreateProjectMutation,
+  useGetProjectsQuery,
+} from "../../../../utils/redux/api/ProjectAPI";
 import { useNavigate } from "react-router-dom";
 
 const CreateProjectModal = ({ onClose }) => {
   const [createProjectForm, setCreateProjectForm] = useState({});
   const [createProject, { isLoading, isError, error }] =
     useCreateProjectMutation();
+  const { refetch } = useGetProjectsQuery("projects/projects");
 
   const navigate = useNavigate();
 
@@ -18,8 +22,9 @@ const CreateProjectModal = ({ onClose }) => {
     });
 
     if (data.message.includes("Project and form created.")) {
-    //   navigate(`/form-builder/${data.formId}`);
-    console.log("Project created")
+      navigate(`/form-builder/${data.formId}`);
+      console.log("Project created");
+      refetch();
     }
   };
 

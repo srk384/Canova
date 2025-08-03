@@ -1,11 +1,12 @@
 const Form = require("../models/formModel");
 const Project = require("../models/projectModel");
 const Page = require("../models/pageModel");
+const User = require("../models/userModel");
+
 
 const saveDraft = async (req, res) => {
   const { formId } = req.params;
   const { name, pages, isDraft } = req.body.form;
-  console.log(pages);
 
   try {
     const updatedForm = await Form.findByIdAndUpdate(
@@ -51,21 +52,35 @@ const getSavedDraft = async (req, res) => {
 const publishForm = async (req, res) => {
   const { formId } = req.params;
   const { name, pages, access } = req.body.form;
+
   try {
+
+    const updatedAccess = await Promise.all(
+      access.map(async (acc) => {
+        const accUser = await User.findOne({ email: acc.email });
+        return {
+          user: accUser ? accUser._id : null, // if user exists, store _id
+          email: acc.email,
+          canEdit: acc.canEdit || false,
+        };
+      })
+    );
+
+    // Update form
     const publishedForm = await Form.findByIdAndUpdate(
       formId,
       {
         $set: {
           name,
-          pages: pages,
+          pages,
           isDraft: false,
-          access: access,
+          access: updatedAccess, // save access with userId
           publishedAt: new Date(),
         },
       },
       {
-        new: true, // return the updated document
-        runValidators: true, // validate against schema
+        new: true, // return updated doc
+        runValidators: true,
       }
     );
 

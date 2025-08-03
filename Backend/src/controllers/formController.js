@@ -92,42 +92,48 @@ const getFormById = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch form" });
   }
 };
+const deleteForm = async (req, res) => {
+  const { id } = req.params;
 
-const addPage = async (req, res) => {
-  const formId = req.params.id;
-  const userId = req.user._id;
-  const { pageOrder } = req.body;
   try {
-    const form = await Form.findOne({ _id: formId, owner: userId });
+    const form = await Form.findByIdAndDelete(id);
+    if (!form) {
+      return res.status(404).json({ error: "Form not found" });
+    }
 
-    const newPage = await Page.create({
-      form: formId,
-      order: pageOrder,
-    });
-
-    form.pages.push(newPage._id);
-    await form.save();
-
-    res.status(200).json({ message: "Page Added", success: true, form: form });
-  } catch (err) {
-    res.status(500).json({ message: "Failed to add Page" });
+    res.json({ message: "Form deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
   }
 };
 
-const getPages = async (req, res) => {
-  const formId = req.params.id;
-  try {
-    const pages = await Page.find({ form: formId });
+const renameForm = async(req,res)=>{
+const { id } = req.params;
+  const { name } = req.body;
 
-    res.status(200).json({
-      message: "Pages fetched with form Id",
-      success: true,
-      pages: pages,
-    });
-  } catch (err) {
-    res.status(500).json({ message: "Failed to get pages" });
+  if (!name || name.trim() === "") {
+    return res.status(400).json({ error: "Name is required" });
   }
-};
+
+  try {
+    const form = await Form.findByIdAndUpdate(
+      id,
+      { name: name.trim() },
+      { new: true }
+    );
+
+    if (!form) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+
+    res.json({ message: "Form renamed successfully", form });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+}
+
 
 module.exports = {
   createForm,
@@ -135,6 +141,6 @@ module.exports = {
   getFormsByProject,
   insertFormInProject,
   getFormById,
-  addPage,
-  getPages,
+  deleteForm,
+  renameForm
 };

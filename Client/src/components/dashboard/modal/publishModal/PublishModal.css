@@ -119,6 +119,7 @@
   color: #4a90e2;
   cursor: pointer;
   font-weight: 500;
+  font-size: 12px;
 }
 
 .dropdown-menu {
@@ -164,7 +165,7 @@
     font-size: 16px;
 }
 
-.avatar {
+.avatar-email {
   background: #ddd;
   border-radius: 50%;
   width: 20px;
@@ -173,6 +174,7 @@
   justify-content: center;
   align-items: center;
   font-size: 12px;
+  flex-shrink: 0;
 }
 
 .add-mail-btn {
@@ -199,4 +201,10 @@
 }
 .select-page-modal-input {
   position: relative;
+}
+.can-edit-toggle{
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 2px;
 }

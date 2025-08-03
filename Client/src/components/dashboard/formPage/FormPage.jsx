@@ -4,13 +4,23 @@ import {
   useGetFormsQuery,
   useCreateProjectMutation,
 } from "../../../utils/redux/api/ProjectAPI";
-import FormComponent from "../../common/FormComponent";
+import FormComponent from "../../common/formComponent/FormComponent";
 import SpinnerOverlay from "../../common/spinnerOverlay/SpinnerOverlay";
+import { toast } from "react-toastify";
+import {
+  useDeleteFormMutation,
+  useRenameFormMutation,
+} from "../../../utils/redux/api/FormAPI";
+import ShareModal from "../modal/shareModal/ShareModal";
+import { setUi } from "../../../utils/redux/slices/uiSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const FormPage = () => {
   const { projectId } = useParams();
   const { projectName } = useLocation().state;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { ui } = useSelector((state) => state.uiSlice);
 
   const {
     data: forms,
@@ -21,17 +31,44 @@ const FormPage = () => {
 
   const [createProject, { isLoading, isError }] = useCreateProjectMutation();
 
-  const handleCreateForm = async () => {
+  const handleAddForm = async () => {
     const { data } = await createProject({
       action: `forms/project/${projectId}`,
       project: "",
     });
-    console.log(data);
 
     if (data.success) {
       navigate(`/form-builder/${data.form._id}`);
       refetch();
+      toast.success("Form Added");
       console.log("Form Inserted");
+    }
+  };
+
+  const [deleteForm] = useDeleteFormMutation();
+
+  const handleDeleteForm = async (id) => {
+    try {
+      if (confirm("Are you sure you want to Delete?")) {
+        await deleteForm(id).unwrap();
+        toast.success("Form deleted!");
+        refetch();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete form");
+    }
+  };
+
+  const [renameForm] = useRenameFormMutation();
+
+  const handleRenameForm = async (id, newName) => {
+    try {
+      await renameForm({ id, name: newName }).unwrap();
+      toast.success("Form renamed!");
+      refetch();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -69,6 +106,29 @@ const FormPage = () => {
                         draft: form.isDraft,
                         id: form._id,
                       }}
+                      onShare={(id) => {
+                        <ShareModal
+                          publishedLink={`${
+                            import.meta.env.VITE_API_URL
+                          }/forms/${id}/verify`}
+                        />;
+
+                        dispatch(
+                          setUi({
+                            ...ui,
+                            showShareModal: true,
+                            publishedLink: `${
+                              import.meta.env.VITE_API_URL_FRONTEND
+                            }/forms/${id}/verify`,
+                          })
+                        );
+                      }}
+                      onDelete={(id) => {
+                        handleDeleteForm(id);
+                      }}
+                      onRename={(id, newName) => {
+                        handleRenameForm(id, newName);
+                      }}
                     />
                   ))}
               </div>
@@ -79,7 +139,7 @@ const FormPage = () => {
         <div className="formPage-createForm-container">
           <button
             className="formPage-createForm-btn"
-            onClick={handleCreateForm}
+            onClick={handleAddForm}
             disabled={isLoading}
           >
             {isLoading ? (

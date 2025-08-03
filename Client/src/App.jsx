@@ -14,6 +14,7 @@ import FormPage from "./components/dashboard/formPage/FormPage";
 import FormBuilder from "./components/formBuilder/FormBuilder";
 import FormResponsePage from "./pages/FormResponsePage";
 import FormResponse from "./components/formResponse/FormResponse";
+import ProfilePage from "./components/profilePage/ProfilePage";
 
 function App() {
   return (
@@ -119,6 +120,9 @@ function App() {
         {/* public form routes */}
         <Route path="/forms/:formId/verify" element={<FormResponsePage />} />
         <Route path="/forms/:formId/respond" element={<FormResponse />} />
+
+        {/* profile route */}
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </Router>
   );

@@ -1,5 +1,10 @@
-import { useGetProjectsQuery } from "../../../utils/redux/api/ProjectAPI";
-import ProjectComponent from "../../common/ProjectComponent";
+import { toast } from "react-toastify";
+import {
+  useDeleteProjectMutation,
+  useGetProjectsQuery,
+  useRenameProjectMutation,
+} from "../../../utils/redux/api/ProjectAPI";
+import ProjectComponent from "../../common/projectComponent/ProjectComponent";
 import SpinnerOverlay from "../../common/spinnerOverlay/SpinnerOverlay";
 import "./ProjectsPageStyle.css";
 
@@ -8,8 +13,24 @@ const ProjectsPage = () => {
     data: projects,
     isLoading,
     isError,
+    refetch
   } = useGetProjectsQuery("projects/projects");
 
+  const [deleteProject] = useDeleteProjectMutation();
+  const [renameProject] = useRenameProjectMutation();
+
+  const handleProjectDelete = async (id) => {
+    if (confirm("Are you sure, you want to delete?"))
+      await deleteProject(id).unwrap();
+    toast.success("Project deleted");
+    refetch()
+  };
+
+  const handleProjectRename = async (id, newName) => {
+    await renameProject({ id, name: newName }).unwrap();
+    toast.success("Project renamed");
+    refetch()
+  };
 
   return (
     <div className="projectsPage-body">
@@ -28,6 +49,12 @@ const ProjectsPage = () => {
                     data={{
                       name: project.name,
                       id: project._id,
+                    }}
+                    onDelete={(id) => {
+                      handleProjectDelete(id);
+                    }}
+                    onRename={(id, newName) => {
+                      handleProjectRename(id, newName);
                     }}
                   />
                 ))}

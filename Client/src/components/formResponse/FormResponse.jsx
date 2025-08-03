@@ -22,6 +22,13 @@ const FormResponse = () => {
   const { questions } = useSelector((state) => state.questionsSlice);
   const [postUserResponse, { isLoading: submittingResponse }] =
     usePostUserResponseMutation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (questions.length < 1) {
+      navigate(`/forms/${formId}/verify`);
+    }
+  }, []);
 
   const handleNextPage = () => {
     const nextPageId = getNextPageId(
@@ -36,8 +43,6 @@ const FormResponse = () => {
       console.log("No more pages");
     }
   };
-
-
 
   const handleUpload = async (files) => {
     const cloudName = "dfomcvlzc";
@@ -149,7 +154,8 @@ const FormResponse = () => {
             publicWelcomeScreen: true,
           })
         );
-      }
+      } 
+      console.log(builderState.data)
     } catch (error) {
       toast.error("Oops! something went wrong.");
       console.log("Form submit error: ", error);
@@ -166,7 +172,7 @@ const FormResponse = () => {
 
       <div className="previewFrom-body">
         <div className="previewForm-heading">
-          {/* <h1 className="form-title">{data?.form?.name}</h1> */}
+          <h1 className="form-title">{builderState?.form?.name}</h1>
         </div>
         <div
           style={{
@@ -291,7 +297,7 @@ const FormResponse = () => {
         ) : builderState?.pages?.findIndex(
             (el) => el._id === builderState.activePage
           ) ===
-          builderState.pages.length - 1 ? (
+          builderState?.pages?.length - 1 ? (
           "Submit"
         ) : (
           "Next"

@@ -21,12 +21,14 @@
 .homepage-inner-container {
   padding: 40px;
 }
+
 .homepage-title {
   padding: 27px 50px;
   font-size: 48px;
   font-weight: 300;
   border-bottom: 1.5px solid #696969;
 }
+
 .homepage-action {
   display: flex;
   gap: 50px;
@@ -51,6 +53,7 @@
       font-weight: 300;
     }
   }
+
   .homepage-form {
     width: 430px;
     height: 190px;
@@ -70,6 +73,7 @@
       font-weight: 300;
     }
   }
+
   .project-img-container {
     background-color: #69b5f8;
     padding: 17px;
@@ -107,7 +111,6 @@
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-  
 }
 
 .recentWorks-formName {
@@ -117,17 +120,17 @@
   display: flex;
   align-items: center;
   gap: 5px;
- 
 }
 
 .recentWorks-formName span:last-of-type {
   font-weight: 400;
   font-size: 14px;
 }
-.recentWorks-formName-name{
-   white-space: nowrap;  
-  overflow: hidden;      
-  text-overflow: ellipsis; 
+
+.recentWorks-formName-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-weight: 500;
   font-size: 16px;
 }
@@ -170,55 +173,8 @@
   cursor: pointer;
 }
 
-/*recent projects */
-
-.homepage-recentWorks-project {
-  width: 239px;
-  height: 195px;
-  border-radius: 20px;
-  box-shadow: 0 4px 16px 0 #00000050;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  cursor: pointer;
-}
-
-.recentWorks-project-top {
-  background-color: #69b5f8;
-  height: 70%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.recentWorks-project-top img {
-  width: 86px;
-  height: 86px;
-}
-
-.recentWorks-project-bottom {
-  height: 30%;
-  padding: 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.recentWorks-projectName {
-  font-size: 16px;
-  font-weight: 500;
-  color: #000;
-  margin: 0;
-}
-
-.dots-icon {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-.no-recentWorks{
+.no-recentWorks {
   color: #9c9a9a;
   font-size: 25px;
-  margin: 0 auto 0  auto;
+  margin: 0 auto 0 auto;
 }

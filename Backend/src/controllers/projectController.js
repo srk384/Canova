@@ -24,12 +24,11 @@ const createProjectAndForm = async (req, res) => {
       pages: [], // start empty
     });
 
-    
     project.forms.push(form._id);
     await project.save();
-    
+
     const page = await Page.create({ form: form._id });
-    
+
     form.pages.push(page._id);
     await form.save();
 
@@ -67,4 +66,56 @@ const getProjectById = async (req, res) => {
   }
 };
 
-module.exports = { createProjectAndForm, getUserProjects, getProjectById };
+const deleteProject = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // First, delete the project
+    const project = await Project.findByIdAndDelete(id);
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    // Delete all forms associated with this project
+    await Form.deleteMany({ project: id });
+
+    res.json({ message: "Project and associated forms deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const renameProject = async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  if (!name || name.trim() === "") {
+    return res.status(400).json({ error: "Name is required" });
+  }
+
+  try {
+    const project = await Project.findByIdAndUpdate(
+      id,
+      { name: name.trim() },
+      { new: true }
+    );
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    res.json({ message: "Project renamed successfully", project });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+module.exports = {
+  createProjectAndForm,
+  getUserProjects,
+  getProjectById,
+  deleteProject,
+  renameProject
+};

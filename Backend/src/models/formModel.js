@@ -66,8 +66,9 @@ const formSchema = new mongoose.Schema(
     pages: [pageSchema],
     access: [
       {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         email: String,
-        canEdit: {type: Boolean, default: false}
+        canEdit: { type: Boolean, default: false },
       },
     ],
     views: { type: Number, default: 0 },

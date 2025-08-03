@@ -30,7 +30,7 @@ const getPublishedForm = async (req, res) => {
 
     // 3. Check if email exists in access array
     const isAllowed = form.access.some(
-      (acc) => acc.email.toLowerCase() === email.toLowerCase()
+      (acc) => acc.email?.toLowerCase() === email.toLowerCase()
     );
 
     if (!isAllowed) {

@@ -19,10 +19,27 @@ export const formAPI = createApi({
         body: data,
       }),
     }),
-    getPages: build.query({
-      query: (path) => path,
+    deleteForm: build.mutation({
+      query: (id) => ({
+        url: `/form/${id}/delete`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Forms"],
+    }),
+    renameForm: build.mutation({
+      query: ({ id, name }) => ({
+        url: `/form/${id}/rename`,
+        method: "PUT",
+        body: { name },
+      }),
+      invalidatesTags: ["Forms"],
     }),
   }),
 });
 
-export const { useUpdateFormMutation, useGetPagesQuery } = formAPI;
+export const {
+  useUpdateFormMutation,
+  useGetPagesQuery,
+  useDeleteFormMutation,
+  useRenameFormMutation,
+} = formAPI;

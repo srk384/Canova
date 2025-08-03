@@ -1,13 +1,12 @@
 import { useState } from "react";
-import "./PublishModal.css"; // Using the same style file for consistency
 import { useDispatch, useSelector } from "react-redux";
-import { setUi } from "../../../../utils/redux/slices/uiSlice";
+import { toast } from "react-toastify";
 import {
   useGetSavedDraftQuery,
   useSaveDraftMutation,
 } from "../../../../utils/redux/api/draftPublishAPI";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { setUi } from "../../../../utils/redux/slices/uiSlice";
+import "./PublishModal.css"; // Using the same style file for consistency
 
 const PublishModal = ({ id, onClose }) => {
   const [responderType, setResponderType] = useState("anyone");
@@ -17,7 +16,6 @@ const PublishModal = ({ id, onClose }) => {
   const dispatch = useDispatch();
   const { data } = useGetSavedDraftQuery(id);
   const [saveDraft, { isLoading }] = useSaveDraftMutation();
-  const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
   const [showEmailInput, setShowEmailInput] = useState(true);
   const [access, setAccess] = useState([]);
@@ -38,7 +36,6 @@ const PublishModal = ({ id, onClose }) => {
     e.preventDefault();
 
     const updatedForm = attachQuestionsToPages(data.form, questions);
-    console.log(updatedForm);
 
     try {
       const { data } = await saveDraft({
@@ -46,10 +43,8 @@ const PublishModal = ({ id, onClose }) => {
         form: updatedForm,
       });
 
-      console.log(data);
       if (data.message.includes("Form published successfully")) {
         toast.success("Form published successfully!");
-        // navigate(`/dashboard`);
 
         dispatch(
           setUi({
@@ -67,7 +62,6 @@ const PublishModal = ({ id, onClose }) => {
     }
   };
 
-  // State to match schema format
 
   // Add new user entry
   const handleAddEmail = () => {
@@ -83,25 +77,12 @@ const PublishModal = ({ id, onClose }) => {
     });
   };
 
-  const handleToggleCanEdit = (index) => {
-    setAccess((prev) => {
-      // copy array
-      const updated = [...prev];
-      // toggle canEdit for the user at index
-      updated[index] = {
-        ...updated[index],
-        canEdit: !updated[index].canEdit,
-      };
-      return updated;
-    });
-  };
 
   // Remove email entry
   const handleRemoveEmail = (index) => {
     setAccess((prev) => prev.filter((_, i) => i !== index));
   };
 
-  console.log(access);
   return (
     <div className="select-page-modal-body" onClick={onClose}>
       <div className="select-page-modal" onClick={(e) => e.stopPropagation()}>
@@ -176,7 +157,7 @@ const PublishModal = ({ id, onClose }) => {
             <div className="restricted-section">
               {/* Owner info */}
               <div className="restricted-item">
-                <span className="avatar">E</span>
+                <span className="avatar-email">E</span>
                 <span
                   style={{
                     whiteSpace: "nowrap",
@@ -210,7 +191,7 @@ const PublishModal = ({ id, onClose }) => {
                 <>
                   {access.map((user, index) => (
                     <div className="restricted-item" key={index}>
-                      <span className="avatar">E</span>
+                      <span className="avatar-email">E</span>
                       <input
                         className="email-input-restricted-item"
                         type="email"
@@ -221,15 +202,7 @@ const PublishModal = ({ id, onClose }) => {
                         }
                       />
 
-                      <label className="can-edit-toggle">
-                        <input
-                          type="checkbox"
-                          checked={user.canEdit}
-                          onChange={() => handleToggleCanEdit(index)} // <-- pass only index
-                        />
-                        Can Edit
-                      </label>
-
+                      
                       <button
                         className="link-btn"
                         onClick={() => handleRemoveEmail(index)}
