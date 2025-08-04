@@ -20,24 +20,33 @@ const FormBuilderMain = () => {
     document.querySelector(".formBuilder-main-content-body").scrollTop = 0;
   }, [ui.uploadModal]);
 
-  const handleUpload = async (file) => {
-    const type = file.type.split("/")[0];
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "canova");
+  const handleUpload = async (files) => {
+    const cloudName = "dfomcvlzc";
+    const preset = "canova";
 
-    const endpoint =
-      type === "video"
-        ? `https://api.cloudinary.com/v1_1/dfomcvlzc/video/upload`
-        : `https://api.cloudinary.com/v1_1/dfomcvlzc/image/upload`;
+    const urls = [];
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", preset);
 
-    try {
-      const res = await fetch(endpoint, {
-        method: "POST",
-        body: formData,
-      });
+      // Determine resource type based on file type
+      const resourceType = file.type.startsWith("image")
+        ? "image"
+        : file.type.startsWith("video")
+        ? "video"
+        : "raw";
+
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
       const data = await res.json();
-      // console.log("Cloudinary URL:", data.secure_url);
+      urls.push(data.secure_url);
 
       // Save URL in your questions array
       if (data.secure_url) {
@@ -49,7 +58,7 @@ const FormBuilderMain = () => {
                   ...question.elements,
                   {
                     elId: Date.now(),
-                    type: type,
+                    type: resourceType,
                     src: data.secure_url,
                   },
                 ],
@@ -60,8 +69,6 @@ const FormBuilderMain = () => {
 
         dispatch(setUi({ ...ui, uploadModal: false, uploadType: null }));
       }
-    } catch (err) {
-      console.error("Upload failed", err);
     }
   };
 
