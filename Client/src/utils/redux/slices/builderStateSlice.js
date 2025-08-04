@@ -13,7 +13,7 @@ const builderStateSlice = createSlice({
   reducers: {
     setBuilderState: (state, action) => {
       state.builderState = action.payload;
-      console.log(action.payload);
+      // console.log(action.payload);
     },
   },
 });

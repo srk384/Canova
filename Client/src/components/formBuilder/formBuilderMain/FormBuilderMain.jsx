@@ -37,7 +37,7 @@ const FormBuilderMain = () => {
         body: formData,
       });
       const data = await res.json();
-      console.log("Cloudinary URL:", data.secure_url);
+      // console.log("Cloudinary URL:", data.secure_url);
 
       // Save URL in your questions array
       if (data.secure_url) {

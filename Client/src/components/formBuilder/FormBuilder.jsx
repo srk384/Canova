@@ -74,7 +74,7 @@ const FormBuilder = () => {
 
       const updatedForm = attachQuestionsToPages(refetchedData.form, questions);
 
-      console.log(updatedForm);
+      // console.log(updatedForm);
 
       const { data } = await saveDraft({
         action: `${id}/save`,
@@ -85,7 +85,7 @@ const FormBuilder = () => {
         notify();
       }
 
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       toast.error("Oops! There is some error.");
       console.log(error);

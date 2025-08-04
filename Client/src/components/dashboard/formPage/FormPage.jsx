@@ -14,6 +14,7 @@ import {
 import ShareModal from "../modal/shareModal/ShareModal";
 import { setUi } from "../../../utils/redux/slices/uiSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 
 const FormPage = () => {
   const { projectId } = useParams();
@@ -72,6 +73,12 @@ const FormPage = () => {
     }
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredForms = forms?.filter((form) =>
+    form.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div>
       <div className="formPage-body">
@@ -84,6 +91,7 @@ const FormPage = () => {
                 id=""
                 className="formPage-searchBar-input"
                 placeholder="Search Forms"
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
               <img src="/svgs/search.svg" alt="" />
             </div>
@@ -97,8 +105,8 @@ const FormPage = () => {
           <div className="formPage-inner-container">
             <SpinnerOverlay input={loadingForms}>
               <div className="formPage-recentWorks">
-                {forms &&
-                  forms.map((form) => (
+                {filteredForms &&
+                  filteredForms.map((form) => (
                     <FormComponent
                       key={form._id}
                       data={{

@@ -158,7 +158,7 @@ const FormResponse = () => {
     }
   };
 
-  console.log(questions);
+  // console.log(questions);
   return (
     <div className="form-preview-container">
       <div className="previewFrom-left">

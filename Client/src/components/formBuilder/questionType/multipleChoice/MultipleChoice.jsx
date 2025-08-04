@@ -32,7 +32,7 @@ const MultipleChoice = ({ question }) => {
     }
   }, [questions]);
 
-  console.log(questions);
+  // console.log(questions);
 
   const handleChange = (value, index) => {
     const updated = [...options];

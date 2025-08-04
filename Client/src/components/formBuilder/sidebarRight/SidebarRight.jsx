@@ -41,7 +41,7 @@ const SidebarRight = () => {
           sectionColor: hexToRgb(sectionColor, sectionOpacity),
         })
       );
-      console.log(sectionColor);
+      // console.log(sectionColor);
       const updateSectiondColor = questions.map((question) =>
         question.sectionId === ui.activeSectionId
           ? {

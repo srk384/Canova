@@ -10,7 +10,7 @@ const conditionsSlice = createSlice({
   reducers: {
     setConditions: (state, action) => {
       state.conditions = action.payload;
-      console.log(action.payload);
+      // console.log(action.payload);
     },
   },
 });

@@ -19,7 +19,7 @@ const ForgotPassword = () => {
         email,
       }).unwrap();
 
-      console.log(message, OTP);
+      // console.log(message, OTP);
 
       if (!isLoading) setIsOTPSent(true);
     } catch (error) {

@@ -20,7 +20,7 @@ const uiSlice = createSlice({
   reducers: {
     setUi: (state, action) => {
       state.ui = action.payload;
-      console.log(action.payload);
+      // console.log(action.payload);
     },
   },
 });

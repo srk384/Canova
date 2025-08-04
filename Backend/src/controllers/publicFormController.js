@@ -21,6 +21,9 @@ const getPublishedForm = async (req, res) => {
       owner: form.owner,
     };
 
+    form.views += 1;
+    await form.save();
+
     // 2. Check if access array is empty (open for all)
     if (!form.access || form.access.length === 0) {
       return res

@@ -46,7 +46,7 @@ const ResetPassword = () => {
         post: { ...updatedPassword, email },
       }).unwrap();
 
-      console.log(message);
+      // console.log(message);
 
       if (message.includes("Password updated successfully")) {
         notify();

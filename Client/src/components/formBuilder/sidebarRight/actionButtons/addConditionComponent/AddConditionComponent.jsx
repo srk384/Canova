@@ -10,7 +10,7 @@ const AddConditionComponent = () => {
   const { questions } = useSelector((state) => state.questionsSlice);
   const { conditions } = useSelector((state) => state.conditions);
   const dispatch = useDispatch();
-  console.log(conditions);
+  // console.log(conditions);
   // console.log(questions);
 
   return (
