@@ -4,6 +4,7 @@ import { updateName, clearUser } from "../../utils/redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./ProfilePage.css";
+import { setQuestions } from "../../utils/redux/slices/questionsSlice";
 
 const ProfilePage = () => {
   const { user } = useSelector((state) => state.user);
@@ -12,7 +13,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
 
   const [nameInput, setNameInput] = useState(user?.name);
-  console.log(user)
+  console.log(user);
 
   useEffect(() => {
     if (!user) {
@@ -32,6 +33,7 @@ const ProfilePage = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(clearUser());
+    dispatch(setQuestions([]));
     navigate("/login");
   };
 

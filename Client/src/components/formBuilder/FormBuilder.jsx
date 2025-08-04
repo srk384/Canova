@@ -34,8 +34,7 @@ const FormBuilder = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
-  //fetching data from db
-  // console.log(questions);
+
   useEffect(() => {
     if (data) {
       const builderState = data.form?.pages.flatMap((page) => {
@@ -49,19 +48,8 @@ const FormBuilder = () => {
     }
   }, [data, dispatch]);
 
-  // setting active page
 
-  useEffect(() => {
-    if (data) {
-      dispatch(
-        setUi({
-          ...ui,
-          formName: data?.form?.name,
-          activePageId: data?.form?.pages[0]?._id,
-        })
-      );
-    }
-  }, [data, isSuccess]);
+  
 
   function attachQuestionsToPages(form, questions) {
     return {

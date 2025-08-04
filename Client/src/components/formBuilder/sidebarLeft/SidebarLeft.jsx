@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   useAddPagesMutation,
@@ -10,11 +10,10 @@ import { setUi } from "../../../utils/redux/slices/uiSlice";
 import "./SidebarLeftStyle.css";
 import { useGetPagesQuery } from "../../../utils/redux/api/PageAPI";
 
-const SidebarLeft = () => {
-  const {id} = useParams()
+const SidebarLeft = ({ id }) => {
   const [updatePages] = useUpdatePagesMutation();
   const [addPages, { isLoading }] = useAddPagesMutation();
-  const { data, refetch } = useGetPagesQuery(`/get/${id}`);
+  const { data, refetch, isSuccess } = useGetPagesQuery(`/get/${id}`);
 
   const dispatch = useDispatch();
   const { ui } = useSelector((state) => state.uiSlice);
@@ -25,6 +24,18 @@ const SidebarLeft = () => {
   const [pageNames, setPageNames] = useState({});
 
   const inputRefs = useRef({});
+
+  useEffect(() => {
+      if (data) {
+        dispatch(
+          setUi({
+            ...ui,
+           
+            activePageId: data?.form?.pages[0]?._id,
+          })
+        );
+      }
+    }, [data, isSuccess]);
 
   // Initialize page names
   useEffect(() => {
