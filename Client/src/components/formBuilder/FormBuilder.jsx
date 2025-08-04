@@ -50,6 +50,19 @@ const FormBuilder = () => {
     //  dispatch
   ]);
 
+  useEffect(() => {
+    if (data) {
+      dispatch(
+        setUi({
+          ...ui,
+
+          activePageId: ui.activePageId ?? data?.form?.pages[0]?._id,
+          formName: data?.form?.name
+        })
+      );
+    }
+  }, [data, isSuccess]);
+
   function attachQuestionsToPages(form, questions) {
     return {
       ...form,
@@ -91,7 +104,7 @@ const FormBuilder = () => {
       console.log(error);
     }
   };
-  
+
   if (isLoading || !data) {
     return <LoadingFallback />;
   }
