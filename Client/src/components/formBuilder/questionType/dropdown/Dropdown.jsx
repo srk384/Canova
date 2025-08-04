@@ -115,10 +115,15 @@ const Dropdown = ({ question }) => {
                   disabled={ui?.previewMode}
                   value={opt}
                   checked={
+                    // Check Redux conditions array
                     conditions.find(
                       (c) =>
                         c.questionId === (qId || elId) && c.trueAnswer === opt
-                    ) !== undefined
+                    ) !== undefined ||
+                    // Check backend condition object
+                    (question.conditions &&
+                      question.conditions.questionId === (qId || elId) &&
+                      question.conditions.trueAnswer === opt)
                   }
                   className="hidden-condition-radio"
                   onClick={() => {

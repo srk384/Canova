@@ -126,10 +126,15 @@ const CheckBox = ({ question }) => {
                 name={`condition ${qId || elId}`}
                 disabled={ui?.previewMode}
                 checked={
+                  // Check Redux conditions array
                   conditions.find(
                     (c) =>
                       c.questionId === (qId || elId) && c.trueAnswer === opt
-                  ) !== undefined
+                  ) !== undefined ||
+                  // Check backend condition object
+                  (question.conditions &&
+                    question.conditions.questionId === (qId || elId) &&
+                    question.conditions.trueAnswer === opt)
                 }
                 value={opt}
                 className="hidden-condition-radio"

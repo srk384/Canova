@@ -73,7 +73,6 @@ const FormResponse = () => {
       urls.push(data.secure_url);
     }
 
-    console.log(urls);
 
     try {
       // Save URL in your questions array
@@ -134,7 +133,6 @@ const FormResponse = () => {
       return [];
     });
 
-    console.log(answers);
 
     try {
       const { data } = await postUserResponse({
@@ -154,8 +152,8 @@ const FormResponse = () => {
             publicWelcomeScreen: true,
           })
         );
+        navigate(`/forms/${formId}/verify`)
       } 
-      console.log(builderState.data)
     } catch (error) {
       toast.error("Oops! something went wrong.");
       console.log("Form submit error: ", error);

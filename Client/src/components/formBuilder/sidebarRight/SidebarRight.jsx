@@ -206,6 +206,7 @@ const SidebarRight = () => {
         </button>
         {/* -----------------------------add condition--------------------------------- */}
         <button
+          style={{ backgroundColor: ui.addCondition ? "#69B5F8" : "" }}
           onClick={() => {
             if (questions.length > 0) {
               dispatch(
@@ -362,8 +363,10 @@ const SidebarRight = () => {
       <div className="formBuilder-right-sidebar-next-container">
         <button
           className="formBuilder-right-sidebar-nextBTN"
-          disabled={questions.length < 1 }
-          onClick={() => dispatch(setUi({ ...ui, showPageFlow: true, addCondition:false }))}
+          disabled={questions.length < 1}
+          onClick={() =>
+            dispatch(setUi({ ...ui, showPageFlow: true, addCondition: false }))
+          }
         >
           Next
         </button>

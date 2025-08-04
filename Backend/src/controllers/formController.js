@@ -101,15 +101,17 @@ const deleteForm = async (req, res) => {
       return res.status(404).json({ error: "Form not found" });
     }
 
-    res.json({ message: "Form deleted successfully" });
+    await Page.deleteMany({ form: form._id });
+
+    res.json({ message: "Form and pages deleted successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
   }
 };
 
-const renameForm = async(req,res)=>{
-const { id } = req.params;
+const renameForm = async (req, res) => {
+  const { id } = req.params;
   const { name } = req.body;
 
   if (!name || name.trim() === "") {
@@ -132,8 +134,7 @@ const { id } = req.params;
     console.error(error);
     res.status(500).json({ error: "Server error" });
   }
-}
-
+};
 
 module.exports = {
   createForm,
@@ -142,5 +143,5 @@ module.exports = {
   insertFormInProject,
   getFormById,
   deleteForm,
-  renameForm
+  renameForm,
 };

@@ -77,10 +77,22 @@ const deleteProject = async (req, res) => {
       return res.status(404).json({ error: "Project not found" });
     }
 
-    // Delete all forms associated with this project
-    await Form.deleteMany({ project: id });
+    // Find all forms associated with this project
+    const forms = await Form.find({ project: id });
 
-    res.json({ message: "Project and associated forms deleted successfully" });
+    // Collect form IDs
+    const formIds = forms.map((form) => form._id);
+
+    // Delete all pages associated with the forms
+    await Page.deleteMany({ form: { $in: formIds } });
+
+    // Delete all forms associated with this project
+    await Form.deleteMany({ _id: { $in: formIds } });
+
+    res.json({
+      message:
+        "Project, associated forms, and their pages deleted successfully",
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
@@ -117,5 +129,5 @@ module.exports = {
   getUserProjects,
   getProjectById,
   deleteProject,
-  renameProject
+  renameProject,
 };

@@ -6,6 +6,7 @@ import { setConditions } from "../../../../utils/redux/slices/conditionsSlice";
 
 const MultipleChoice = ({ question }) => {
   const { qId, elId, qno, type, text, pageId } = question;
+  console.log(question);
 
   const [options, setOptions] = useState(["", ""]); // Start with 2 empty options
   const optionRefs = useRef([]);
@@ -159,10 +160,15 @@ const MultipleChoice = ({ question }) => {
                 disabled={ui?.previewMode}
                 value={opt}
                 checked={
+                  // Check Redux conditions array
                   conditions.find(
                     (c) =>
                       c.questionId === (qId || elId) && c.trueAnswer === opt
-                  ) !== undefined
+                  ) !== undefined ||
+                  // Check backend condition object
+                  (question.conditions &&
+                    question.conditions.questionId === (qId || elId) &&
+                    question.conditions.trueAnswer === opt)
                 }
                 className="hidden-condition-radio"
                 onClick={() => {
