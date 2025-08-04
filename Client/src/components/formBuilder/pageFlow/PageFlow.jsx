@@ -53,8 +53,6 @@ const PageFlow = () => {
 
   const treeData = buildTree();
 
-  console.log(treeData);
-  // console.log(pages);
 
   return (
     <div className="page-flow-container">

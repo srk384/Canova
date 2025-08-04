@@ -75,30 +75,50 @@ const AddQuestionComponent = ({ question, preview }) => {
     }
   }, [questionType]);
 
-  const reorderQuestions = (questions) => {
-    const validTypes = [
-      "shortAnswer",
-      "longAnswer",
-      "multipleChoice",
-      "checkbox",
-      "dropdown",
-      "fileUpload",
-      "date",
-      "linearScale",
-      "rating",
-    ];
+const reorderQuestions = (questions) => {
+  const validTypes = [
+    "shortAnswer",
+    "longAnswer",
+    "multipleChoice",
+    "checkbox",
+    "dropdown",
+    "fileUpload",
+    "date",
+    "linearScale",
+    "rating",
+  ];
 
+  // Group questions by pageId
+  const pageGroups = {};
+
+  questions.forEach((q) => {
+    if (!q.pageId) return;
+    if (!pageGroups[q.pageId]) {
+      pageGroups[q.pageId] = [];
+    }
+    pageGroups[q.pageId].push(q);
+  });
+
+  // Reorder each page's questions
+  const reorderedQuestions = [];
+
+  Object.values(pageGroups).forEach((group) => {
     let order = 1;
-
-    return questions.map((q) => {
+    group.forEach((q) => {
       if (validTypes.includes(q.type)) {
-        const updatedQuestion = { ...q, questionOrder: order };
-        order++;
-        return updatedQuestion;
+        reorderedQuestions.push({
+          ...q,
+          questionOrder: order++,
+        });
+      } else {
+        reorderedQuestions.push(q);
       }
-      return q;
     });
-  };
+  });
+
+  return reorderedQuestions;
+};
+
   const reorderElements = (questions) => {
     const validTypes = [
       "shortAnswer",

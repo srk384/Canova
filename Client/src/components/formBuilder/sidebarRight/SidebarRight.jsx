@@ -6,6 +6,7 @@ import { setUi } from "../../../utils/redux/slices/uiSlice";
 import "./SidebarRightStyle.css";
 
 const SidebarRight = () => {
+  const { questions, sections } = useSelector((state) => state.questionsSlice);
   const [pageColor, setPageColor] = useState("#ffffff");
   const [sectionColor, setSectionColor] = useState("#ffffff");
   const [pageOpacity, setPageOpacity] = useState(100);
@@ -14,7 +15,6 @@ const SidebarRight = () => {
 
   const dispatch = useDispatch();
   const { ui } = useSelector((state) => state.uiSlice);
-  const { questions, sections } = useSelector((state) => state.questionsSlice);
 
   const notify = () => toast("Section Created, Add Questions Now!");
 
@@ -41,31 +41,41 @@ const SidebarRight = () => {
           sectionColor: hexToRgb(sectionColor, sectionOpacity),
         })
       );
-
-      const updatedColor = questions.map((question) =>
+      console.log(sectionColor);
+      const updateSectiondColor = questions.map((question) =>
         question.sectionId === ui.activeSectionId
           ? {
               ...question,
               sectionColor: hexToRgb(sectionColor, sectionOpacity),
-              pageColor: hexToRgb(sectionColor, sectionOpacity),
             }
           : question
       );
 
-      dispatch(setQuestions(updatedColor));
+      dispatch(setQuestions(updateSectiondColor));
+
+      const updatedPageColor = questions.map((question) =>
+        question.pageId === ui.activePageId
+          ? {
+              ...question,
+              pageColor: hexToRgb(pageColor, pageOpacity),
+            }
+          : question
+      );
+
+      dispatch(setQuestions(updatedPageColor));
     }
   }, [pageColor, sectionColor, pageOpacity, sectionOpacity]);
 
-  useEffect(() => {
-    if (sections.length > 0) {
-      dispatch(
-        setUi({
-          ...ui,
-          activeSectionId: sections[sections.length - 1].sectionId,
-        })
-      );
-    }
-  }, [sections]);
+  // useEffect(() => {
+  //   if (sections.length > 0) {
+  //     dispatch(
+  //       setUi({
+  //         ...ui,
+  //         activeSectionId: sections[sections.length - 1].sectionId,
+  //       })
+  //     );
+  //   }
+  // }, [sections]);
 
   const addElement = (type) => {
     if (ui.activeSectionId) {
@@ -150,6 +160,7 @@ const SidebarRight = () => {
                 question.pageId === ui.activePageId
                   ? {
                       ...question,
+                      sectionColor: ui.sectionColor,
                       elements: [
                         ...question.elements,
                         {

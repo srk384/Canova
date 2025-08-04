@@ -42,6 +42,7 @@ const pageSchema = new mongoose.Schema(
     _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
     title: { type: String, default: "Untitled Page" },
     questions: [questionSchema],
+    pageColor: { type: String, default: "#ffffff" },
   },
   { _id: false }
 );

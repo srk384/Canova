@@ -139,11 +139,59 @@ const addPage = async (req, res) => {
 };
 
 
+const colorUpdate = async (req, res) => {
+  const { pageId, pageColor } = req.body.updateData;
+  const { formId } = req.params;
+
+  try {
+    // Step 1: Update the page color in the Page collection (if exists)
+    const updatedPage = await Page.findByIdAndUpdate(
+      pageId,
+      { pageColor },
+      { new: true }
+    );
+
+    if (!updatedPage) {
+      return res.status(404).json({ message: "Page not found in Page collection" });
+    }
+
+    // Step 2: Also update it inside Form.pages array
+    const updatedForm = await Form.findOneAndUpdate(
+      { _id: formId, "pages._id": pageId },
+      {
+        $set: {
+          "pages.$.pageColor": pageColor,
+        },
+      },
+      { new: true }
+    );
+
+    if (!updatedForm) {
+      return res.status(404).json({ message: "Form or Page not found inside Form" });
+    }
+
+    res.status(200).json({
+      message: "Page color updated successfully",
+      success: true,
+      form: updatedForm,
+    });
+
+  } catch (error) {
+    console.error("Color update error:", error);
+    res.status(500).json({
+      message: "Failed to update page color",
+      error: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   addQuestions,
   getQuestions,
   renamePage,
   deletePage,
   addPage,
-  getPages
+  getPages,
+  colorUpdate
 };

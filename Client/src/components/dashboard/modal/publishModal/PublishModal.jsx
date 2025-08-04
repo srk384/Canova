@@ -14,7 +14,7 @@ const PublishModal = ({ id, onClose }) => {
   const { ui } = useSelector((state) => state.uiSlice);
   const { questions } = useSelector((state) => state.questionsSlice);
   const dispatch = useDispatch();
-  const { data } = useGetSavedDraftQuery(id);
+  const { data , refetch} = useGetSavedDraftQuery(id);
   const [saveDraft, { isLoading }] = useSaveDraftMutation();
   const { user } = useSelector((state) => state.user);
   const [showEmailInput, setShowEmailInput] = useState(true);
@@ -23,7 +23,7 @@ const PublishModal = ({ id, onClose }) => {
   function attachQuestionsToPages(form, questions) {
     return {
       ...form,
-      name: ui.formName,
+      name: ui.formName ?? data?.form?.name,
       access: access,
       pages: form.pages.map((page) => ({
         ...page,
@@ -35,9 +35,12 @@ const PublishModal = ({ id, onClose }) => {
   const handlePublish = async (e) => {
     e.preventDefault();
 
-    const updatedForm = attachQuestionsToPages(data.form, questions);
-
     try {
+      const { data: refetchedData } = await refetch();
+
+      const updatedForm = attachQuestionsToPages(refetchedData.form, questions);
+
+
       const { data } = await saveDraft({
         action: `${id}/publish`,
         form: updatedForm,
@@ -62,7 +65,6 @@ const PublishModal = ({ id, onClose }) => {
     }
   };
 
-
   // Add new user entry
   const handleAddEmail = () => {
     setAccess((prev) => [...prev, { email: "", canEdit: false }]);
@@ -76,7 +78,6 @@ const PublishModal = ({ id, onClose }) => {
       return updated;
     });
   };
-
 
   // Remove email entry
   const handleRemoveEmail = (index) => {
@@ -202,7 +203,6 @@ const PublishModal = ({ id, onClose }) => {
                         }
                       />
 
-                      
                       <button
                         className="link-btn"
                         onClick={() => handleRemoveEmail(index)}

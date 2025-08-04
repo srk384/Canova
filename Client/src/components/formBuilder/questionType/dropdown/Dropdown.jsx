@@ -114,44 +114,88 @@ const Dropdown = ({ question }) => {
                   name={`condition ${qId || elId}`}
                   disabled={ui?.previewMode}
                   value={opt}
-                  checked={
-                    // Check Redux conditions array
-                    conditions.find(
-                      (c) =>
-                        c.questionId === (qId || elId) && c.trueAnswer === opt
-                    ) !== undefined ||
-                    // Check backend condition object
-                    (question.conditions &&
-                      question.conditions.questionId === (qId || elId) &&
-                      question.conditions.trueAnswer === opt)
-                  }
-                  className="hidden-condition-radio"
-                  onClick={() => {
-                    const updatedConditions = Array.isArray(conditions)
-                      ? [...conditions]
-                      : []; // ensure array
+                checked={
+                  conditions.some(
+                    (c) =>
+                      c.questionId === (qId || elId) && c.trueAnswer === opt
+                  ) ||
+                  (!conditions.some((c) => c.questionId === (qId || elId)) &&
+                    question.conditions?.questionId === (qId || elId) &&
+                    question.conditions?.trueAnswer === opt)
+                }
+                className="hidden-condition-radio"
+                onClick={() => {
+                  const selectedId = qId || elId;
 
-                    const existingIndex = updatedConditions.findIndex(
-                      (c) => c.questionId === (qId || elId)
+                  const reduxIndex = conditions.findIndex(
+                    (c) => c.questionId === selectedId && c.trueAnswer === opt
+                  );
+
+                  const backendSelected =
+                    question.conditions &&
+                    question.conditions.questionId === selectedId &&
+                    question.conditions.trueAnswer === opt;
+
+                  let updatedConditions = [...conditions];
+
+                  // Clone and update questions array
+                  const updatedQuestions = questions.map((q) => {
+                    if (
+                      q.qId === qId ||
+                      q.elements?.some((el) => el.elId === elId)
+                    ) {
+                      // Target question found
+                      if (reduxIndex !== -1 || backendSelected) {
+                        // Remove condition
+                        return {
+                          ...q,
+                          conditions: null,
+                        };
+                      } else {
+                        // Add or update condition
+                        return {
+                          ...q,
+                          conditions: {
+                            questionId: selectedId,
+                            trueAnswer: opt,
+                            pageId,
+                          },
+                        };
+                      }
+                    }
+                    return q;
+                  });
+
+                  if (reduxIndex !== -1) {
+                    // Toggle off: remove from conditions array
+                    updatedConditions.splice(reduxIndex, 1);
+                  } else if (backendSelected) {
+                    // Backend-selected option → treat as toggled off → add empty override
+                    // Optional: Skip this if you’re updating `questions` array directly
+                    updatedConditions = updatedConditions.filter(
+                      (c) => c.questionId !== selectedId
                     );
+                  } else {
+                    // Add/update condition in Redux
+                    const existingIndex = updatedConditions.findIndex(
+                      (c) => c.questionId === selectedId
+                    );
+                    const newCondition = {
+                      questionId: selectedId,
+                      trueAnswer: opt,
+                      pageId,
+                    };
 
                     if (existingIndex !== -1) {
-                      // Overwrite the existing condition
-                      updatedConditions[existingIndex] = {
-                        ...updatedConditions[existingIndex],
-                        trueAnswer: opt,
-                      };
+                      updatedConditions[existingIndex] = newCondition;
                     } else {
-                      // Add a new condition if array is empty or doesn't have this question
-                      updatedConditions.push({
-                        questionId: qId || elId,
-                        trueAnswer: opt,
-                        pageId: pageId,
-                      });
+                      updatedConditions.push(newCondition);
                     }
+                  }
 
-                    dispatch(setConditions(updatedConditions));
-                  }}
+                  dispatch(setConditions(updatedConditions));
+                  dispatch(setQuestions(updatedQuestions));
+                }}
                 />
                 <span className="custom-condition-radio"></span>
               </div>

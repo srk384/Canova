@@ -73,7 +73,6 @@ const FormResponse = () => {
       urls.push(data.secure_url);
     }
 
-
     try {
       // Save URL in your questions array
       if (urls.length > 0) {
@@ -133,7 +132,6 @@ const FormResponse = () => {
       return [];
     });
 
-
     try {
       const { data } = await postUserResponse({
         action: `/form/${formId}/response`,
@@ -152,14 +150,15 @@ const FormResponse = () => {
             publicWelcomeScreen: true,
           })
         );
-        navigate(`/forms/${formId}/verify`)
-      } 
+        navigate(`/forms/${formId}/verify`);
+      }
     } catch (error) {
       toast.error("Oops! something went wrong.");
       console.log("Form submit error: ", error);
     }
   };
 
+  console.log(questions);
   return (
     <div className="form-preview-container">
       <div className="previewFrom-left">
@@ -168,7 +167,15 @@ const FormResponse = () => {
         </div>
       </div>
 
-      <div className="previewFrom-body">
+      <div
+        className="previewFrom-body"
+        style={{
+          backgroundColor:
+            questions.find((q) => q.pageId === builderState
+            .activePage && q.pageColor)
+              ?.pageColor || "#ffffff",
+        }}
+      >
         <div className="previewForm-heading">
           <h1 className="form-title">{builderState?.form?.name}</h1>
         </div>

@@ -12,10 +12,10 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     async function verifyJWT() {
-      const { data, error } = await authentication({
+      const data = await authentication({
         action: "verify",
         post: "",
-      });
+      }).unwrap();
 
       dispatch(setUser(data));
 

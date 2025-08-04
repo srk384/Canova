@@ -7,13 +7,14 @@ import AddQuestionComponent from "../sidebarRight/actionButtons/addQuestionCompo
 import AddTextComponent from "../sidebarRight/actionButtons/addTextComponent/AddTextComponent";
 import AddVideoComponent from "../sidebarRight/actionButtons/addVideoComponent/AddVideoComponent";
 import "./formBuilderMainStyle.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const FormBuilderMain = () => {
   const { ui } = useSelector((state) => state.uiSlice);
   const { questions, sections } = useSelector((state) => state.questionsSlice);
   const rgba = ui?.pageColor;
   const dispatch = useDispatch();
+  const [pageBgColor, setPageBgColor] = useState("");
 
   useEffect(() => {
     document.querySelector(".formBuilder-main-content-body").scrollTop = 0;
@@ -68,8 +69,10 @@ const FormBuilderMain = () => {
     <div
       className="formBuilder-main-content-body"
       style={{
-        backgroundColor: rgba,
-        overflowY: `${ui.uploadModal ? "hidden" : "auto"}`,
+        backgroundColor:
+          questions.find((q) => q.pageId === ui.activePageId && q.pageColor)
+            ?.pageColor || "#ffffff",
+        overflowY: ui.uploadModal ? "hidden" : "auto",
       }}
     >
       {questions
@@ -99,7 +102,10 @@ const FormBuilderMain = () => {
                       ? "activeSection"
                       : ""
                   }`}
-                  style={{ backgroundColor: question.sectionColor }}
+                  style={{
+                    backgroundColor:
+                      question?.sectionColor || ui.sectionColor || "#ffffff",
+                  }}
                   onClick={() =>
                     dispatch(
                       setUi({ ...ui, activeSectionId: question.sectionId })

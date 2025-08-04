@@ -7,15 +7,15 @@ import { setUser } from "../../utils/redux/slices/userSlice";
 
 const PublicRoute = ({ children }) => {
   const dispatch = useDispatch();
- const [authentication, { isLoading, isSuccess, data, isError }] =
+  const [authentication, { isLoading, error, data, isError }] =
     useAuthenticationMutation();
 
   useEffect(() => {
     async function verifyJWT() {
-      const { data, error } = await authentication({
+      const data = await authentication({
         action: "verify",
         post: "",
-      });
+      }).unwrap();
 
       dispatch(setUser(data));
 
@@ -27,7 +27,7 @@ const PublicRoute = ({ children }) => {
 
   if (isLoading) return <LoadingFallback />;
 
-  // if (data && !isError ) return <Navigate to="/dashboard" replace:true />;  
+  if (data && !isError) return <Navigate to="/dashboard" replace:true />;
 
   return children;
 };

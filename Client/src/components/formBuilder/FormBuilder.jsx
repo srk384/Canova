@@ -23,8 +23,8 @@ import ShareModal from "../dashboard/modal/shareModal/ShareModal";
 
 const FormBuilder = () => {
   const { id } = useParams();
-  
-  const { data, isLoading, isSuccess } = useGetSavedDraftQuery(id);
+
+  const { data, isLoading, isSuccess, refetch } = useGetSavedDraftQuery(id);
 
   const { ui } = useSelector((state) => state.uiSlice);
   const { questions } = useSelector((state) => state.questionsSlice);
@@ -32,29 +32,28 @@ const FormBuilder = () => {
   const [saveDraft, { isLoading: formUpdating }] = useSaveDraftMutation();
 
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (data) {
       const builderState = data.form?.pages.flatMap((page) => {
         return page.questions.map((q) => ({
           ...q,
-          pageId: page._id, 
+          pageId: page._id,
         }));
       });
 
-      dispatch(setQuestions(builderState)); 
+      dispatch(setQuestions(builderState));
     }
-  }, [data, dispatch]);
-
-
-  
+  }, [
+    data,
+    //  dispatch
+  ]);
 
   function attachQuestionsToPages(form, questions) {
     return {
       ...form,
-      name: ui.formName,
+      name: ui.formName ?? data?.form?.name,
       pages: form.pages.map((page) => ({
         ...page,
         questions: questions.filter((q) => q.pageId === page._id),
@@ -70,24 +69,29 @@ const FormBuilder = () => {
   };
 
   const handleSave = async () => {
-    const updatedForm = attachQuestionsToPages(data.form, questions);
-    console.log(updatedForm);
-
     try {
+      const { data: refetchedData } = await refetch();
+
+      const updatedForm = attachQuestionsToPages(refetchedData.form, questions);
+
+      console.log(updatedForm);
+
       const { data } = await saveDraft({
         action: `${id}/save`,
         form: updatedForm,
       });
+
       if (data.message.includes("form updated")) {
         notify();
       }
+
       console.log(data);
     } catch (error) {
       toast.error("Oops! There is some error.");
       console.log(error);
     }
   };
-
+  
   if (isLoading || !data) {
     return <LoadingFallback />;
   }
@@ -169,7 +173,7 @@ const FormBuilder = () => {
                 <ShareModal
                   publishedLink={ui.publishedLink}
                   onClose={() => {
-                    navigate('/dashboard')
+                    navigate("/dashboard");
                     dispatch(setUi({ ...ui, showShareModal: false }));
                   }}
                 />

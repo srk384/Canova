@@ -11,6 +11,7 @@ const pageSchema = new mongoose.Schema(
       type: String,
       default: "Untitled Page",
     },
+    pageColor: { type: String, default: "#ffffff" },
     // order: {
     //   type: Number,
     //   default: 1,

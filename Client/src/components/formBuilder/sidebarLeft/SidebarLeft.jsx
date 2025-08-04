@@ -26,16 +26,16 @@ const SidebarLeft = ({ id }) => {
   const inputRefs = useRef({});
 
   useEffect(() => {
-      if (data) {
-        dispatch(
-          setUi({
-            ...ui,
-           
-            activePageId: data?.form?.pages[0]?._id,
-          })
-        );
-      }
-    }, [data, isSuccess]);
+    if (data) {
+      dispatch(
+        setUi({
+          ...ui,
+
+          activePageId: ui.activePageId ?? data?.form?.pages[0]?._id,
+        })
+      );
+    }
+  }, [data, isSuccess]);
 
   // Initialize page names
   useEffect(() => {
@@ -49,15 +49,9 @@ const SidebarLeft = ({ id }) => {
   }, [data]);
 
   const addPage = async () => {
-    // const newPageName = `Page ${
-    //   data?.form.pages.length + 1 < 10
-    //     ? String(data?.form.pages.length + 1).padStart(2, "0")
-    //     : data?.form.pages.length + 1
-    // }`;
-
     try {
       await addPages({
-        action: `add/${data?.form._id}`,
+        action: `add/${id}`,
         pageAction: "add",
       });
 
@@ -194,10 +188,7 @@ const SidebarLeft = ({ id }) => {
                         );
                       }}
                     >
-                      <img
-                        src="/svgs/more.svg"
-                        width={5}
-                      />
+                      <img src="/svgs/more.svg" width={5} />
                     </div>
                     {menuOpenId === page._id && (
                       <div className="page-menu-popup">

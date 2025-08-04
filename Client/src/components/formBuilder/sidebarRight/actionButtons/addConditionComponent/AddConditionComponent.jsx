@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setQuestions } from "../../../../../utils/redux/slices/questionsSlice";
 import SelectPageModal from "../../../../dashboard/modal/SelectPageModal/SelectPageModal";
+import { toast } from "react-toastify";
 
 const AddConditionComponent = () => {
   const [openSelectPageModal, setOpenSelectPageModal] = useState(false);
@@ -55,6 +56,7 @@ const AddConditionComponent = () => {
 
             // Dispatch updated questions to Redux
             dispatch(setQuestions(updatedQuestions));
+            toast.success("Conditions Applied!")
           }}
         />
       )}

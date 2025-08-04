@@ -13,7 +13,6 @@ const ProfilePage = () => {
   const navigate = useNavigate();
 
   const [nameInput, setNameInput] = useState(user?.name);
-  console.log(user);
 
   useEffect(() => {
     if (!user) {
