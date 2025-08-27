@@ -1,25 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetFormsQuery } from "../../utils/redux/api/ProjectAPI";
-import { setUi } from "../../utils/redux/slices/uiSlice";
-import LoadingFallback from "../common/LoadingFallback/LoadingFallback";
-import FormBuilderMain from "./formBuilderMain/FormBuilderMain";
-import "./FormBuilderStyle.css";
-import SidebarLeft from "./sidebarLeft/SidebarLeft";
-import SidebarRight from "./sidebarRight/SidebarRight";
-import PreviewForm from "./previewForm/PreviewForm";
-import { setBuilderState } from "../../utils/redux/slices/builderStateSlice";
+import { toast } from "react-toastify";
 import {
-  useSaveDraftMutation,
   useGetSavedDraftQuery,
+  useSaveDraftMutation,
 } from "../../utils/redux/api/draftPublishAPI";
 import { setQuestions } from "../../utils/redux/slices/questionsSlice";
-import { toast } from "react-toastify";
-import AddConditionComponent from "./sidebarRight/actionButtons/addConditionComponent/AddConditionComponent";
-import PageFlow from "./pageFlow/PageFlow";
+import { setUi } from "../../utils/redux/slices/uiSlice";
+import LoadingFallback from "../common/LoadingFallback/LoadingFallback";
 import PublishModal from "../dashboard/modal/publishModal/PublishModal";
 import ShareModal from "../dashboard/modal/shareModal/ShareModal";
+import FormBuilderMain from "./formBuilderMain/FormBuilderMain";
+import "./FormBuilderStyle.css";
+import PageFlow from "./pageFlow/PageFlow";
+import PreviewForm from "./previewForm/PreviewForm";
+import SidebarLeft from "./sidebarLeft/SidebarLeft";
+import AddConditionComponent from "./sidebarRight/actionButtons/addConditionComponent/AddConditionComponent";
+import SidebarRight from "./sidebarRight/SidebarRight";
 
 const FormBuilder = () => {
   const { id } = useParams();
@@ -28,7 +26,6 @@ const FormBuilder = () => {
 
   const { ui } = useSelector((state) => state.uiSlice);
   const { questions } = useSelector((state) => state.questionsSlice);
-  const { builderState } = useSelector((state) => state.builderState);
   const [saveDraft, { isLoading: formUpdating }] = useSaveDraftMutation();
 
   const dispatch = useDispatch();
@@ -57,7 +54,7 @@ const FormBuilder = () => {
           ...ui,
 
           activePageId: ui.activePageId ?? data?.form?.pages[0]?._id,
-          formName: data?.form?.name
+          formName: data?.form?.name,
         })
       );
     }
@@ -94,20 +91,19 @@ const FormBuilder = () => {
         form: updatedForm,
       });
 
+      refetch();
+
       if (data.message.includes("form updated")) {
         notify();
       }
-
-      // console.log(data);
     } catch (error) {
       toast.error("Oops! There is some error.");
       console.log(error);
     }
   };
 
-  if (isLoading || !data) {
-    return <LoadingFallback />;
-  }
+  if (isLoading || formUpdating) <LoadingFallback />;
+
   return (
     <>
       {!ui.previewMode && (
