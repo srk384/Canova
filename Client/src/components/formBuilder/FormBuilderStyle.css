@@ -57,3 +57,7 @@
     }
   }
 }
+
+.formBuilder-save-button:disabled {
+  cursor: not-allowed;
+}

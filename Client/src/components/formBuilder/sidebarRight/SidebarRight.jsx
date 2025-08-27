@@ -374,7 +374,7 @@ const SidebarRight = () => {
       <div className="formBuilder-right-sidebar-next-container">
         <button
           className="formBuilder-right-sidebar-nextBTN"
-          disabled={questions.length < 1}
+          disabled={questions.length < 1 || ui.addCondition}
           onClick={() =>
             dispatch(setUi({ ...ui, showPageFlow: true, addCondition: false }))
           }

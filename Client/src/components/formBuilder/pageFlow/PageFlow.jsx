@@ -72,7 +72,7 @@ const PageFlow = () => {
       </select>
 
       {treeData
-        .filter((t) => t.pageId === activePage)
+        ?.filter((t) => t.pageId === activePage).slice(0,1)
         .map((node) => (
           <div key={node.questionId} className="page-node-wrapper">
 

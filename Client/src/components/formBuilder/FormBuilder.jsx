@@ -18,11 +18,16 @@ import PreviewForm from "./previewForm/PreviewForm";
 import SidebarLeft from "./sidebarLeft/SidebarLeft";
 import AddConditionComponent from "./sidebarRight/actionButtons/addConditionComponent/AddConditionComponent";
 import SidebarRight from "./sidebarRight/SidebarRight";
+import { useGetPagesQuery } from "../../utils/redux/api/PageAPI";
 
 const FormBuilder = () => {
   const { id } = useParams();
 
   const { data, isLoading, isSuccess, refetch } = useGetSavedDraftQuery(id);
+
+  const { data: pagesData, refetch: refetchPages } = useGetPagesQuery(
+    `/get/${id}`
+  );
 
   const { ui } = useSelector((state) => state.uiSlice);
   const { questions } = useSelector((state) => state.questionsSlice);
@@ -52,11 +57,11 @@ const FormBuilder = () => {
       dispatch(
         setUi({
           ...ui,
-
-          activePageId: ui.activePageId ?? data?.form?.pages[0]?._id,
+          activePageId: data?.form?.pages[0]?._id,
           formName: data?.form?.name,
         })
       );
+      console.log(ui);
     }
   }, [data, isSuccess]);
 
@@ -108,7 +113,11 @@ const FormBuilder = () => {
     <>
       {!ui.previewMode && (
         <div className="formBuilder-layout">
-          <SidebarLeft id={id} />
+          {pagesData && (
+            <SidebarLeft
+              onLoad={{ data: pagesData, refetch: refetchPages, id }}
+            />
+          )}
           <div className="builder-tools-container">
             <div className="formBuilder-top">
               {isSuccess && (
@@ -137,7 +146,8 @@ const FormBuilder = () => {
                       Preview
                     </button>
                     <button
-                      disabled={formUpdating || questions.length < 1}
+                    className="formBuilder-save-button"
+                      disabled={formUpdating || questions.length < 1 || ui.addCondition}
                       onClick={handleSave}
                     >
                       {formUpdating ? (

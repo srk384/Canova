@@ -10,10 +10,11 @@ import { setUi } from "../../../utils/redux/slices/uiSlice";
 import "./SidebarLeftStyle.css";
 import { useGetPagesQuery } from "../../../utils/redux/api/PageAPI";
 
-const SidebarLeft = ({ id }) => {
+const SidebarLeft = ({ onLoad }) => {
+  const { data, refetch, id } = onLoad;
   const [updatePages] = useUpdatePagesMutation();
   const [addPages, { isLoading }] = useAddPagesMutation();
-  const { data, refetch, isSuccess } = useGetPagesQuery(`/get/${id}`);
+  // const { data, refetch, isSuccess } = useGetPagesQuery(`/get/${id}`);
 
   const dispatch = useDispatch();
   const { ui } = useSelector((state) => state.uiSlice);
@@ -25,17 +26,18 @@ const SidebarLeft = ({ id }) => {
 
   const inputRefs = useRef({});
 
-  useEffect(() => {
-    if (data) {
-      dispatch(
-        setUi({
-          ...ui,
 
-          activePageId: ui.activePageId ?? data?.form?.pages[0]?._id,
-        })
-      );
-    }
-  }, [data, isSuccess]);
+  // useEffect(() => {
+  //   if (data) {
+  //     dispatch(
+  //       setUi({
+  //         ...ui,
+
+  //         activePageId: ui.activePageId ?? data?.form?.pages[0]?._id,
+  //       })
+  //     );
+  //   }
+  // }, [data]);
 
   // Initialize page names
   useEffect(() => {
