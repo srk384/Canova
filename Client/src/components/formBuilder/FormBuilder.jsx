@@ -107,17 +107,16 @@ const FormBuilder = () => {
     }
   };
 
-  if (isLoading || formUpdating) <LoadingFallback />;
+  // if (isLoading || formUpdating) <LoadingFallback />;
 
   return (
     <>
       {!ui.previewMode && (
         <div className="formBuilder-layout">
-          {pagesData && (
+          
             <SidebarLeft
               onLoad={{ data: pagesData, refetch: refetchPages, id }}
             />
-          )}
           <div className="builder-tools-container">
             <div className="formBuilder-top">
               {isSuccess && (
@@ -146,8 +145,10 @@ const FormBuilder = () => {
                       Preview
                     </button>
                     <button
-                    className="formBuilder-save-button"
-                      disabled={formUpdating || questions.length < 1 || ui.addCondition}
+                      className="formBuilder-save-button"
+                      disabled={
+                        formUpdating || questions.length < 1 || ui.addCondition
+                      }
                       onClick={handleSave}
                     >
                       {formUpdating ? (

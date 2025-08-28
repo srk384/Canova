@@ -1,5 +1,11 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import {
+  useDeleteFormMutation,
+  useRenameFormMutation,
+} from "../../../utils/redux/api/FormAPI";
 import {
   useCreateProjectMutation,
   useDeleteProjectMutation,
@@ -9,21 +15,14 @@ import {
   useGetSharedFormsQuery,
   useRenameProjectMutation,
 } from "../../../utils/redux/api/ProjectAPI";
+import { setUi } from "../../../utils/redux/slices/uiSlice";
 import FormComponent from "../../common/formComponent/FormComponent";
 import ProjectComponent from "../../common/projectComponent/ProjectComponent";
+import SharedFormComponent from "../../common/sharedFormComponent/SharedFormComponent";
 import SpinnerOverlay from "../../common/spinnerOverlay/SpinnerOverlay";
 import CreateProjectModal from "../modal/createProject/CreateProjectModal";
-import "./HomePage.css";
-import SharedFormComponent from "../../common/sharedFormComponent/SharedFormComponent";
 import ShareModal from "../modal/shareModal/ShareModal";
-import { useDispatch, useSelector } from "react-redux";
-import { setUi } from "../../../utils/redux/slices/uiSlice";
-import { toast } from "react-toastify";
-import {
-  useDeleteFormMutation,
-  useRenameFormMutation,
-} from "../../../utils/redux/api/FormAPI";
-import LoadingFallback from "../../common/LoadingFallback/LoadingFallback";
+import "./HomePage.css";
 
 const HomePage = () => {
   const [isCreateProjectClicked, setIsCreateProjectClicked] = useState(false);
@@ -127,7 +126,6 @@ const HomePage = () => {
     refetchProjects();
   };
 
-  if (loadingForms || loadingProjects || sharedforms) <LoadingFallback />;
 
   return (
     <div
