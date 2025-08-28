@@ -23,6 +23,7 @@ import {
   useDeleteFormMutation,
   useRenameFormMutation,
 } from "../../../utils/redux/api/FormAPI";
+import LoadingFallback from "../../common/LoadingFallback/LoadingFallback";
 
 const HomePage = () => {
   const [isCreateProjectClicked, setIsCreateProjectClicked] = useState(false);
@@ -125,6 +126,8 @@ const HomePage = () => {
     toast.success("Project renamed");
     refetchProjects();
   };
+
+  if (loadingForms || loadingProjects || sharedforms) <LoadingFallback />;
 
   return (
     <div

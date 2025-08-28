@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   builderState: {
-    activePage:null,
-    pages:null
+    activePage: null,
+    pages: null,
   },
 };
 
@@ -15,8 +15,9 @@ const builderStateSlice = createSlice({
       state.builderState = action.payload;
       // console.log(action.payload);
     },
+    clearBuilderState: () => initialState,
   },
 });
 
-export const { setBuilderState } = builderStateSlice.actions;
+export const { setBuilderState, clearBuilderState } = builderStateSlice.actions;
 export default builderStateSlice.reducer;

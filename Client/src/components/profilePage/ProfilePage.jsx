@@ -4,7 +4,13 @@ import { updateName, clearUser } from "../../utils/redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./ProfilePage.css";
-import { setQuestions } from "../../utils/redux/slices/questionsSlice";
+import { clearQuestions } from "../../utils/redux/slices/questionsSlice";
+import { clearUi } from "../../utils/redux/slices/uiSlice";
+import { clearBuilderState } from "../../utils/redux/slices/builderStateSlice";
+import { setConditions } from "../../utils/redux/slices/conditionsSlice";
+import { authApi } from "../../utils/redux/api/AuthAPI";
+import { formAPI } from "../../utils/redux/api/FormAPI";
+import { projectsApi } from "../../utils/redux/api/ProjectAPI";
 
 const ProfilePage = () => {
   const { user } = useSelector((state) => state.user);
@@ -32,7 +38,13 @@ const ProfilePage = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(clearUser());
-    dispatch(setQuestions([]));
+    dispatch(clearQuestions());
+    dispatch(clearUi());
+    dispatch(clearBuilderState());
+    dispatch(setConditions([]));
+    dispatch(authApi.util.resetApiState());
+    dispatch(formAPI.util.resetApiState());
+    dispatch(projectsApi.util.resetApiState());
     navigate("/login");
   };
 

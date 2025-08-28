@@ -8,9 +8,9 @@ const initialState = {
     sectionColor: null,
     previewMode: false,
     formName: null,
-    uploadModal:false,
-    uploadType:null,
-    publicWelcomeScreen:true
+    uploadModal: false,
+    uploadType: null,
+    publicWelcomeScreen: true,
   },
 };
 
@@ -22,8 +22,9 @@ const uiSlice = createSlice({
       state.ui = action.payload;
       // console.log(action.payload);
     },
+    clearUi: () => initialState,
   },
 });
 
-export const { setUi } = uiSlice.actions;
+export const { setUi, clearUi } = uiSlice.actions;
 export default uiSlice.reducer;
