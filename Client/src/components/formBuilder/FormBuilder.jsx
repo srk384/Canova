@@ -61,7 +61,6 @@ const FormBuilder = () => {
           formName: data?.form?.name,
         })
       );
-      console.log(ui);
     }
   }, [data, isSuccess]);
 
