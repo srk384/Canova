@@ -41,10 +41,10 @@ const Login = () => {
     } catch (error) {
       console.log("err:", error);
 
-      if (error.data.error.includes("Incorrect Password"))
+      if (error?.data?.error?.includes("Incorrect Password"))
         setError({ incorrectPassword: true });
 
-      if (error.data.error.includes("User does not exist"))
+      if (error?.data?.error?.includes("User does not exist"))
         setError({ incorrectEmail: true });
     }
   };
